@@ -1,0 +1,81 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "PolygonShape2D",
+"class": "CapsulePolygonShape2D",
+"language": "GDScript",
+"path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/CapsulePolygonShape2D.gd"
+}, {
+"base": "PolygonShape2D",
+"class": "CirclePolygonShape2D",
+"language": "GDScript",
+"path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/CirclePolygonShape2D.gd"
+}, {
+"base": "",
+"class": "GitAPI",
+"language": "NativeScript",
+"path": "res://addons/godot-git-plugin/git_api.gdns"
+}, {
+"base": "Resource",
+"class": "PolygonShape2D",
+"language": "GDScript",
+"path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/PolygonShape2D.gd"
+}, {
+"base": "PolygonShape2D",
+"class": "RectanglePolygonShape2D",
+"language": "GDScript",
+"path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/RectanglePolygonShape2D.gd"
+}, {
+"base": "PolygonShape2D",
+"class": "TrianglePolygonShape2D",
+"language": "GDScript",
+"path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/TrianglePolygonShape2D.gd"
+} ]
+_global_script_class_icons={
+"CapsulePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/CapsulePolygonShape2D.svg",
+"CirclePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/CirclePolygonShape2D.svg",
+"GitAPI": "",
+"PolygonShape2D": "res://addons/CollisionPolygonShape/Icons/PolygonShape2D.svg",
+"RectanglePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/RectanglePolygonShape2D.svg",
+"TrianglePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/TrianglePolygonShape2D.svg"
+}
+
+[application]
+
+config/name="LD50"
+run/main_scene="res://default.tscn"
+config/icon="res://icon.png"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/CollisionPolygonShape/plugin.cfg", "res://addons/build-and-deploy/plugin.cfg", "res://addons/gdfxr/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg" )
+
+[gdnative]
+
+singletons=[ "res://addons/godot-git-plugin/git_api.gdnlib" ]
+
+[layer_names]
+
+2d_physics/layer_1="Player"
+2d_physics/layer_2="Enemy"
+2d_physics/layer_3="World"
+2d_physics/layer_4="PlayerBullet"
+2d_physics/layer_5="EnemyBullet"
+2d_physics/layer_6="Interactable"
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+2d/options/ninepatch_mode=0
+environment/default_environment="res://default_env.tres"
