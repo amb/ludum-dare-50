@@ -1,4 +1,5 @@
 addons/
+build/
 
 # Godot-specific ignores
 .import/

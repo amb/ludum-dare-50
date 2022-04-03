@@ -255,6 +255,7 @@ func _ready():
 	tilesGround.position = Vector2(-mapHalfSize, -mapHalfSize) * tileSize
 	tilesBlocking.position = Vector2(-mapHalfSize, -mapHalfSize) * tileSize
 	
+	print("Run: Map generator")
 	_generate_new_map(3, 4, 2)
 
 func create_new_map(min_range, max_range, iterations):

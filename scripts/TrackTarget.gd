@@ -6,4 +6,5 @@ func _ready():
 	trackTarget = get_node(trackTarget)
 
 func _process(delta):
-	global_position = trackTarget.global_position
+	if is_instance_valid(trackTarget):
+		global_position = trackTarget.global_position

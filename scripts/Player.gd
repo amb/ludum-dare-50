@@ -9,9 +9,11 @@ var movePath : Array
 
 var entityAvatar
 
-onready var health = 100.0
-onready var experience = 0.0
+onready var health = 20.0
+onready var maxHealth = 20.0
 onready var energy = 100.0
+onready var maxEnergy
+onready var experience = 0.0
 onready var level = 1
 onready var levelCap = 20
 
@@ -21,6 +23,8 @@ export(float) var movementSpeed
 export(NodePath) var pathFinder
 export(NodePath) var textDump
 export(NodePath) var levelUpPanel
+export(NodePath) var hpBar
+var audioStreamPlayer
 
 func get_input():
 	movementVector = Vector2.ZERO
@@ -55,15 +59,19 @@ func setMovementDirection(newLoc):
 	moveTarget = newLoc
 	moving = true
 
+func _update_hp():
+#	textDump.setText("Health", health)
+	hpBar.value = health * 100.0 / maxHealth
+
 func _ready():
 	entityAvatar = get_node("Hero")
 	textDump = get_node(textDump)
 	levelUpPanel = get_node(levelUpPanel)
+	hpBar = get_node(hpBar)
 	
-	textDump.setTextDeferred({
-		"Health":health,
-		"Energy":energy
-	})
+	_update_hp()
+
+#	textDump.setText("Energy", energy)
 #	pathFinder = get_node(pathFinder)
 
 func _physics_process(_delta):
@@ -91,16 +99,16 @@ func _physics_process(_delta):
 		
 func takeDamage(amount, direction):
 	health -= amount
+	$DamageAS.play()
 	if health < 0.0:
 		health = 0.0
-#	takeDamageParticles.direction = direction
-#	takeDamageParticles.emitting = true
-#	flashRedAnimation.play("PlayerFlashRed")
-#	flashRedAnimation.seek(0.0)
+		SceneChanger.change_scene("res://default.tscn")
+		queue_free()
+	_update_hp()
 
 func _levelup():
 	level += 1
-	levelCap *= 1.4
+	levelCap *= 1.1
 	textDump.setText("Level", level)
 	levelUpPanel.activate()
 

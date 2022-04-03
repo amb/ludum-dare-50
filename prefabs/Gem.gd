@@ -30,6 +30,10 @@ func _player_pickup(target):
 func _on_Gem_body_entered(body):
 	if body.name == "Player":
 		_player_pickup(body)
+	else:
+		# Collision with terrain, remove
+		if body.is_in_group("world"):
+			queue_free()
 
 func addExp(amount):
 	myExp += amount

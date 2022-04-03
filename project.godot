@@ -54,6 +54,10 @@ config/name="Survivor Island"
 run/main_scene="res://default.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+SceneChanger="*res://SceneChanger.tscn"
+
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/CollisionPolygonShape/plugin.cfg", "res://addons/build-and-deploy/plugin.cfg", "res://addons/gdfxr/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg" )

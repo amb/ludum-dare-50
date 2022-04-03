@@ -1,0 +1,72 @@
+{
+    "speed": {
+        "description":"Faster movement",
+        "multiply":1.0,
+        "increase":0.1,
+        "max_level":10,
+        "value":1.0
+    },
+    "area": {
+        "description":"Bigger area",
+        "multiply":1.0,
+        "increase":0.1,
+        "max_level":10,
+        "value":1.0
+    },
+    "damage": {
+        "description":"Increase damage",
+        "multiply":1.0,
+        "increase":0.1,
+        "max_level":10,
+        "value":1.0
+    },
+    "knockback": {
+        "description":"Knockback force",
+        "multiply":1.0,
+        "increase":0.1,
+        "max_level":10,
+        "value":1.0
+    },
+    "cast": {
+        "description":"Lower cast time",
+        "multiply":1.0,
+        "increase":0.1,
+        "max_level":10,
+        "value":1.0
+    },
+    "projectiles": {
+        "description":"More projectiles",
+        "multiply":1.0,
+        "increase":0.1,
+        "max_level":10,
+        "value":1.0
+    },
+    "duration": {
+        "description":"Longer duration",
+        "multiply":1.0,
+        "increase":0.1,
+        "max_level":10,
+        "value":1.0
+    },
+    "pickup": {
+        "description":"Pickup range",
+        "multiply":1.0,
+        "increase":0.1,
+        "max_level":10,
+        "value":1.0
+    },
+    "health": {
+        "description":"Health pool",
+        "multiply":1.1,
+        "increase":0.0,
+        "max_level":10,
+        "value":1.0
+    },
+    "armor": {
+        "description":"Thicker armor",
+        "multiply":1.0,
+        "increase":1.0,
+        "max_level":10,
+        "value":0.0
+    },
+}
