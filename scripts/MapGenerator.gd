@@ -103,19 +103,13 @@ func _add_rooms(tmap, blocking_grid):
 			for x in range(-1, sizex+2):
 				var cx = x + loc.x
 				var cy = y + loc.y
-#				if blocking_grid[cx][cy] or tmap.get_cell(cx, cy) != -1:
 				if blocking_grid[cx][cy]:
 					it_fits = false
 					break
 					
 		if it_fits:
 			found_rooms += 1
-#			for y in range(sizey+1):
-#				tmap.set_cell(loc.x, y+loc.y, 5)
-#				tmap.set_cell(loc.x+sizex, y+loc.y, 5)
-#			for x in range(sizex):
-#				tmap.set_cell(x+loc.x, loc.y, 5)
-#				tmap.set_cell(x+loc.x, loc.y+sizey, 5)
+
 			rooms.append([loc.x, loc.y, sizex, sizey])
 			for x in range(sizex+1):
 				for y in range(sizey+1):
@@ -200,13 +194,18 @@ func _generate_new_map(min_range, max_range, iterations):
 	var res = _add_rooms(tilesGround, bgrid)
 	var new_tiles = res[0]
 	var new_rooms = res[1]
-	_fill_tiles_grid(tilesBlocking, 3, new_tiles)
-
-	_update_tilemap(tilesBlocking)
 	
-	# Poke doors to room walls after autotile
 	for r in new_rooms:
-		# r = [loc.x, loc.y, sizex, sizey]
+		var loc = Vector2(r[0], r[1])
+		var sizex = r[2]
+		var sizey = r[3]
+		for y in range(sizey+1):
+			tilesBlocking.set_cell(loc.x, y+loc.y, 5)
+			tilesBlocking.set_cell(loc.x+sizex, y+loc.y, 5)
+		for x in range(sizex):
+			tilesBlocking.set_cell(x+loc.x, loc.y, 5)
+			tilesBlocking.set_cell(x+loc.x, loc.y+sizey, 5)
+			
 		var pokes = [false, false, false, false]
 		for i in range(pokes.size()):
 			pokes[i] = randf() > 0.6
@@ -216,17 +215,21 @@ func _generate_new_map(min_range, max_range, iterations):
 		
 		for hside in range(2):
 			if pokes[hside]:
-				var posx = r[0]+r[2] * hside
-				var posy = r[1]+1 +(randi() % (r[3]-3))
-				tilesBlocking.set_cell(posx, posy, 3, false, false, false, Vector2(4-hside,0))
-				tilesBlocking.set_cell(posx, posy+1, -1)
+				var posx = loc.x +sizex * hside
+				var posy = loc.y+1 +(randi() % (sizey-1))
+				tilesBlocking.set_cell(posx, posy, -1)
 			
 		for vside in range(2):
 			if pokes[vside + 2]:
-				var posx = r[0] +1 +(randi() % (r[2]-1))
-				var posy = r[1]+r[3] * vside
+				var posx = loc.x+1 +(randi() % (sizex-1))
+				var posy = loc.y+sizey * vside
 				tilesBlocking.set_cell(posx, posy, -1)
-		
+
+
+#	_fill_tiles_grid(tilesBlocking, 5, new_tiles)
+	_update_tilemap(tilesBlocking)
+
+
 	# Fill empty space with vegetation
 	var probg = _grid_with_value(0.4)
 	_probability_tile_fill(tilesGround, 2, probg)
