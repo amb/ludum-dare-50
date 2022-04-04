@@ -109,12 +109,12 @@ func takeDamage(amount, direction):
 func _levelup():
 	level += 1
 	levelCap *= 1.1
-	textDump.setText("Level", level)
+	textDump.setText(tr("Level"), level)
 	levelUpPanel.activate()
 
 func addExperience(amount):
 #	print("exp:", amount)
-	textDump.setText("Exp", "%.2f" % [experience*100.0/levelCap])
+	textDump.setText(tr("Exp"), "%.2f" % [experience*100.0/levelCap])
 	experience += amount
 	if experience > levelCap:
 		experience = 0

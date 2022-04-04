@@ -7,11 +7,13 @@ export(NodePath) var textDump
 
 	
 func _timeout():
-	textDump.setText("Time", "%02d:%02d" % [int(timerTicks/60), timerTicks % 60])
+	textDump.setText(tr("Time"), "%02d:%02d" % [int(timerTicks/60), timerTicks % 60])
 	timerTicks += 1
 
 
 func _ready():
+	TranslationServer.set_locale("fi")
+	
 	textDump = get_node(textDump)
 	
 	timer = Timer.new()

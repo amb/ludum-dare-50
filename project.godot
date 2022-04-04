@@ -75,6 +75,10 @@ singletons=[ "res://addons/godot-git-plugin/git_api.gdnlib" ]
 2d_physics/layer_5="EnemyBullet"
 2d_physics/layer_6="Interactable"
 
+[locale]
+
+translations=PoolStringArray(  )
+
 [physics]
 
 common/enable_pause_aware_picking=true
