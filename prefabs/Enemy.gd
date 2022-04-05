@@ -2,19 +2,10 @@ extends RigidBody2D
 
 var moveTarget : Vector2
 var resting : bool = true
-var restingTick = 0.0
 var previousPosition : Vector2
 
-var oldLayerMask
-var oldCollisionMask
-
-var movementTick = 0.0
-var movementTickMax = 0.1
 var movementVector = Vector2()
-var moving : bool = false
-
 var movementMinDistance = 10.0
-var movementMaxSpeedSquared = 1000.0
 var movementForce = 100.0
 
 var entityAvatar
@@ -23,10 +14,9 @@ var sleepTimer : float = 0.0
 var attackTarget
 onready var touchingTarget = false
 
-var spawner
-
 var seekTimer
 var attackTick
+var attackOnBodyEnter : bool = true
 
 var health = 12.0
 
@@ -36,10 +26,19 @@ var rootNode
 
 const TERRAIN_ID = 2
 
+export(PackedScene) var lootDrop
+
 func takeDamage(amount):
-	rootNode.emit_signal("spawn_damage_number", amount, global_position)
+#	rootNode.emit_signal("spawn_damage_number", amount, global_position)
 	health -= amount
 	if health <= 0.0:
+		set_deferred("disabled", true)
+		
+		# Spawn loots
+		var ni = lootDrop.instance()
+		ni.position.x = global_position.x
+		ni.position.y = global_position.y
+		get_parent().add_child(ni)
 		_destroy()
 
 func setTarget(target):
@@ -85,7 +84,6 @@ func _attackTick():
 # Called by prefab timer
 func _seekTarget():
 	var spr = $Sprite
-#	spr.frame = 1 - spr.frame 
 
 	if not is_instance_valid(attackTarget):
 		attackTarget = null
@@ -134,6 +132,7 @@ func _seekTarget():
 		
 func _destroy():
 #	spawner.mobCounterLabel.sub_mob_count()
+
 	queue_free()
 		
 func _wakeup():
@@ -156,7 +155,8 @@ func _on_EnemyMob_body_entered(body):
 	if not body.is_in_group("enemy"):
 		if body.name == "Player":
 			touchingTarget = true
-			_attackTick()
+			if attackOnBodyEnter:
+				_attackTick()
 
 func _on_EnemyMob_body_exited(body):
 	if not body.is_in_group("enemy"):

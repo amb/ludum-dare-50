@@ -199,6 +199,14 @@ func _generate_new_map(min_range, max_range, iterations):
 		var loc = Vector2(r[0], r[1])
 		var sizex = r[2]
 		var sizey = r[3]
+		
+		# Remove corner tiles
+		tilesGround.set_cell(loc.x, loc.y, -1)
+		tilesGround.set_cell(loc.x+sizex, loc.y, -1)
+		tilesGround.set_cell(loc.x, loc.y+sizey, -1)
+		tilesGround.set_cell(loc.x+sizex, loc.y+sizey, -1)
+		
+		# Create walls
 		for y in range(sizey+1):
 			tilesBlocking.set_cell(loc.x, y+loc.y, 5)
 			tilesBlocking.set_cell(loc.x+sizex, y+loc.y, 5)
@@ -206,6 +214,7 @@ func _generate_new_map(min_range, max_range, iterations):
 			tilesBlocking.set_cell(x+loc.x, loc.y, 5)
 			tilesBlocking.set_cell(x+loc.x, loc.y+sizey, 5)
 			
+		# Create doorways to walls
 		var pokes = [false, false, false, false]
 		for i in range(pokes.size()):
 			pokes[i] = randf() > 0.6

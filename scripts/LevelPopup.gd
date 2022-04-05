@@ -21,6 +21,9 @@ func activate():
 	picked.shuffle()
 	picked = picked.slice(0, 2)
 	
+	print("Modmanager: Activate")
+	print(picked)
+	
 	# Create buttons
 	var total_height = 0.0
 	for m in picked:

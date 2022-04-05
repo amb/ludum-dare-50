@@ -12,7 +12,7 @@ func _timeout():
 
 
 func _ready():
-	TranslationServer.set_locale("fi")
+#	TranslationServer.set_locale("fi")
 	
 	textDump = get_node(textDump)
 	

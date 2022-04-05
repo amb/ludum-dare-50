@@ -8,17 +8,126 @@ func _json_parse(file_loc):
 	var text = file.get_as_text()
 	file.close()
 	mods = JSON.parse(text).result
+	
+func _hardcoded_mods():
+	return {
+		"speed": {
+			"description":"Faster movement",
+			"multiply":1.0,
+			"increase":0.1,
+			"level":0,
+			"max_level":10,
+			"value":1.0
+		},
+		"area": {
+			"description":"Bigger area",
+			"multiply":1.0,
+			"increase":0.1,
+			"level":0,
+			"max_level":10,
+			"value":1.0
+		},
+		"damage": {
+			"description":"Increase damage",
+			"multiply":1.1,
+			"increase":0.1,
+			"level":0,
+			"max_level":10,
+			"value":1.0
+		},
+		"knockback": {
+			"description":"Knockback force",
+			"multiply":1.0,
+			"increase":0.4,
+			"level":0,
+			"max_level":10,
+			"value":1.0
+		},
+		"cast": {
+			"description":"Lower cast time",
+			"multiply":1.0,
+			"increase":0.4,
+			"level":0,
+			"max_level":10,
+			"value":1.0
+		},
+		"projectiles": {
+			"description":"More projectiles",
+			"multiply":1.0,
+			"increase":1.0,
+			"level":0,
+			"max_level":10,
+			"value":1.0
+		},
+		"duration": {
+			"description":"Longer duration",
+			"multiply":1.0,
+			"increase":0.1,
+			"level":0,
+			"max_level":10,
+			"value":1.0
+		},
+		"pickup": {
+			"description":"Pickup range",
+			"multiply":1.0,
+			"increase":0.4,
+			"level":0,
+			"max_level":10,
+			"value":1.0
+		},
+		"health": {
+			"description":"Health pool",
+			"multiply":1.1,
+			"increase":0.0,
+			"level":0,
+			"max_level":20,
+			"value":1.0
+		},
+		"armor": {
+			"description":"Thicker armor",
+			"multiply":1.0,
+			"increase":1.0,
+			"level":0,
+			"max_level":10,
+			"value":0.0
+		},
+	}
+
+func _get_mods_keys_with_levelups():
+	var res = []
+	for k in mods.keys():
+		if mods[k]["level"] < mods[k]["max_level"]:
+			res.append(k)
+	return res
 
 func _ready():
 	print("Init: Modmanager")
-	mods = {}
-	_json_parse("res://assets/values/mods.json")
+	mods = _hardcoded_mods()
+#	mods = {}
+#	_json_parse("res://assets/values/mods.json")
+
+func getRandomPowerupName():
+	return mods.keys()[randi() % mods.size()]
 
 func getPowerupNames():
 	var res = {}
-	for k in mods.keys():
+	for k in _get_mods_keys_with_levelups():
 		res[k] = mods[k]["description"]
 	return res
 	
+func getActivatedMods():
+	var res = []
+	for k in mods.keys():
+		if mods[k].level > 0:
+			res.append([k, mods[k]])
+	return res
+			
+	
 func powerupMod(name):
 	print("Powerup:", name)
+	var mn = mods[name]
+	# TODO: test mn.level etc
+	if mn["level"] < mn["max_level"]:
+		mn["level"] += 1
+		mn["value"] *= mn["multiply"]
+		mn["value"] += mn["increase"]

@@ -2,10 +2,11 @@ extends KinematicBody2D
 
 var moveTarget : Vector2
 var moving : bool = false
-var moving_keyboard : bool = false
 var movementVector : Vector2 = Vector2.ZERO
+
 var previousLocation : Vector2
 var movePath : Array
+var moving_keyboard : bool = false
 
 var entityAvatar
 
@@ -15,16 +16,16 @@ onready var energy = 100.0
 onready var maxEnergy
 onready var experience = 0.0
 onready var level = 1
-onready var levelCap = 20
+onready var levelCap = 10
+onready var movementSpeed = 0.5
 
 var movementPath : PoolVector2Array
 
-export(float) var movementSpeed
 export(NodePath) var pathFinder
+export(NodePath) var modManager
 export(NodePath) var textDump
 export(NodePath) var levelUpPanel
 export(NodePath) var hpBar
-var audioStreamPlayer
 
 func get_input():
 	movementVector = Vector2.ZERO
@@ -61,23 +62,27 @@ func setMovementDirection(newLoc):
 
 func _update_hp():
 #	textDump.setText("Health", health)
-	hpBar.value = health * 100.0 / maxHealth
+	hpBar.value = max(health, 0.0) * 100.0 / maxHealth
 
 func _ready():
 	entityAvatar = get_node("Hero")
 	textDump = get_node(textDump)
 	levelUpPanel = get_node(levelUpPanel)
 	hpBar = get_node(hpBar)
+	modManager = get_node(modManager)
 	
 	_update_hp()
 
 #	textDump.setText("Energy", energy)
 #	pathFinder = get_node(pathFinder)
 
+func _process(_delta):
+	get_input()
+
+
 func _physics_process(_delta):
 	previousLocation = self.global_position
 	# TODO: keyboard input is sluggy
-	get_input()
 	if moving:
 		var diff = moveTarget - self.position
 		var dlen = diff.length()
@@ -98,19 +103,31 @@ func _physics_process(_delta):
 		move_and_slide(120.0 * movementVector)
 		
 func takeDamage(amount, direction):
-	health -= amount
-	$DamageAS.play()
-	if health < 0.0:
-		health = 0.0
-		SceneChanger.change_scene("res://default.tscn")
-		queue_free()
-	_update_hp()
+	if health > 0:
+		health -= amount
+		if health <= 0:
+			# Death
+			movementSpeed = 0.0
+			$DieAS.play()
+			health = 0.0
+			_update_hp()
+			yield($DieAS, "finished")
+	#		yield(get_tree().create_timer(0.5), "timeout")
+			SceneChanger.change_scene("res://default.tscn")
+			queue_free()
+		else:
+			$DamageAS.play()
+			_update_hp()
 
 func _levelup():
 	level += 1
-	levelCap *= 1.1
+#	levelCap *= 1.1
+	levelCap += 10
 	textDump.setText(tr("Level"), level)
 	levelUpPanel.activate()
+	# After pause return here
+	for i in modManager.getActivatedMods():
+		textDump.setText(i[0].capitalize(), str(i[1].value))
 
 func addExperience(amount):
 #	print("exp:", amount)

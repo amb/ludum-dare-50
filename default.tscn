@@ -1,4 +1,4 @@
-[gd_scene load_steps=96 format=2]
+[gd_scene load_steps=99 format=2]
 
 [ext_resource path="res://scripts/MapGenerator.gd" type="Script" id=1]
 [ext_resource path="res://assets/tiles_map.png" type="Texture" id=2]
@@ -18,6 +18,8 @@
 [ext_resource path="res://prefabs/Enemy.tscn" type="PackedScene" id=16]
 [ext_resource path="res://assets/hp_bar_over.png" type="Texture" id=17]
 [ext_resource path="res://assets/hp_bar_under.png" type="Texture" id=18]
+[ext_resource path="res://Weapon.gd" type="Script" id=19]
+[ext_resource path="res://audio/die.sfxr" type="AudioStream" id=20]
 
 [sub_resource type="ConvexPolygonShape2D" id=31]
 points = PoolVector2Array( 4, 0, 16, 0, 16, 12, 8, 8 )
@@ -203,19 +205,19 @@ polygon = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
 polygon = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
 
 [sub_resource type="ConvexPolygonShape2D" id=6]
-points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
+points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 
 [sub_resource type="ConvexPolygonShape2D" id=7]
-points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
+points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 
 [sub_resource type="ConvexPolygonShape2D" id=8]
-points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
+points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 
 [sub_resource type="ConvexPolygonShape2D" id=9]
 points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
 
 [sub_resource type="ConvexPolygonShape2D" id=10]
-points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
+points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 
 [sub_resource type="ConvexPolygonShape2D" id=11]
 points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
@@ -224,19 +226,19 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
 points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
 
 [sub_resource type="ConvexPolygonShape2D" id=13]
-points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
+points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 
 [sub_resource type="ConvexPolygonShape2D" id=14]
 points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
 
 [sub_resource type="ConvexPolygonShape2D" id=15]
-points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
+points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 
 [sub_resource type="ConvexPolygonShape2D" id=16]
-points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
+points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 
 [sub_resource type="ConvexPolygonShape2D" id=17]
-points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
+points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 
 [sub_resource type="TileSet" id=4]
 0/name = "tiles_map.png 0"
@@ -738,9 +740,11 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
 [sub_resource type="CircleShape2D" id=5]
 radius = 5.0
 
-[sub_resource type="AtlasTexture" id=30]
-atlas = ExtResource( 7 )
-region = Rect2( 112.027, 176.275, 144.147, 79.7552 )
+[sub_resource type="CircleShape2D" id=81]
+radius = 32.0
+
+[sub_resource type="CanvasItemMaterial" id=82]
+blend_mode = 1
 
 [sub_resource type="CircleShape2D" id=80]
 radius = 67.1863
@@ -748,6 +752,15 @@ radius = 67.1863
 [node name="Root" type="Node2D"]
 script = ExtResource( 14 )
 textDump = NodePath("CanvasLayer/Control/Panel/RandomTextContainer")
+
+[node name="ModManager" type="Node2D" parent="."]
+script = ExtResource( 15 )
+
+[node name="MapGenerator" type="Node2D" parent="."]
+script = ExtResource( 1 )
+tilesBase = NodePath("../Tiles Base")
+tilesGround = NodePath("../Tiles Ground")
+tilesBlocking = NodePath("../YSort/Tiles Blocking")
 
 [node name="Tiles Base" type="TileMap" parent="." groups=["world"]]
 tile_set = SubResource( 4 )
@@ -764,26 +777,19 @@ collision_mask = 63
 format = 1
 tile_data = PoolIntArray( 1114121, 4, 0, 1114122, 4, 0, 1114123, 4, 0, 1114124, 4, 0, 1179653, 4, 0, 1179654, 4, 0, 1179657, 4, 0, 1179658, 4, 0, 1179659, 4, 0, 1179660, 4, 0, 1179661, 4, 0, 1179662, 4, 0, 1179663, 4, 0, 1245188, 4, 0, 1245189, 4, 0, 1245190, 4, 0, 1245191, 4, 0, 1245192, 4, 0, 1245193, 4, 0, 1245194, 4, 0, 1245195, 4, 0, 1245196, 4, 0, 1310724, 4, 0, 1310727, 4, 0, 1310728, 4, 0, 1310729, 4, 0, 1310730, 4, 0, 1310731, 4, 0, 1376264, 4, 0, 1376265, 4, 0, 1376266, 4, 0, 1376267, 4, 0, 1441800, 4, 0, 1441801, 4, 0, 1441802, 4, 0, 1441803, 4, 0, 1507333, 4, 0, 1507335, 4, 0, 1507336, 4, 0, 1507337, 4, 0, 1507338, 4, 0, 1507339, 4, 0, 1572869, 4, 0, 1572870, 4, 0, 1572871, 4, 0, 1572872, 4, 0, 1572873, 4, 0, 1572874, 4, 0, 1638405, 4, 0, 1638406, 4, 0, 1638407, 4, 0, 1638408, 4, 0, 1638409, 4, 0, 1703942, 4, 0, 1703943, 4, 0, 1703944, 4, 0, 1769478, 4, 0, 1769479, 4, 0, 1769480, 4, 0, 1835014, 4, 0, 1835015, 4, 0, 1835016, 4, 0 )
 
-[node name="Tiles Blocking" type="TileMap" parent="." groups=["world"]]
+[node name="YSort" type="YSort" parent="."]
+
+[node name="Tiles Blocking" type="TileMap" parent="YSort" groups=["world"]]
 tile_set = SubResource( 4 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
+cell_tile_origin = 2
+cell_y_sort = true
 show_collision = true
 collision_layer = 4
 collision_mask = 63
 format = 1
 tile_data = PoolIntArray( 1048585, 5, 0, 1048586, 5, 1, 1048587, 5, 1, 1048588, 5, 2, 1114116, 5, 0, 1114117, 5, 1, 1114118, 5, 2, 1114121, 5, 65538, 1114124, 5, 131072, 1114125, 5, 1, 1114126, 5, 1, 1114127, 5, 131075, 1179652, 5, 65538, 1179654, 5, 131072, 1179655, 5, 1, 1179656, 5, 1, 1179657, 5, 131074, 1245188, 5, 65538, 1245196, 5, 0, 1245197, 5, 1, 1245198, 5, 1, 1245199, 5, 131075, 1310724, 5, 131072, 1310725, 5, 1, 1310726, 5, 1, 1310727, 5, 2, 1310732, 5, 65538, 1376263, 5, 65538, 1376268, 5, 65538, 1441799, 5, 65538, 1441803, 5, 0, 1441804, 5, 131074, 1507332, 5, 0, 1507333, 5, 1, 1507334, 5, 1, 1507335, 5, 131074, 1507339, 5, 65538, 1572868, 5, 65538, 1572874, 5, 0, 1572875, 5, 131074, 1638404, 5, 65538, 1638410, 5, 65538, 1703940, 5, 131072, 1703941, 5, 1, 1703942, 5, 2, 1703944, 5, 0, 1703945, 5, 1, 1703946, 5, 131074, 1769478, 5, 65538, 1769480, 5, 65538, 1835014, 5, 65539, 1835016, 5, 65539 )
-
-[node name="ModManager" type="Node2D" parent="."]
-script = ExtResource( 15 )
-
-[node name="MapGenerator" type="Node2D" parent="."]
-script = ExtResource( 1 )
-tilesBase = NodePath("../Tiles Base")
-tilesGround = NodePath("../Tiles Ground")
-tilesBlocking = NodePath("../Tiles Blocking")
-
-[node name="YSort" type="YSort" parent="."]
 
 [node name="SimpleSpawner" type="Node2D" parent="YSort"]
 position = Vector2( 19, 9 )
@@ -796,7 +802,7 @@ tracking = NodePath("../Player")
 [node name="Player" type="KinematicBody2D" parent="YSort"]
 collision_mask = 55
 script = ExtResource( 6 )
-movementSpeed = 0.5
+modManager = NodePath("../../ModManager")
 textDump = NodePath("../../CanvasLayer/Control/Panel/RandomTextContainer")
 levelUpPanel = NodePath("../../CanvasLayer/Control/CenterContainer/LevelPopup")
 hpBar = NodePath("PlayerHPbar")
@@ -815,15 +821,11 @@ hframes = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="YSort/Player"]
 shape = SubResource( 5 )
 
-[node name="Light2D" type="Light2D" parent="YSort/Player"]
-visible = false
-texture = SubResource( 30 )
-texture_scale = 2.0
-mode = 2
-shadow_color = Color( 0, 0, 0, 1 )
-
 [node name="DamageAS" type="AudioStreamPlayer2D" parent="YSort/Player"]
 stream = ExtResource( 10 )
+
+[node name="DieAS" type="AudioStreamPlayer2D" parent="YSort/Player"]
+stream = ExtResource( 20 )
 
 [node name="PlayerHPbar" type="TextureProgress" parent="YSort/Player"]
 anchor_left = 0.5
@@ -831,12 +833,27 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -8.0
-margin_top = 4.0
+margin_top = -24.0
 margin_right = 8.0
-margin_bottom = 8.0
+margin_bottom = -20.0
 value = 50.0
 texture_under = ExtResource( 18 )
 texture_progress = ExtResource( 17 )
+
+[node name="WGarlic" type="Area2D" parent="YSort"]
+collision_layer = 8
+collision_mask = 6
+script = ExtResource( 19 )
+target = NodePath("../Player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSort/WGarlic"]
+shape = SubResource( 81 )
+
+[node name="Sprite" type="Sprite" parent="YSort/WGarlic"]
+visible = false
+modulate = Color( 1, 1, 1, 0.254902 )
+material = SubResource( 82 )
+texture = ExtResource( 7 )
 
 [node name="PlayerGemPickup" type="Area2D" parent="." groups=["player"]]
 script = ExtResource( 11 )
@@ -934,7 +951,6 @@ margin_bottom = 40.0
 max_columns = 2
 
 [node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 
@@ -959,7 +975,6 @@ margin_bottom = -10.0
 self_modulate = Color( 1, 1, 1, 0.501961 )
 margin_right = 120.0
 margin_bottom = 33.0
-rect_clip_content = true
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -972,4 +987,5 @@ margin_right = -10.0
 margin_bottom = -10.0
 script = ExtResource( 12 )
 
+[connection signal="body_entered" from="YSort/WGarlic" to="YSort/WGarlic" method="_on_weapon_body_entered"]
 [connection signal="pressed" from="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer/Generate" to="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer/Generate" method="_on_Generate_pressed"]
