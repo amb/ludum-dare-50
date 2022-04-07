@@ -1,0 +1,33 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=3]
+code = "//shader_type canvas_item;
+//
+//render_mode blend_mix;
+//uniform float fattyness = 2.0;
+//
+//void fragment() {
+//	vec2 ruv = UV - vec2(0.5, 0.5);
+//	vec2 dir = normalize(ruv);
+//	float len = length(ruv);
+//
+//	len = pow(len * 2.0, fattyness) * 0.5;
+//	ruv = len * dir;
+//
+//	vec4 col = texture(TEXTURE, ruv + vec2(0.5, 0.5));
+//
+//	COLOR = col;
+//}
+
+shader_type canvas_item;
+
+render_mode blend_mix;
+uniform vec4 modulate: hint_color;
+
+void fragment() {
+	COLOR = vec4(modulate.rgb * modulate.a + texture(TEXTURE, UV).rgb * (1.0 - modulate.a), texture(TEXTURE, UV).a);
+}"
+
+[resource]
+shader = SubResource( 3 )
+shader_param/modulate = Color( 1, 1, 1, 1 )
