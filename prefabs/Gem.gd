@@ -23,8 +23,9 @@ func _player_pickup(target):
 			target, "global_position", 0.5, \
 			Tween.TRANS_LINEAR, Tween.EASE_OUT)
 		tween.start()
-		
 		yield(tween, "tween_completed")
+		tween.remove_all()
+		
 		$Gemsprite.visible = false
 		$GemPickupAS.play()
 		yield($GemPickupAS, "finished")
@@ -49,7 +50,7 @@ func _on_Gem_area_entered(area):
 		
 	# Gem picked up by player when close enough
 	if area.is_in_group("player"):
-		_player_pickup(area.target)
+		_player_pickup($"../Player")
 		
 	
 

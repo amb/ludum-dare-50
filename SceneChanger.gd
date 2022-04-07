@@ -9,7 +9,7 @@ func change_scene(path, delay = 0.5):
 	animation_player.play_backwards("FadeIn")
 	yield(animation_player, "animation_finished")
 	get_node("/root/Root").free()
-	get_tree().change_scene(path)
+	assert (get_tree().change_scene(path) == OK)
 	animation_player.play("FadeIn")
 	yield(animation_player, "animation_finished")
 #	$Control/FadeOutCircle.visible = false

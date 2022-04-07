@@ -7,6 +7,9 @@ export(NodePath) var tilesBlocking
 var mapSize = 128
 var mapHalfSize = 64
 
+var mapUpdateTick
+var cellsNextToWater
+
 func _fill_tiles_grid(tmap, tile_id, tiles):
 	for x in range(1, mapSize-1):
 		for y in range(1, mapSize-1):
@@ -35,7 +38,7 @@ func _get_cell_neighbours(tmap, x, y):
 func _cell_dynamics(tmap, range_a, range_b, tile_id, iterations):
 #	var used_cells = tmap.get_used_cells()
 #	print("cd:", " min:", range_a, " max:", range_b, " it:", iterations)
-	for it in range(iterations):
+	for _it in range(iterations):
 		var new_cells = {}
 		for x in range(mapSize):
 			for y in range(mapSize):
@@ -64,9 +67,9 @@ func _center_distance_grid(pw):
 	
 func _grid_with_value(v):
 	var vals = []
-	for y in range(mapSize):
+	for _y in range(mapSize):
 		vals.append([])
-		for x in range(mapSize):
+		for _x in range(mapSize):
 			vals[-1].append(v)
 	return vals
 			
@@ -88,7 +91,7 @@ func _add_rooms(tmap, blocking_grid):
 	var new_tiles = _grid_with_value(false)
 	var rooms = []
 	var found_rooms = 0
-	for tr in range(50):
+	for _tr in range(50):
 		var sizex = (randi() % 4) * 2 + 5
 		var sizey = (randi() % 4) * 2 + 5
 		
@@ -148,7 +151,6 @@ func _remove_with_grid(tmap, tile_id, bgrid):
 func _autotile_walls(bmap, gmap, x, y):
 	var nb = _get_cell_neighbours(gmap, x, y)
 	var tt = gmap.get_cell(x, y)
-	var pos = Vector2(x, y)
 	
 	# Right wall
 	if (nb[2] != 5 and tt == 5):
@@ -192,7 +194,7 @@ func _generate_new_map(min_range, max_range, iterations):
 	var bgrid = _get_blocking_grid(tilesGround, 0)
 	bgrid[mapHalfSize][mapHalfSize] = true
 	var res = _add_rooms(tilesGround, bgrid)
-	var new_tiles = res[0]
+	var _new_tiles = res[0]
 	var new_rooms = res[1]
 	
 	for r in new_rooms:
@@ -264,6 +266,44 @@ func _ready():
 	
 	print("Run: Map generator")
 	_generate_new_map(3, 4, 2)
+
+	mapUpdateTick = Timer.new()
+	mapUpdateTick.autostart = true
+	mapUpdateTick.wait_time = 0.2
+	mapUpdateTick.connect("timeout", self, "_map_update_tick")
+	add_child(mapUpdateTick)
+	
+	# Get water and land border tiles
+	cellsNextToWater = {}
+	for x in range(mapSize):
+		for y in range(mapSize):
+			var nb = _get_cell_neighbours(tilesGround, x, y)
+			# water = 0
+			if tilesGround.get_cell(x, y) != 0 and (nb[0] == 0 or nb[2] == 0 or nb[4] == 0 or nb[6] == 0):
+				cellsNextToWater[Vector2(x, y)] = true
+				
+	
+func _map_update_tick():
+	if cellsNextToWater.size() > 0:
+		# Get random key and fill with water
+		var kk = cellsNextToWater.keys()[randi() % cellsNextToWater.size()]
+		tilesGround.set_cell(kk.x, kk.y, 0)
+		tilesBlocking.set_cell(kk.x, kk.y, -1)
+		cellsNextToWater.erase(kk)
+		
+		if cellsNextToWater.size() == 0:
+			print("Level is filled with water")
+		
+		var locs = [Vector2(-1,0),Vector2(1,0),Vector2(0,-1),Vector2(0,1)]
+		for l in locs:
+			# Not water, add it to next to fill dictionary
+			if tilesGround.get_cell(kk.x+l.x, kk.y+l.y) != 0:
+				cellsNextToWater[Vector2(kk.x+l.x, kk.y+l.y)] = true
+		tilesGround.update_bitmask_region(Vector2(kk.x-1, kk.y-1), Vector2(kk.x+1, kk.y+1))
+	else:
+		# Level is now full of water
+		pass
+		
 
 func create_new_map(min_range, max_range, iterations):
 	_generate_new_map(min_range, max_range, iterations)

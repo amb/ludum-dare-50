@@ -19,6 +19,8 @@ onready var level = 1
 onready var levelCap = 10
 onready var movementSpeed = 0.5
 
+onready var inWater = false
+
 var movementPath : PoolVector2Array
 
 export(NodePath) var pathFinder
@@ -72,11 +74,15 @@ func _ready():
 	modManager = get_node(modManager)
 	
 	_update_hp()
+	
+	AssetLoader.spawnWeapon("garlic", self)
 
 #	textDump.setText("Energy", energy)
 #	pathFinder = get_node(pathFinder)
 
-func _process(_delta):
+func _process(delta):
+	if inWater:
+		takeDamage(10.0 * delta, Vector2(0, 0), false)
 	get_input()
 
 func _physics_process(_delta):
@@ -101,22 +107,24 @@ func _physics_process(_delta):
 		moving = false
 		move_and_slide(120.0 * movementVector)
 		
-func takeDamage(amount, direction):
+func _death():
+	# Death
+	movementSpeed = 0.0
+	$DieAS.play()
+	health = 0.0
+	hpBar.visible = false
+	yield($DieAS, "finished")
+	SceneChanger.change_scene("res://default.tscn")
+	queue_free()
+	
+func takeDamage(amount, _direction, playsound=true):
 	if health > 0:
 		health -= amount
 		if health <= 0:
-			# Death
-			movementSpeed = 0.0
-			
-			$DieAS.play()
-			health = 0.0
-			hpBar.visible = false
-			yield($DieAS, "finished")
-	#		yield(get_tree().create_timer(0.5), "timeout")
-			SceneChanger.change_scene("res://default.tscn")
-			queue_free()
+			_death()
 		else:
-			$DamageAS.play()
+			if playsound:
+				$DamageAS.play()
 			_update_hp()
 
 func _levelup():
@@ -137,3 +145,14 @@ func addExperience(amount):
 	if experience > levelCap:
 		experience = 0
 		_levelup()
+
+func _on_Area2D_body_entered(body):
+	# Water Area2D entered
+	if body.name != "Player":
+		inWater = true
+		movementSpeed *= 0.5
+
+func _on_Area2D_body_exited(body):
+	if body.name != "Player":
+		inWater = false
+		movementSpeed *= 2.0

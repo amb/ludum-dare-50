@@ -1,23 +1,20 @@
-[gd_scene load_steps=96 format=2]
+[gd_scene load_steps=94 format=2]
 
 [ext_resource path="res://scripts/MapGenerator.gd" type="Script" id=1]
 [ext_resource path="res://assets/tiles_map.png" type="Texture" id=2]
 [ext_resource path="res://assets/floor_shadow.png" type="Texture" id=3]
 [ext_resource path="res://scripts/ButtonGenerate.gd" type="Script" id=4]
-[ext_resource path="res://scripts/TrackTarget.gd" type="Script" id=5]
 [ext_resource path="res://scripts/Player.gd" type="Script" id=6]
 [ext_resource path="res://assets/hero.png" type="Texture" id=7]
 [ext_resource path="res://assets/hp_bar_under.png" type="Texture" id=8]
 [ext_resource path="res://scripts/SimpleSpawner.gd" type="Script" id=9]
 [ext_resource path="res://audio/hit.sfxr" type="AudioStream" id=10]
-[ext_resource path="res://scripts/Follower.gd" type="Script" id=11]
 [ext_resource path="res://scripts/RandomTextContainer.gd" type="Script" id=12]
 [ext_resource path="res://scripts/LevelPopup.gd" type="Script" id=13]
 [ext_resource path="res://scripts/Root.gd" type="Script" id=14]
 [ext_resource path="res://scripts/ModManager.gd" type="Script" id=15]
 [ext_resource path="res://prefabs/Enemy.tscn" type="PackedScene" id=16]
 [ext_resource path="res://assets/hp_bar_over.png" type="Texture" id=17]
-[ext_resource path="res://Weapon.gd" type="Script" id=19]
 [ext_resource path="res://audio/die.sfxr" type="AudioStream" id=20]
 
 [sub_resource type="ConvexPolygonShape2D" id=31]
@@ -739,10 +736,14 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 [sub_resource type="CircleShape2D" id=5]
 radius = 5.0
 
+[sub_resource type="CircleShape2D" id=81]
+radius = 3.16228
+
 [sub_resource type="CircleShape2D" id=80]
 radius = 24.0
 
 [node name="Root" type="Node2D"]
+position = Vector2( 7, 2 )
 script = ExtResource( 14 )
 textDump = NodePath("CanvasLayer/Control/PanelContainer/RandomTextContainer")
 
@@ -768,7 +769,7 @@ tile_set = SubResource( 4 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
 collision_layer = 4
-collision_mask = 63
+collision_mask = 62
 format = 1
 tile_data = PoolIntArray( 1114121, 4, 0, 1114122, 4, 0, 1114123, 4, 0, 1114124, 4, 0, 1179653, 4, 0, 1179654, 4, 0, 1179657, 4, 0, 1179658, 4, 0, 1179659, 4, 0, 1179660, 4, 0, 1179661, 4, 0, 1179662, 4, 0, 1179663, 4, 0, 1245188, 4, 0, 1245189, 4, 0, 1245190, 4, 0, 1245191, 4, 0, 1245192, 4, 0, 1245193, 4, 0, 1245194, 4, 0, 1245195, 4, 0, 1245196, 4, 0, 1310724, 4, 0, 1310727, 4, 0, 1310728, 4, 0, 1310729, 4, 0, 1310730, 4, 0, 1310731, 4, 0, 1376264, 4, 0, 1376265, 4, 0, 1376266, 4, 0, 1376267, 4, 0, 1441800, 4, 0, 1441801, 4, 0, 1441802, 4, 0, 1441803, 4, 0, 1507333, 4, 0, 1507335, 4, 0, 1507336, 4, 0, 1507337, 4, 0, 1507338, 4, 0, 1507339, 4, 0, 1572869, 4, 0, 1572870, 4, 0, 1572871, 4, 0, 1572872, 4, 0, 1572873, 4, 0, 1572874, 4, 0, 1638405, 4, 0, 1638406, 4, 0, 1638407, 4, 0, 1638408, 4, 0, 1638409, 4, 0, 1703942, 4, 0, 1703943, 4, 0, 1703944, 4, 0, 1769478, 4, 0, 1769479, 4, 0, 1769480, 4, 0, 1835014, 4, 0, 1835015, 4, 0, 1835016, 4, 0 )
 
@@ -796,12 +797,18 @@ isRunning = true
 tracking = NodePath("../Player")
 
 [node name="Player" type="KinematicBody2D" parent="YSort"]
-collision_mask = 55
+collision_mask = 51
 script = ExtResource( 6 )
 modManager = NodePath("../../ModManager")
 textDump = NodePath("../../CanvasLayer/Control/PanelContainer/RandomTextContainer")
 levelUpPanel = NodePath("../../CanvasLayer/Control/CenterContainer/LevelPopup")
 hpBar = NodePath("PlayerHPbar")
+
+[node name="CameraLock" type="RemoteTransform2D" parent="YSort/Player"]
+remote_path = NodePath("../../../Camera2D")
+
+[node name="GemPickup" type="RemoteTransform2D" parent="YSort/Player"]
+remote_path = NodePath("../../../PlayerGemPickup")
 
 [node name="Shadow" type="Sprite" parent="YSort/Player"]
 modulate = Color( 1, 1, 1, 0.376471 )
@@ -836,25 +843,20 @@ value = 50.0
 texture_under = ExtResource( 8 )
 texture_progress = ExtResource( 17 )
 
-[node name="WeaponGeneric" type="Area2D" parent="YSort"]
-collision_layer = 8
-collision_mask = 6
-script = ExtResource( 19 )
-attachment = NodePath("../Player")
+[node name="Area2D" type="Area2D" parent="YSort/Player"]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSort/Player/Area2D"]
+shape = SubResource( 81 )
 
 [node name="PlayerGemPickup" type="Area2D" parent="." groups=["player"]]
-script = ExtResource( 11 )
-target = NodePath("../YSort/Player")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerGemPickup"]
 shape = SubResource( 80 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-scale = Vector2( 1e-05, 1e-05 )
 current = true
 zoom = Vector2( 0.5, 0.5 )
-script = ExtResource( 5 )
-trackTarget = NodePath("../YSort/Player")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 pause_mode = 2
@@ -949,8 +951,9 @@ margin_bottom = 14.0
 [node name="RandomTextContainer" type="VBoxContainer" parent="CanvasLayer/Control/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 7.0
-margin_bottom = 7.0
+margin_right = 57.0
+margin_bottom = 21.0
+rect_min_size = Vector2( 50, 14 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 12 )
@@ -1021,5 +1024,6 @@ margin_right = 33.0
 margin_bottom = 33.0
 rect_scale = Vector2( 0.5, 0.5 )
 
-[connection signal="body_entered" from="YSort/WeaponGeneric" to="YSort/WeaponGeneric" method="_on_weapon_body_entered"]
+[connection signal="body_entered" from="YSort/Player/Area2D" to="YSort/Player" method="_on_Area2D_body_entered"]
+[connection signal="body_exited" from="YSort/Player/Area2D" to="YSort/Player" method="_on_Area2D_body_exited"]
 [connection signal="pressed" from="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer/Generate" to="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer/Generate" method="_on_Generate_pressed"]

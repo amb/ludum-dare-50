@@ -27,28 +27,31 @@ export(PackedScene) var lootDrop
 
 var currentMaterial
 
+func _death():
+	set_deferred("disabled", true)
+	$CollisionShape2D.set_deferred("disabled", true)
+	
+	# Spawn loots
+	var ni = lootDrop.instance()
+	ni.position.x = global_position.x
+	ni.position.y = global_position.y
+	get_parent().add_child(ni)
+	
+#		$Sprite.visible = false
+#		$Shadow.visible = false
+#
+	$DieAS.play()
+	yield($DieAS, "finished")
+	yield(get_tree().create_timer(0.1), "timeout")
+
+	_destroy()
+
 func takeDamage(amount):
 #	rootNode.emit_signal("spawn_damage_number", amount, global_position)
 	health -= amount
 	$Sprite.set_material(currentMaterial)
 	if health <= 0.0:
-		set_deferred("disabled", true)
-		$CollisionShape2D.set_deferred("disabled", true)
-		
-		# Spawn loots
-		var ni = lootDrop.instance()
-		ni.position.x = global_position.x
-		ni.position.y = global_position.y
-		get_parent().add_child(ni)
-		
-#		$Sprite.visible = false
-#		$Shadow.visible = false
-#
-		$DieAS.play()
-		yield($DieAS, "finished")
-		yield(get_tree().create_timer(0.1), "timeout")
-
-		_destroy()
+		_death()
 	else:
 		# Got hit animation
 		yield(get_tree().create_timer(0.1), "timeout")
@@ -181,3 +184,8 @@ func _on_EnemyMob_body_exited(body):
 		if body.name == "Player":
 			touchingTarget = false
 
+func _on_Area2D_body_entered(body):
+	# Drowning
+	if not body.is_in_group("enemy"):
+		_death()
+		
