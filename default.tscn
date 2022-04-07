@@ -6,7 +6,7 @@
 [ext_resource path="res://scripts/ButtonGenerate.gd" type="Script" id=4]
 [ext_resource path="res://scripts/TrackTarget.gd" type="Script" id=5]
 [ext_resource path="res://scripts/Player.gd" type="Script" id=6]
-[ext_resource path="res://assets/light_source.png" type="Texture" id=7]
+[ext_resource path="res://assets/frame16.png" type="Texture" id=7]
 [ext_resource path="res://assets/floor_shadow.png" type="Texture" id=8]
 [ext_resource path="res://scripts/SimpleSpawner.gd" type="Script" id=9]
 [ext_resource path="res://audio/hit.sfxr" type="AudioStream" id=10]
@@ -20,6 +20,8 @@
 [ext_resource path="res://assets/hp_bar_under.png" type="Texture" id=18]
 [ext_resource path="res://Weapon.gd" type="Script" id=19]
 [ext_resource path="res://audio/die.sfxr" type="AudioStream" id=20]
+[ext_resource path="res://assets/pixel_icons/22_3.tga.png" type="Texture" id=21]
+[ext_resource path="res://assets/pixel_icons/11.tga.png" type="Texture" id=22]
 
 [sub_resource type="ConvexPolygonShape2D" id=31]
 points = PoolVector2Array( 4, 0, 16, 0, 16, 12, 8, 8 )
@@ -740,18 +742,12 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 [sub_resource type="CircleShape2D" id=5]
 radius = 5.0
 
-[sub_resource type="CircleShape2D" id=81]
-radius = 32.0
-
-[sub_resource type="CanvasItemMaterial" id=82]
-blend_mode = 1
-
 [sub_resource type="CircleShape2D" id=80]
-radius = 67.1863
+radius = 24.0
 
 [node name="Root" type="Node2D"]
 script = ExtResource( 14 )
-textDump = NodePath("CanvasLayer/Control/Panel/RandomTextContainer")
+textDump = NodePath("CanvasLayer/Control/PanelContainer/RandomTextContainer")
 
 [node name="ModManager" type="Node2D" parent="."]
 script = ExtResource( 15 )
@@ -763,12 +759,14 @@ tilesGround = NodePath("../Tiles Ground")
 tilesBlocking = NodePath("../YSort/Tiles Blocking")
 
 [node name="Tiles Base" type="TileMap" parent="." groups=["world"]]
+z_index = -100
 tile_set = SubResource( 4 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
 format = 1
 
 [node name="Tiles Ground" type="TileMap" parent="." groups=["world"]]
+z_index = -100
 tile_set = SubResource( 4 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
@@ -780,6 +778,7 @@ tile_data = PoolIntArray( 1114121, 4, 0, 1114122, 4, 0, 1114123, 4, 0, 1114124, 
 [node name="YSort" type="YSort" parent="."]
 
 [node name="Tiles Blocking" type="TileMap" parent="YSort" groups=["world"]]
+z_index = -100
 tile_set = SubResource( 4 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
@@ -803,7 +802,7 @@ tracking = NodePath("../Player")
 collision_mask = 55
 script = ExtResource( 6 )
 modManager = NodePath("../../ModManager")
-textDump = NodePath("../../CanvasLayer/Control/Panel/RandomTextContainer")
+textDump = NodePath("../../CanvasLayer/Control/PanelContainer/RandomTextContainer")
 levelUpPanel = NodePath("../../CanvasLayer/Control/CenterContainer/LevelPopup")
 hpBar = NodePath("PlayerHPbar")
 
@@ -840,20 +839,11 @@ value = 50.0
 texture_under = ExtResource( 18 )
 texture_progress = ExtResource( 17 )
 
-[node name="WGarlic" type="Area2D" parent="YSort"]
+[node name="WeaponGeneric" type="Area2D" parent="YSort"]
 collision_layer = 8
 collision_mask = 6
 script = ExtResource( 19 )
-target = NodePath("../Player")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="YSort/WGarlic"]
-shape = SubResource( 81 )
-
-[node name="Sprite" type="Sprite" parent="YSort/WGarlic"]
-visible = false
-modulate = Color( 1, 1, 1, 0.254902 )
-material = SubResource( 82 )
-texture = ExtResource( 7 )
+attachment = NodePath("../Player")
 
 [node name="PlayerGemPickup" type="Area2D" parent="." groups=["player"]]
 script = ExtResource( 11 )
@@ -880,7 +870,7 @@ anchor_bottom = 1.0
 visible = false
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_top = -272.0
+margin_top = -90.0
 margin_right = 135.0
 
 [node name="Panel2" type="Panel" parent="CanvasLayer/Control/HBoxContainer"]
@@ -934,22 +924,6 @@ text = "Engage"
 script = ExtResource( 4 )
 mapGenerator = NodePath("../../../../../../MapGenerator")
 
-[node name="MiddlePanel" type="Panel" parent="CanvasLayer/Control"]
-visible = false
-modulate = Color( 1, 1, 1, 0.501961 )
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -183.0
-margin_top = -174.0
-margin_right = 183.0
-
-[node name="ItemList" type="ItemList" parent="CanvasLayer/Control/MiddlePanel"]
-margin_right = 40.0
-margin_bottom = 40.0
-max_columns = 2
-
 [node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -971,21 +945,91 @@ margin_top = 10.0
 margin_right = -10.0
 margin_bottom = -10.0
 
-[node name="Panel" type="Panel" parent="CanvasLayer/Control"]
-self_modulate = Color( 1, 1, 1, 0.501961 )
-margin_right = 120.0
-margin_bottom = 33.0
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Control"]
+margin_right = 14.0
+margin_bottom = 14.0
+
+[node name="RandomTextContainer" type="VBoxContainer" parent="CanvasLayer/Control/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 7.0
+margin_bottom = 7.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="RandomTextContainer" type="VBoxContainer" parent="CanvasLayer/Control/Panel"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 10.0
-margin_top = 10.0
-margin_right = -10.0
-margin_bottom = -10.0
 script = ExtResource( 12 )
 
-[connection signal="body_entered" from="YSort/WGarlic" to="YSort/WGarlic" method="_on_weapon_body_entered"]
+[node name="WeaponsBar" type="PanelContainer" parent="CanvasLayer/Control"]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -176.0
+margin_top = -72.0
+margin_bottom = -40.0
+rect_scale = Vector2( 2, 2 )
+size_flags_vertical = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/WeaponsBar"]
+margin_left = 49.0
+margin_top = 7.0
+margin_right = 127.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+custom_constants/separation = 2
+
+[node name="WeaponSlot1frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer"]
+margin_right = 18.0
+margin_bottom = 18.0
+texture = ExtResource( 7 )
+
+[node name="WeaponSlot1icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/WeaponSlot1frame"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 33.0
+margin_bottom = 33.0
+rect_scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 22 )
+
+[node name="WeaponSlot2frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer"]
+margin_left = 20.0
+margin_right = 38.0
+margin_bottom = 18.0
+texture = ExtResource( 7 )
+
+[node name="WeaponSlot2icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/WeaponSlot2frame"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 33.0
+margin_bottom = 33.0
+rect_scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 21 )
+
+[node name="TextureRect3frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer"]
+margin_left = 40.0
+margin_right = 58.0
+margin_bottom = 18.0
+texture = ExtResource( 7 )
+
+[node name="WeaponSlot3icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/TextureRect3frame"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 33.0
+margin_bottom = 33.0
+rect_scale = Vector2( 0.5, 0.5 )
+
+[node name="TextureRect4frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer"]
+margin_left = 60.0
+margin_right = 78.0
+margin_bottom = 18.0
+texture = ExtResource( 7 )
+
+[node name="WeaponSlot4icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/TextureRect4frame"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 33.0
+margin_bottom = 33.0
+rect_scale = Vector2( 0.5, 0.5 )
+
+[connection signal="body_entered" from="YSort/WeaponGeneric" to="YSort/WeaponGeneric" method="_on_weapon_body_entered"]
 [connection signal="pressed" from="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer/Generate" to="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer/Generate" method="_on_Generate_pressed"]

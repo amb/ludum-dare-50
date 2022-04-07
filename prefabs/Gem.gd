@@ -10,23 +10,25 @@ func _ready():
 #	playerPickup = false
 	add_to_group("gem")
 	
-func _disable_collision():
-	$CollisionShape2D.set_deferred("disabled", true)
-
 func _player_pickup(target):
 #	playerPickup = true
 	if is_instance_valid(target):
 		target.addExperience(myExp)
 		
-		$AudioStreamPlayer2D.play()
-		_disable_collision()
+		$CollisionShape2D.set_deferred("disabled", true)
 		$Shadow.set_deferred("disabled", true)
 		
 		var tween = get_node("Tween")
 		tween.follow_property(self, "global_position", self.global_position, \
 			target, "global_position", 0.5, \
-			Tween.TRANS_LINEAR, Tween.EASE_IN)
+			Tween.TRANS_LINEAR, Tween.EASE_OUT)
 		tween.start()
+		
+		yield(tween, "tween_completed")
+		$Gemsprite.visible = false
+		$GemPickupAS.play()
+		yield($GemPickupAS, "finished")
+		queue_free()
 
 func _on_Gem_body_entered(body):
 	if body.name == "Player":
@@ -38,9 +40,6 @@ func _on_Gem_body_entered(body):
 
 func addExp(amount):
 	myExp += amount
-
-func _on_Tween_tween_all_completed():
-	queue_free()
 
 func _on_Gem_area_entered(area):
 	# Collect nearby gems into one

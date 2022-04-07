@@ -238,13 +238,11 @@ func _generate_new_map(min_range, max_range, iterations):
 #	_fill_tiles_grid(tilesBlocking, 5, new_tiles)
 	_update_tilemap(tilesBlocking)
 
-
 	# Fill empty space with vegetation
 	var probg = _grid_with_value(0.4)
 	_probability_tile_fill(tilesGround, 2, probg)
-	_remove_with_grid(tilesGround, 2, bgrid)
 	_cell_dynamics(tilesGround, 3, 4, 2, 2)
-#	_remove_with_grid(tilesGround, 2, bgrid)
+	_remove_with_grid(tilesGround, 2, bgrid)
 
 	_update_tilemap(tilesGround)
 	

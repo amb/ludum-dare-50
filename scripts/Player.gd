@@ -79,7 +79,6 @@ func _ready():
 func _process(_delta):
 	get_input()
 
-
 func _physics_process(_delta):
 	previousLocation = self.global_position
 	# TODO: keyboard input is sluggy
@@ -108,9 +107,10 @@ func takeDamage(amount, direction):
 		if health <= 0:
 			# Death
 			movementSpeed = 0.0
+			
 			$DieAS.play()
 			health = 0.0
-			_update_hp()
+			hpBar.visible = false
 			yield($DieAS, "finished")
 	#		yield(get_tree().create_timer(0.5), "timeout")
 			SceneChanger.change_scene("res://default.tscn")
@@ -125,6 +125,7 @@ func _levelup():
 	levelCap += 10
 	textDump.setText(tr("Level"), level)
 	levelUpPanel.activate()
+	yield(levelUpPanel, "panelFinished")
 	# After pause return here
 	for i in modManager.getActivatedMods():
 		textDump.setText(i[0].capitalize(), str(i[1].value))

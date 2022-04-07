@@ -3,6 +3,8 @@ extends Panel
 var powerups = {}
 export(NodePath) var modManager
 
+signal panelFinished
+
 func _ready():
 	modManager = get_node(modManager)
 	visible = false
@@ -44,6 +46,7 @@ func _deactivate():
 		child.queue_free()
 	get_tree().paused = false
 	visible = false
+	emit_signal("panelFinished")
 	
 func _input(ev):
 	if visible:

@@ -7,6 +7,7 @@ var previousPosition : Vector2
 var movementVector = Vector2()
 var movementMinDistance = 10.0
 var movementForce = 100.0
+var health = 12.0
 
 var entityAvatar
 var sleepTimer : float = 0.0
@@ -18,28 +19,41 @@ var seekTimer
 var attackTick
 var attackOnBodyEnter : bool = true
 
-var health = 12.0
-
-var rng = RandomNumberGenerator.new()
-
 var rootNode
 
 const TERRAIN_ID = 2
 
 export(PackedScene) var lootDrop
 
+var currentMaterial
+
 func takeDamage(amount):
 #	rootNode.emit_signal("spawn_damage_number", amount, global_position)
 	health -= amount
+	$Sprite.set_material(currentMaterial)
 	if health <= 0.0:
 		set_deferred("disabled", true)
+		$CollisionShape2D.set_deferred("disabled", true)
 		
 		# Spawn loots
 		var ni = lootDrop.instance()
 		ni.position.x = global_position.x
 		ni.position.y = global_position.y
 		get_parent().add_child(ni)
+		
+#		$Sprite.visible = false
+#		$Shadow.visible = false
+#
+		$DieAS.play()
+		yield($DieAS, "finished")
+		yield(get_tree().create_timer(0.1), "timeout")
+
 		_destroy()
+	else:
+		# Got hit animation
+		yield(get_tree().create_timer(0.1), "timeout")
+		$Sprite.set_material(null)
+	
 
 func setTarget(target):
 	attackTarget = target
@@ -47,7 +61,6 @@ func setTarget(target):
 func _ready():
 	rootNode = get_tree().root.get_child(0)
 	
-	rng.randomize()
 	entityAvatar = get_node("Sprite")
 
 	seekTimer = Timer.new()
@@ -74,6 +87,11 @@ func _ready():
 	else:
 		self.visible = true
 		previousPosition = self.position
+		
+	# Save flash material
+	currentMaterial = $Sprite.get_material()
+	$Sprite.set_material(null)
+	
 
 func _attackTick():
 	if touchingTarget:
