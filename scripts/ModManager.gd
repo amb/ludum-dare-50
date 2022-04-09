@@ -12,7 +12,7 @@ func _json_parse(file_loc):
 func _hardcoded_mods():
 	return {
 		"speed": {
-			"description":"Faster movement",
+			"description":tr("Faster movement"),
 			"multiply":1.0,
 			"increase":0.1,
 			"level":0,
@@ -20,7 +20,7 @@ func _hardcoded_mods():
 			"value":1.0
 		},
 		"area": {
-			"description":"Bigger area",
+			"description":tr("Bigger area"),
 			"multiply":1.0,
 			"increase":0.1,
 			"level":0,
@@ -28,7 +28,7 @@ func _hardcoded_mods():
 			"value":1.0
 		},
 		"damage": {
-			"description":"Increase damage",
+			"description":tr("Increase damage"),
 			"multiply":1.1,
 			"increase":0.1,
 			"level":0,
@@ -36,7 +36,7 @@ func _hardcoded_mods():
 			"value":1.0
 		},
 		"knockback": {
-			"description":"Knockback force",
+			"description":tr("Knockback force"),
 			"multiply":1.0,
 			"increase":0.4,
 			"level":0,
@@ -44,7 +44,7 @@ func _hardcoded_mods():
 			"value":1.0
 		},
 		"cast": {
-			"description":"Lower cast time",
+			"description":tr("Lower cast time"),
 			"multiply":1.0,
 			"increase":0.4,
 			"level":0,
@@ -52,7 +52,7 @@ func _hardcoded_mods():
 			"value":1.0
 		},
 		"projectiles": {
-			"description":"More projectiles",
+			"description":tr("More projectiles"),
 			"multiply":1.0,
 			"increase":1.0,
 			"level":0,
@@ -60,7 +60,7 @@ func _hardcoded_mods():
 			"value":1.0
 		},
 		"duration": {
-			"description":"Longer duration",
+			"description":tr("Longer duration"),
 			"multiply":1.0,
 			"increase":0.1,
 			"level":0,
@@ -68,7 +68,7 @@ func _hardcoded_mods():
 			"value":1.0
 		},
 		"pickup": {
-			"description":"Pickup range",
+			"description":tr("Pickup range"),
 			"multiply":1.0,
 			"increase":0.4,
 			"level":0,
@@ -76,7 +76,7 @@ func _hardcoded_mods():
 			"value":1.0
 		},
 		"health": {
-			"description":"Health pool",
+			"description":tr("Health pool"),
 			"multiply":1.1,
 			"increase":0.0,
 			"level":0,
@@ -84,7 +84,7 @@ func _hardcoded_mods():
 			"value":1.0
 		},
 		"armor": {
-			"description":"Thicker armor",
+			"description":tr("Thicker armor"),
 			"multiply":1.0,
 			"increase":1.0,
 			"level":0,

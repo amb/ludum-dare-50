@@ -56,8 +56,8 @@ config/icon="res://icon.png"
 
 [autoload]
 
-SceneChanger="*res://SceneChanger.tscn"
-AssetLoader="*res://AssetLoader.gd"
+SceneChanger="*res://global/SceneChanger.tscn"
+AssetLoader="*res://global/AssetLoader.gd"
 
 [display]
 

@@ -20,6 +20,7 @@ onready var levelCap = 10
 onready var movementSpeed = 0.5
 
 onready var inWater = false
+var updateTimer
 
 var movementPath : PoolVector2Array
 
@@ -73,6 +74,12 @@ func _ready():
 	hpBar = get_node(hpBar)
 	modManager = get_node(modManager)
 	
+	updateTimer = Timer.new()
+	updateTimer.autostart = true
+	updateTimer.wait_time = 0.2
+	updateTimer.connect("timeout", self, "_updateTick")
+	add_child(updateTimer)
+	
 	_update_hp()
 	
 	AssetLoader.spawnWeapon("garlic", self)
@@ -80,9 +87,14 @@ func _ready():
 #	textDump.setText("Energy", energy)
 #	pathFinder = get_node(pathFinder)
 
+func _updateTick():
+	# This is to fix the occasional bug where running into
+	# water stops the health decrease after not moving
+	move_and_slide(Vector2(randf()-0.5, randf()-0.5))
+
 func _process(delta):
 	if inWater:
-		takeDamage(10.0 * delta, Vector2(0, 0), false)
+		takeDamage(5.0 * delta, Vector2(0, 0), false)
 	get_input()
 
 func _physics_process(_delta):
