@@ -30,6 +30,10 @@ export(NodePath) var textDump
 export(NodePath) var levelUpPanel
 export(NodePath) var hpBar
 
+signal death
+
+#var mainScene = load("res://default.tscn")
+
 func get_input():
 	movementVector = Vector2.ZERO
 	
@@ -126,7 +130,7 @@ func _death():
 	health = 0.0
 	hpBar.visible = false
 	yield($DieAS, "finished")
-	SceneChanger.change_scene("res://default.tscn")
+	emit_signal("death")
 	queue_free()
 	
 func takeDamage(amount, _direction, playsound=true):

@@ -19,11 +19,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/CirclePolygonShape2D.gd"
 }, {
-"base": "",
-"class": "GitAPI",
-"language": "NativeScript",
-"path": "res://addons/godot-git-plugin/git_api.gdns"
-}, {
 "base": "Resource",
 "class": "PolygonShape2D",
 "language": "GDScript",
@@ -42,7 +37,6 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "CapsulePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/CapsulePolygonShape2D.svg",
 "CirclePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/CirclePolygonShape2D.svg",
-"GitAPI": "",
 "PolygonShape2D": "res://addons/CollisionPolygonShape/Icons/PolygonShape2D.svg",
 "RectanglePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/RectanglePolygonShape2D.svg",
 "TrianglePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/TrianglePolygonShape2D.svg"
@@ -51,12 +45,10 @@ _global_script_class_icons={
 [application]
 
 config/name="Survivor Island"
-run/main_scene="res://default.tscn"
-config/icon="res://icon.png"
+run/main_scene="res://global/SceneChanger.tscn"
 
 [autoload]
 
-SceneChanger="*res://global/SceneChanger.tscn"
 AssetLoader="*res://global/AssetLoader.gd"
 
 [display]
@@ -70,7 +62,7 @@ enabled=PoolStringArray( "res://addons/CollisionPolygonShape/plugin.cfg", "res:/
 
 [gdnative]
 
-singletons=[ "res://addons/godot-git-plugin/git_api.gdnlib" ]
+singletons=[  ]
 
 [global]
 

@@ -1,21 +1,21 @@
 [gd_scene load_steps=94 format=2]
 
-[ext_resource path="res://scripts/MapGenerator.gd" type="Script" id=1]
-[ext_resource path="res://assets/tiles_map.png" type="Texture" id=2]
-[ext_resource path="res://assets/floor_shadow.png" type="Texture" id=3]
-[ext_resource path="res://scripts/ButtonGenerate.gd" type="Script" id=4]
-[ext_resource path="res://scripts/Player.gd" type="Script" id=6]
-[ext_resource path="res://assets/hero.png" type="Texture" id=7]
-[ext_resource path="res://assets/hp_bar_under.png" type="Texture" id=8]
-[ext_resource path="res://scripts/SimpleSpawner.gd" type="Script" id=9]
-[ext_resource path="res://audio/hit.sfxr" type="AudioStream" id=10]
-[ext_resource path="res://scripts/RandomTextContainer.gd" type="Script" id=12]
-[ext_resource path="res://scripts/LevelPopup.gd" type="Script" id=13]
-[ext_resource path="res://scripts/Root.gd" type="Script" id=14]
-[ext_resource path="res://scripts/ModManager.gd" type="Script" id=15]
-[ext_resource path="res://prefabs/Enemy.tscn" type="PackedScene" id=16]
-[ext_resource path="res://assets/hp_bar_over.png" type="Texture" id=17]
-[ext_resource path="res://audio/die.sfxr" type="AudioStream" id=20]
+[ext_resource path="res://assets/hp_bar_under.png" type="Texture" id=1]
+[ext_resource path="res://scripts/LevelPopup.gd" type="Script" id=2]
+[ext_resource path="res://scripts/RandomTextContainer.gd" type="Script" id=3]
+[ext_resource path="res://scripts/SimpleSpawner.gd" type="Script" id=4]
+[ext_resource path="res://scripts/Player.gd" type="Script" id=5]
+[ext_resource path="res://scripts/ButtonGenerate.gd" type="Script" id=6]
+[ext_resource path="res://scripts/MapGenerator.gd" type="Script" id=7]
+[ext_resource path="res://prefabs/Enemy.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scripts/ModManager.gd" type="Script" id=9]
+[ext_resource path="res://assets/hero.png" type="Texture" id=10]
+[ext_resource path="res://scripts/Root.gd" type="Script" id=11]
+[ext_resource path="res://assets/tiles_map.png" type="Texture" id=12]
+[ext_resource path="res://audio/die.sfxr" type="AudioStream" id=13]
+[ext_resource path="res://audio/hit.sfxr" type="AudioStream" id=14]
+[ext_resource path="res://assets/hp_bar_over.png" type="Texture" id=15]
+[ext_resource path="res://assets/floor_shadow.png" type="Texture" id=16]
 
 [sub_resource type="ConvexPolygonShape2D" id=31]
 points = PoolVector2Array( 4, 0, 16, 0, 16, 12, 8, 8 )
@@ -238,7 +238,7 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 
 [sub_resource type="TileSet" id=4]
 0/name = "tiles_map.png 0"
-0/texture = ExtResource( 2 )
+0/texture = ExtResource( 12 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
 0/region = Rect2( 0, 48, 128, 112 )
@@ -556,7 +556,7 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 } ]
 0/z_index = 0
 1/name = "tiles_map.png 1"
-1/texture = ExtResource( 2 )
+1/texture = ExtResource( 12 )
 1/tex_offset = Vector2( 0, 0 )
 1/modulate = Color( 1, 1, 1, 1 )
 1/region = Rect2( 0, 0, 16, 16 )
@@ -570,7 +570,7 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 1/shapes = [  ]
 1/z_index = 0
 2/name = "tiles_map.png 2"
-2/texture = ExtResource( 2 )
+2/texture = ExtResource( 12 )
 2/tex_offset = Vector2( 0, 0 )
 2/modulate = Color( 1, 1, 1, 1 )
 2/region = Rect2( 144, 32, 80, 64 )
@@ -593,7 +593,7 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 2/shapes = [  ]
 2/z_index = 0
 3/name = "tiles_map.png 3"
-3/texture = ExtResource( 2 )
+3/texture = ExtResource( 12 )
 3/tex_offset = Vector2( 0, 0 )
 3/modulate = Color( 1, 1, 1, 1 )
 3/region = Rect2( 144, 128, 80, 48 )
@@ -616,7 +616,7 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 3/shapes = [  ]
 3/z_index = 0
 4/name = "tiles_map.png 4"
-4/texture = ExtResource( 2 )
+4/texture = ExtResource( 12 )
 4/tex_offset = Vector2( 0, 0 )
 4/modulate = Color( 1, 1, 1, 1 )
 4/region = Rect2( 128, 128, 16, 48 )
@@ -637,7 +637,7 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 8, 16, 8 )
 4/shapes = [  ]
 4/z_index = 0
 5/name = "tiles_map.png 5"
-5/texture = ExtResource( 2 )
+5/texture = ExtResource( 12 )
 5/tex_offset = Vector2( 0, 0 )
 5/modulate = Color( 1, 1, 1, 1 )
 5/region = Rect2( 0, 192, 64, 48 )
@@ -744,14 +744,15 @@ radius = 24.0
 
 [node name="Root" type="Node2D"]
 position = Vector2( 7, 2 )
-script = ExtResource( 14 )
+script = ExtResource( 11 )
 textDump = NodePath("CanvasLayer/Control/PanelContainer/RandomTextContainer")
+player = NodePath("YSort/Player")
 
 [node name="ModManager" type="Node2D" parent="."]
-script = ExtResource( 15 )
+script = ExtResource( 9 )
 
 [node name="MapGenerator" type="Node2D" parent="."]
-script = ExtResource( 1 )
+script = ExtResource( 7 )
 tilesBase = NodePath("../Tiles Base")
 tilesGround = NodePath("../Tiles Ground")
 tilesBlocking = NodePath("../YSort/Tiles Blocking")
@@ -790,15 +791,15 @@ tile_data = PoolIntArray( 1048585, 5, 0, 1048586, 5, 1, 1048587, 5, 1, 1048588, 
 
 [node name="SimpleSpawner" type="Node2D" parent="YSort"]
 position = Vector2( 19, 9 )
-script = ExtResource( 9 )
-spawnItem = ExtResource( 16 )
+script = ExtResource( 4 )
+spawnItem = ExtResource( 8 )
 timerTick = 0.1
 isRunning = true
 tracking = NodePath("../Player")
 
 [node name="Player" type="KinematicBody2D" parent="YSort"]
 collision_mask = 51
-script = ExtResource( 6 )
+script = ExtResource( 5 )
 modManager = NodePath("../../ModManager")
 textDump = NodePath("../../CanvasLayer/Control/PanelContainer/RandomTextContainer")
 levelUpPanel = NodePath("../../CanvasLayer/Control/CenterContainer/LevelPopup")
@@ -812,23 +813,23 @@ remote_path = NodePath("../../../PlayerGemPickup")
 
 [node name="Shadow" type="Sprite" parent="YSort/Player"]
 modulate = Color( 1, 1, 1, 0.376471 )
-texture = ExtResource( 3 )
+texture = ExtResource( 16 )
 vframes = 2
 frame = 1
 
 [node name="Hero" type="Sprite" parent="YSort/Player"]
 position = Vector2( 0, -7 )
-texture = ExtResource( 7 )
+texture = ExtResource( 10 )
 hframes = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="YSort/Player"]
 shape = SubResource( 5 )
 
 [node name="DamageAS" type="AudioStreamPlayer2D" parent="YSort/Player"]
-stream = ExtResource( 10 )
+stream = ExtResource( 14 )
 
 [node name="DieAS" type="AudioStreamPlayer2D" parent="YSort/Player"]
-stream = ExtResource( 20 )
+stream = ExtResource( 13 )
 
 [node name="PlayerHPbar" type="TextureProgress" parent="YSort/Player"]
 anchor_left = 0.5
@@ -840,8 +841,8 @@ margin_top = -24.0
 margin_right = 8.0
 margin_bottom = -20.0
 value = 50.0
-texture_under = ExtResource( 8 )
-texture_progress = ExtResource( 17 )
+texture_under = ExtResource( 1 )
+texture_progress = ExtResource( 15 )
 
 [node name="WaterKill" type="Area2D" parent="YSort/Player"]
 collision_mask = 4
@@ -920,7 +921,7 @@ margin_bottom = 68.0
 focus_mode = 0
 enabled_focus_mode = 0
 text = "Engage"
-script = ExtResource( 4 )
+script = ExtResource( 6 )
 mapGenerator = NodePath("../../../../../../MapGenerator")
 
 [node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control"]
@@ -933,7 +934,7 @@ margin_top = 280.0
 margin_right = 587.0
 margin_bottom = 320.0
 rect_min_size = Vector2( 150, 40 )
-script = ExtResource( 13 )
+script = ExtResource( 2 )
 modManager = NodePath("../../../../ModManager")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/CenterContainer/LevelPopup"]
@@ -956,7 +957,7 @@ margin_bottom = 21.0
 rect_min_size = Vector2( 50, 14 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 12 )
+script = ExtResource( 3 )
 
 [node name="WeaponsBar" type="PanelContainer" parent="CanvasLayer/Control"]
 self_modulate = Color( 1, 1, 1, 0 )
