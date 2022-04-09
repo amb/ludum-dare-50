@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-04-04 19:03+0300\n"
+"POT-Creation-Date: 2022-04-09 14:12+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: default.tscn:916
+#: default.tscn:922
 msgid "Engage"
 msgstr ""
 
-#: assets/values/mods.json:3
+#: assets/values/mods.json:3 scripts/ModManager.gd:15
 msgid "Faster movement"
 msgstr ""
 
@@ -57,47 +57,47 @@ msgstr ""
 msgid "value"
 msgstr ""
 
-#: assets/values/mods.json:10
+#: assets/values/mods.json:10 scripts/ModManager.gd:23
 msgid "Bigger area"
 msgstr ""
 
-#: assets/values/mods.json:17
+#: assets/values/mods.json:17 scripts/ModManager.gd:31
 msgid "Increase damage"
 msgstr ""
 
-#: assets/values/mods.json:24
+#: assets/values/mods.json:24 scripts/ModManager.gd:39
 msgid "Knockback force"
 msgstr ""
 
-#: assets/values/mods.json:31
+#: assets/values/mods.json:31 scripts/ModManager.gd:47
 msgid "Lower cast time"
 msgstr ""
 
-#: assets/values/mods.json:38
+#: assets/values/mods.json:38 scripts/ModManager.gd:55
 msgid "More projectiles"
 msgstr ""
 
-#: assets/values/mods.json:45
+#: assets/values/mods.json:45 scripts/ModManager.gd:63
 msgid "Longer duration"
 msgstr ""
 
-#: assets/values/mods.json:52
+#: assets/values/mods.json:52 scripts/ModManager.gd:71
 msgid "Pickup range"
 msgstr ""
 
-#: assets/values/mods.json:59
+#: assets/values/mods.json:59 scripts/ModManager.gd:79
 msgid "Health pool"
 msgstr ""
 
-#: assets/values/mods.json:66
+#: assets/values/mods.json:66 scripts/ModManager.gd:87
 msgid "Thicker armor"
 msgstr ""
 
-#: scripts/Player.gd:112
+#: scripts/Player.gd:146
 msgid "Level"
 msgstr ""
 
-#: scripts/Player.gd:117
+#: scripts/Player.gd:155
 msgid "Exp"
 msgstr ""
 
