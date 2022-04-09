@@ -66,7 +66,7 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/CollisionPolygonShape/plugin.cfg", "res://addons/build-and-deploy/plugin.cfg", "res://addons/gdfxr/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/CollisionPolygonShape/plugin.cfg", "res://addons/gdfxr/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg" )
 
 [gdnative]
 
