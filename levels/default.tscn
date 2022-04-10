@@ -793,9 +793,9 @@ tile_data = PoolIntArray( 1048585, 5, 0, 1048586, 5, 1, 1048587, 5, 1, 1048588, 
 position = Vector2( 19, 9 )
 script = ExtResource( 4 )
 spawnItem = ExtResource( 8 )
-timerTick = 0.1
 isRunning = true
 tracking = NodePath("../Player")
+mapSource = NodePath("../../MapGenerator")
 
 [node name="Player" type="KinematicBody2D" parent="YSort"]
 collision_mask = 51

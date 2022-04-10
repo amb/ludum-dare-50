@@ -11,86 +11,87 @@ func _json_parse(file_loc):
 	
 func _hardcoded_mods():
 	return {
-		"speed": {
-			"description":tr("Faster movement"),
-			"multiply":1.0,
-			"increase":0.1,
-			"level":0,
-			"max_level":10,
-			"value":1.0
-		},
+
 		"area": {
 			"description":tr("Bigger area"),
 			"multiply":1.0,
-			"increase":0.1,
+			"increase":0.25,
 			"level":0,
-			"max_level":10,
+			"max_level":4,
 			"value":1.0
 		},
 		"damage": {
 			"description":tr("Increase damage"),
-			"multiply":1.1,
-			"increase":0.1,
+			"multiply":1.0,
+			"increase":0.25,
 			"level":0,
-			"max_level":10,
+			"max_level":4,
 			"value":1.0
 		},
 		"knockback": {
 			"description":tr("Knockback force"),
 			"multiply":1.0,
-			"increase":0.4,
+			"increase":0.25,
 			"level":0,
-			"max_level":10,
+			"max_level":4,
 			"value":1.0
 		},
 		"cast": {
 			"description":tr("Lower cast time"),
 			"multiply":1.0,
-			"increase":0.4,
+			"increase":0.5,
 			"level":0,
-			"max_level":10,
+			"max_level":4,
 			"value":1.0
 		},
-		"projectiles": {
-			"description":tr("More projectiles"),
-			"multiply":1.0,
-			"increase":1.0,
-			"level":0,
-			"max_level":10,
-			"value":1.0
-		},
-		"duration": {
-			"description":tr("Longer duration"),
+		"speed": {
+			"description":tr("Faster movement"),
 			"multiply":1.0,
 			"increase":0.1,
 			"level":0,
-			"max_level":10,
+			"max_level":4,
 			"value":1.0
 		},
+#		"projectiles": {
+#			"description":tr("More projectiles"),
+#			"multiply":1.0,
+#			"increase":1.0,
+#			"level":0,
+#			"max_level":10,
+#			"value":1.0
+#		},
+#		"duration": {
+#			"description":tr("Longer duration"),
+#			"multiply":1.0,
+#			"increase":0.25,
+#			"level":0,
+#			"max_level":10,
+#			"value":1.0
+#		},
 		"pickup": {
 			"description":tr("Pickup range"),
 			"multiply":1.0,
-			"increase":0.4,
+			"increase":0.5,
 			"level":0,
-			"max_level":10,
+			"max_level":4,
 			"value":1.0
 		},
 		"health": {
-			"description":tr("Health pool"),
-			"multiply":1.1,
-			"increase":0.0,
+			"description":tr("Health pickup"),
+			"multiply":1.0,
+			"increase":0.4,
 			"level":0,
 			"max_level":20,
-			"value":1.0
-		},
-		"armor": {
-			"description":tr("Thicker armor"),
-			"multiply":1.0,
-			"increase":1.0,
-			"level":0,
-			"max_level":10,
 			"value":0.0
 		},
+#		"armor": {
+#			"description":tr("Thicker armor"),
+#			"multiply":1.0,
+#			"increase":1.0,
+#			"level":0,
+#			"max_level":10,
+#			"value":0.0
+#		},
 	}
 
 func _get_mods_keys_with_levelups():
@@ -103,6 +104,7 @@ func _get_mods_keys_with_levelups():
 func _ready():
 	print("Init: Modmanager")
 	mods = _hardcoded_mods()
+	print(mods.keys())
 #	mods = {}
 #	_json_parse("res://assets/values/mods.json")
 
@@ -122,6 +124,12 @@ func getActivatedMods():
 			res.append([k, mods[k]])
 	return res
 			
+func getActiveModsDict():
+	var res = {}
+	for k in mods.keys():
+		if mods[k].level > 0:
+			res[k] = mods[k]
+	return res
 	
 func powerupMod(name):
 	print("Powerup:", name)

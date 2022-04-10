@@ -9,6 +9,8 @@ var current_root
 func _ready():
 	_init_scene()
 	fade_out.material.set_shader_param("Radius", 600)
+#	animation_player.play("FadeIn")
+#	yield(animation_player, "animation_finished")
 	
 func _init_scene():
 	current_root = mainScene.instance()

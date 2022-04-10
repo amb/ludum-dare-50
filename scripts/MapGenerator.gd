@@ -283,6 +283,12 @@ func _ready():
 				cellsNextToWater[Vector2(x, y)] = true
 				
 	
+func getWaterCells():
+	var res = []
+	for c in cellsNextToWater.keys():
+		res.append(c * tilesBase.cell_size.x + tilesBase.position)
+	return res
+	
 func _map_update_tick():
 	if cellsNextToWater.size() > 0:
 		# Get random key and fill with water

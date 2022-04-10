@@ -10,14 +10,16 @@ var moving_keyboard : bool = false
 
 var entityAvatar
 
-onready var health = 20.0
-onready var maxHealth = 20.0
-onready var energy = 100.0
-onready var maxEnergy
-onready var experience = 0.0
-onready var level = 1
-onready var levelCap = 10
-onready var movementSpeed = 0.5
+onready var stats = {
+	"health":20.0,
+	"maxHealth":20.0,
+	"experience":0.0,
+	"level":1,
+	"levelCap":10,
+	"movementSpeed":0.5,
+}
+
+var weapons = []
 
 onready var inWater = false
 var updateTimer
@@ -49,7 +51,7 @@ func get_input():
 	if Input.is_action_pressed('ui_up'):
 		movementVector.y -= 1
 		
-	movementVector = movementVector.normalized() * movementSpeed
+	movementVector = movementVector.normalized() * stats.movementSpeed
 
 func setTargetLocation(newLoc):
 	# Pathfinding here, therefore separate function
@@ -69,7 +71,7 @@ func setMovementDirection(newLoc):
 
 func _update_hp():
 #	textDump.setText("Health", health)
-	hpBar.value = max(health, 0.0) * 100.0 / maxHealth
+	hpBar.value = max(stats.health, 0.0) * 100.0 / stats.maxHealth
 
 func _ready():
 	entityAvatar = get_node("Hero")
@@ -86,10 +88,8 @@ func _ready():
 	
 	_update_hp()
 	
-	AssetLoader.spawnWeapon("garlic", self)
-
-#	textDump.setText("Energy", energy)
-#	pathFinder = get_node(pathFinder)
+	weapons.append(AssetLoader.spawnWeapon("garlic", self))
+	add_child(weapons[-1])
 
 func _updateTick():
 	# This is to fix the occasional bug where running into
@@ -125,18 +125,18 @@ func _physics_process(_delta):
 		
 func _death():
 	# Death
-	movementSpeed = 0.0
+	stats.movementSpeed = 0.0
 	$DieAS.play()
-	health = 0.0
+	stats.health = 0.0
 	hpBar.visible = false
 	yield($DieAS, "finished")
 	emit_signal("death")
 	queue_free()
 	
 func takeDamage(amount, _direction, playsound=true):
-	if health > 0:
-		health -= amount
-		if health <= 0:
+	if stats.health > 0:
+		stats.health -= amount
+		if stats.health <= 0:
 			_death()
 		else:
 			if playsound:
@@ -144,31 +144,52 @@ func takeDamage(amount, _direction, playsound=true):
 			_update_hp()
 
 func _levelup():
-	level += 1
-#	levelCap *= 1.1
-	levelCap += 10
-	textDump.setText(tr("Level"), level)
+	stats.level += 1
+	stats.levelCap += 10
+	textDump.setText(tr("Level"), stats.level)
 	levelUpPanel.activate()
 	yield(levelUpPanel, "panelFinished")
+	
 	# After pause return here
 	for i in modManager.getActivatedMods():
 		textDump.setText(i[0].capitalize(), str(i[1].value))
+		
+	var mods = modManager.mods
+		
+	# Levelup weapons
+	for w in weapons:
+		w.applyMods(mods)
+
+	# Levelup self
+	if mods.health.level > 0:
+		stats.health += mods.health.value
+		if stats.health > stats.maxHealth:
+			stats.health = stats.maxHealth
+		_update_hp()
+	
+	if mods.speed.level > 0:
+		stats.movementSpeed = 0.5 * mods.speed.value
+
+	if mods.pickup.level > 0:
+		$GemPickup.scale.x = mods.pickup.value
+		$GemPickup.scale.y = mods.pickup.value
+
 
 func addExperience(amount):
 #	print("exp:", amount)
-	textDump.setText(tr("Exp"), "%.2f" % [experience*100.0/levelCap])
-	experience += amount
-	if experience > levelCap:
-		experience = 0
+	textDump.setText(tr("Exp"), "%.2f" % [stats.experience*100.0 / stats.levelCap])
+	stats.experience += amount
+	if stats.experience > stats.levelCap:
+		stats.experience -= stats.levelCap
 		_levelup()
 
 func _on_Area2D_body_entered(body):
 	# Water Area2D entered
 	if body.name != "Player":
 		inWater = true
-		movementSpeed *= 0.5
+		stats.movementSpeed *= 0.5
 
 func _on_Area2D_body_exited(body):
 	if body.name != "Player":
 		inWater = false
-		movementSpeed *= 2.0
+		stats.movementSpeed *= 2.0

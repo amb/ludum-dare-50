@@ -107,7 +107,7 @@ nodes/fragment/connections = PoolIntArray( 4, 0, 6, 0, 7, 0, 4, 1, 12, 0, 4, 0, 
 
 [sub_resource type="ShaderMaterial" id=86]
 shader = SubResource( 85 )
-shader_param/Radius = 0.0
+shader_param/Radius = 41.2143
 
 [sub_resource type="Animation" id=89]
 resource_name = "FadeIn"
@@ -119,10 +119,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5, 2 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 1.93187, 1 ),
 "update": 0,
-"values": [ 0.0, 70.0, 600.0 ]
+"values": [ 0.0, 600.0 ]
 }
 
 [sub_resource type="Animation" id=90]

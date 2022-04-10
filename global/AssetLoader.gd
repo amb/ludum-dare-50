@@ -1,7 +1,7 @@
 extends Node
 
 var garlic = {
-	"use_instant":false,
+	"use_instant":true,
 	"use_timer":true,
 	"timer_delay":1.0, 
 	
@@ -103,5 +103,5 @@ var weapon_textures = {
 
 func spawnWeapon(name, source):
 	var weapon = spawnItem.instance()
-	source.add_child(weapon)
 	weapon.setup(weaponList[name], source)
+	return weapon

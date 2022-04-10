@@ -2,17 +2,34 @@ extends Area2D
 
 var attachment
 var weapon
+var wp_zero
 var attackTimer
 var collisionShape
 var sprite
 var target
 
 func setup(wp, attach):
-	weapon = wp.duplicate()
+	weapon = wp.duplicate(true)
 	attachment = attach
 	assert (self is Area2D)
+	wp_zero = weapon.duplicate(true)
 	if not weapon.activate_on_detach:
 		_activate()
+		
+func applyMods(mods):
+	if mods.area.level > 0:
+		scale.x = 2.0 * mods.area.value
+		scale.y = scale.x
+	if mods.damage.level > 0:
+		weapon.damage.low = int(wp_zero.damage.low * mods.damage.value)
+		weapon.damage.add = int(wp_zero.damage.add * mods.damage.value)
+	if mods.cast.level > 0:
+		weapon.timer_delay = wp_zero.timer_delay / mods.cast.value
+		attackTimer.wait_time = weapon.timer_delay
+	if mods.knockback.level > 0:
+		weapon.damage.knockback = wp_zero.damage.knockback * mods.knockback.value
+	
+		
 
 func _activate():
 	if weapon.collision_type == "circle":
@@ -42,8 +59,10 @@ func _activate():
 func _area_trigger(body):
 	if weapon.damage:
 		var diff = body.global_position - global_position
-		body.apply_central_impulse(diff.normalized() * weapon.damage.knockback * 100.0)
 		body.takeDamage(_attack_damage())
+		if is_instance_valid(body):
+			var kbv = weapon.damage.knockback * 100.0
+			body.apply_central_impulse(diff.normalized() * kbv)
 		
 	if weapon.spawner:
 		target = body

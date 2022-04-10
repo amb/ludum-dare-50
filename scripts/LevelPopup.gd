@@ -1,6 +1,7 @@
 extends Panel
 
 var powerups = {}
+#var mutex
 export(NodePath) var modManager
 
 signal panelFinished
@@ -8,12 +9,14 @@ signal panelFinished
 func _ready():
 	modManager = get_node(modManager)
 	visible = false
+#	mutex = Mutex.new()
 
 func _button_press(foo):
 	modManager.powerupMod(foo)
 	_deactivate()
 
 func activate():
+#	mutex.lock()
 	get_tree().paused = true
 	visible = true
 	
@@ -39,7 +42,10 @@ func activate():
 #		total_height += $VBoxContainer.theme.separation
 #	$VBoxContainer.emit_signal("item_rect_changed")
 	self.rect_min_size.y = total_height + 20
-	$VBoxContainer.get_node(picked[0]).grab_focus()
+	if picked.size() > 0:
+		$VBoxContainer.get_node(picked[0]).grab_focus()
+	else:
+		_deactivate()
 
 func _deactivate():
 	for child in $VBoxContainer.get_children():
@@ -47,6 +53,7 @@ func _deactivate():
 	get_tree().paused = false
 	visible = false
 	emit_signal("panelFinished")
+#	mutex.unlock()
 	
 func _input(ev):
 	if visible:

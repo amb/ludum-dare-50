@@ -17,6 +17,7 @@ onready var touchingTarget = false
 
 var seekTimer
 var attackTick
+var lastSeen
 var attackOnBodyEnter : bool = true
 
 var rootNode
@@ -86,7 +87,8 @@ func _ready():
 	# Test if can move and not collide
 	if self.test_motion(Vector2(2.0, 2.0), false):
 		# Remove self
-		_destroy()
+		#_destroy()
+		pass
 	else:
 		self.visible = true
 		previousPosition = self.position
@@ -95,6 +97,11 @@ func _ready():
 	currentMaterial = $Sprite.get_material()
 	$Sprite.set_material(null)
 	
+	lastSeen = OS.get_ticks_msec()
+	
+func multiplyDifficulty(mm):
+	health *= mm
+	mass *= mm
 
 func _attackTick():
 	if touchingTarget:
@@ -108,7 +115,9 @@ func _seekTarget():
 
 	if not is_instance_valid(attackTarget):
 		attackTarget = null
-	
+		
+	var totalForce = movementForce * mass
+		
 	if attackTarget:
 		moveTarget = attackTarget.global_position
 		var diff = moveTarget - global_position
@@ -121,14 +130,17 @@ func _seekTarget():
 		
 		if not result:
 			if dlen >= movementMinDistance:
-				movementVector = diff/dlen * movementForce
+				movementVector = diff/dlen * totalForce
 			else:
 				movementVector = Vector2.ZERO
-#		else:
+			lastSeen = OS.get_ticks_msec()
+		else:
+			if OS.get_ticks_msec() - lastSeen > 3000:
+				movementVector = Vector2(randf()*2.0-1.0, randf()*2.0-1.0).normalized() * totalForce
 ##			print(result)
 #			var nextMove = attackTarget.pathFinder.find_move(global_position)
 #			if nextMove != Vector2.ZERO:
-#				movementVector = nextMove * movementForce
+#				movementVector = nextMove * totalForce
 #			else:
 #				movementVector = Vector2(rng.randf()*2.0-1.0, rng.randf()*2.0-1.0).normalized()
 #
@@ -187,5 +199,6 @@ func _on_EnemyMob_body_exited(body):
 func _on_Area2D_body_entered(body):
 	# Drowning
 	if not body.is_in_group("enemy"):
-		_death()
+#		_death()
+		_destroy()
 		
