@@ -5,7 +5,7 @@ var startTime
 #var playerPickup
 
 func _ready():
-	myExp = 1.0
+	myExp = 20.0
 	startTime = OS.get_system_time_msecs()
 #	playerPickup = false
 	add_to_group("gem")

@@ -1,4 +1,4 @@
-extends Panel
+extends PanelContainer
 
 var powerups = {}
 #var mutex
@@ -30,6 +30,7 @@ func activate():
 	print(picked)
 	
 	# Create buttons
+#	var box_width = 0.0
 	var total_height = 0.0
 	for m in picked:
 		var new_button = Button.new()
@@ -39,9 +40,14 @@ func activate():
 		new_button.connect("pressed", self, "_button_press", [m])
 		total_height += new_button.rect_size.y
 		total_height += 3
+#		if box_width < new_button.rect_size.x:
+#			box_width = new_button.rect_size.x
 #		total_height += $VBoxContainer.theme.separation
 #	$VBoxContainer.emit_signal("item_rect_changed")
-	self.rect_min_size.y = total_height + 20
+	
+#	self.rect_min_size.y = total_height + 20
+#	self.rect_min_size.x = box_width + 40
+#	print(total_height + 20, ", ", box_width + 40)
 	if picked.size() > 0:
 		$VBoxContainer.get_node(picked[0]).grab_focus()
 	else:

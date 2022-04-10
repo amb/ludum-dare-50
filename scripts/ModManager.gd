@@ -28,14 +28,14 @@ func _hardcoded_mods():
 			"max_level":4,
 			"value":1.0
 		},
-		"knockback": {
-			"description":tr("Knockback force"),
-			"multiply":1.0,
-			"increase":0.25,
-			"level":0,
-			"max_level":4,
-			"value":1.0
-		},
+#		"knockback": {
+#			"description":tr("Knockback force"),
+#			"multiply":1.0,
+#			"increase":0.25,
+#			"level":0,
+#			"max_level":4,
+#			"value":1.0
+#		},
 		"cast": {
 			"description":tr("Lower cast time"),
 			"multiply":1.0,

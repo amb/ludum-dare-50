@@ -26,8 +26,8 @@ func applyMods(mods):
 	if mods.cast.level > 0:
 		weapon.timer_delay = wp_zero.timer_delay / mods.cast.value
 		attackTimer.wait_time = weapon.timer_delay
-	if mods.knockback.level > 0:
-		weapon.damage.knockback = wp_zero.damage.knockback * mods.knockback.value
+#	if mods.knockback.level > 0:
+#		weapon.damage.knockback = wp_zero.damage.knockback * mods.knockback.value
 	
 		
 
