@@ -40,9 +40,8 @@ func _death():
 	
 #		$Sprite.visible = false
 #		$Shadow.visible = false
-#
-	$DieAS.play()
-	yield($DieAS, "finished")
+
+	AudioManager.play("res://audio/enemy_die.sfxr")
 	yield(get_tree().create_timer(0.1), "timeout")
 
 	_destroy()
@@ -54,6 +53,7 @@ func takeDamage(amount):
 	if health <= 0.0:
 		_death()
 	else:
+#		AudioManager.play("res://audio/enemy_take_damage.sfxr")
 		# Got hit animation
 		yield(get_tree().create_timer(0.1), "timeout")
 		$Sprite.set_material(null)
@@ -88,7 +88,8 @@ func _ready():
 	if self.test_motion(Vector2(2.0, 2.0), false):
 		# Remove self
 		#_destroy()
-		pass
+#		pass
+		queue_free()
 	else:
 		self.visible = true
 		previousPosition = self.position
