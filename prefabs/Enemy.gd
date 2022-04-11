@@ -13,14 +13,13 @@ var entityAvatar
 var sleepTimer : float = 0.0
 
 var attackTarget
+var pathFinder
 onready var touchingTarget = false
 
 var seekTimer
 var attackTick
 var lastSeen
 var attackOnBodyEnter : bool = true
-
-var rootNode
 
 const TERRAIN_ID = 2
 
@@ -47,7 +46,6 @@ func _death():
 	_destroy()
 
 func takeDamage(amount):
-#	rootNode.emit_signal("spawn_damage_number", amount, global_position)
 	health -= amount
 	$Sprite.set_material(currentMaterial)
 	if health <= 0.0:
@@ -63,8 +61,6 @@ func setTarget(target):
 	attackTarget = target
 
 func _ready():
-	rootNode = get_tree().root.get_child(0)
-	
 	entityAvatar = get_node("Sprite")
 
 	seekTimer = Timer.new()
@@ -85,11 +81,12 @@ func _ready():
 	self.mode = self.MODE_CHARACTER 
 	
 	# Test if can move and not collide
-	if self.test_motion(Vector2(2.0, 2.0), false):
+#	pathFinder = attackTarget.get_node("PathFinder")
+	if self.test_motion(Vector2(1.0, 1.0), false):
 		# Remove self
 		#_destroy()
-#		pass
-		queue_free()
+		pass
+#		queue_free()
 	else:
 		self.visible = true
 		previousPosition = self.position
@@ -137,32 +134,33 @@ func _seekTarget():
 			lastSeen = OS.get_ticks_msec()
 		else:
 			if OS.get_ticks_msec() - lastSeen > 3000:
-				movementVector = Vector2(randf()*2.0-1.0, randf()*2.0-1.0).normalized() * totalForce
-##			print(result)
-#			var nextMove = attackTarget.pathFinder.find_move(global_position)
-#			if nextMove != Vector2.ZERO:
-#				movementVector = nextMove * totalForce
-#			else:
-#				movementVector = Vector2(rng.randf()*2.0-1.0, rng.randf()*2.0-1.0).normalized()
-#
+				var pos = global_position # + Vector2(8.0, 8.0)
+				# Some tiles don't have full 100% filled collisions, which is why the minus
+				var nextMove = attackTarget.get_node("PathFinder").find_move(Vector2(pos.x, pos.y-3.0))
+				if nextMove != Vector2.ZERO:
+					movementVector = nextMove * totalForce
+				else:
+					movementVector = Vector2(randf()*2.0-1.0, randf()*2.0-1.0).normalized() * totalForce
+#					movementVector = nextMove
+		
 		spr.flip_h = movementVector.x < 0
 				
-		if dlen > 450.0 and self.visible == true:
-			_go_to_sleep()
-			
-		elif dlen < 430.0 and self.visible == false:
-			_wakeup()
+#		if dlen > 450.0 and self.visible == true:
+#			_go_to_sleep()
+#
+#		elif dlen < 430.0 and self.visible == false:
+#			_wakeup()
 			
 	else:
 		# Scan for player target
 		pass
 			
-	if sleeping:
-		# Seektimer usually ~0.5s
-		sleepTimer += 0.5
-		if sleepTimer > 25:
-			# Player probably completely forgot this mob existed
-			_destroy()
+#	if sleeping:
+#		# Seektimer usually ~0.5s
+#		sleepTimer += 0.5
+#		if sleepTimer > 25:
+#			# Player probably completely forgot this mob existed
+#			_destroy()
 		
 func _destroy():
 #	spawner.mobCounterLabel.sub_mob_count()

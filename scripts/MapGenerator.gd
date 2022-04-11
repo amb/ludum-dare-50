@@ -92,8 +92,8 @@ func _add_rooms(tmap, blocking_grid):
 	var rooms = []
 	var found_rooms = 0
 	for _tr in range(50):
-		var sizex = (randi() % 4) * 2 + 5
-		var sizey = (randi() % 4) * 2 + 5
+		var sizex = (randi() % 4) * 2 + 6
+		var sizey = (randi() % 4) * 2 + 6
 		
 		# Try location
 		var asize = 18

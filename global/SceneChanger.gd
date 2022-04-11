@@ -18,10 +18,9 @@ func _init_scene():
 	current_root.connect("scene_finished", self, "changer")
 	
 func changer():
-	print("New scene")
+	print("Scene change")
 	var delay = 0.5
 	
-	print("Change scene...")
 	yield(get_tree().create_timer(delay), "timeout")
 	animation_player.play_backwards("FadeIn")
 	yield(animation_player, "animation_finished")

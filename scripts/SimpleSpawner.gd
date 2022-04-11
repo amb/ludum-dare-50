@@ -1,7 +1,7 @@
 extends Node2D
 
 export(PackedScene) var spawnItem
-export(float) var randomness = 5.0
+#export(float) var randomness = 5.0
 export(bool) var isRunning
 export(NodePath) var tracking
 export(NodePath) var mapSource
@@ -11,6 +11,8 @@ var itemPreload
 var startTime
 var timer
 
+var pathFinder
+
 func _ready():
 	timer = Timer.new()
 	timer.autostart = true
@@ -18,11 +20,12 @@ func _ready():
 	add_child(timer)
 	timer.connect("timeout", self, "_timeout")
 	
-	if tracking:
-		tracking = get_node(tracking)
+	tracking = get_node(tracking)
 		
 	mapSource = get_node(mapSource)
 	startTime = OS.get_ticks_msec()
+	
+	pathFinder = tracking.get_node("PathFinder")
 	
 func _process(_delta):
 	if is_instance_valid(tracking):
@@ -40,16 +43,16 @@ func _timeout():
 		timer.wait_time = next_to_5 * 0.5
 #		print(timer.wait_time)
 
-		
-		var ni = spawnItem.instance()
+
 #		print(0.4/next_to_5)
-		ni.multiplyDifficulty(0.1/next_to_5)
+#		ni.multiplyDifficulty(0.1/next_to_5)
+		var pos = Vector2.ZERO
 		var wck = mapSource.getWaterCells()
 		if wck.size() > 0:
 			var rpick = wck[randi() % wck.size()]
 			
-			ni.position.x = rpick.x + 8.0
-			ni.position.y = rpick.y + 8.0
+			pos.x = rpick.x + 8.0
+			pos.y = rpick.y + 8.0
 			
 		# Circle spawner:
 		if false:
@@ -58,10 +61,17 @@ func _timeout():
 			var cx = sin(ca) * crange
 			var cy = cos(ca) * crange * 0.55
 			
-			ni.position.x += randf() * randomness*2 - randomness + cx + global_position.x
-			ni.position.y += randf() * randomness*2 - randomness + cy + global_position.y
+			pos.x += global_position.x - cx
+			pos.y += global_position.y - cy
 			
+		# If no path to player, don't spawn
+#		if is_instance_valid(pathFinder):
+#			if pathFinder.get_grid_value(pos) < 1:
+#				pass
+#			else:
 		# Add to world
+		var ni = spawnItem.instance()
+		ni.global_position = pos
 		get_parent().add_child(ni)
 		if tracking:
 			ni.setTarget(tracking)

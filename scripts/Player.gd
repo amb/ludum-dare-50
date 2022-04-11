@@ -92,6 +92,7 @@ func _ready():
 	add_child(weapons[-1])
 
 func _updateTick():
+	$PathFinder.find_move(global_position)
 	# This is to fix the occasional bug where running into
 	# water stops the health decrease after not moving
 	move_and_slide(Vector2(randf()-0.5, randf()-0.5))

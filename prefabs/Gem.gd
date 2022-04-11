@@ -4,7 +4,8 @@ var myExp : float
 var startTime
 
 func _ready():
-	myExp = 20.0
+#	myExp = 1.0
+	myExp = 0.0
 	startTime = OS.get_system_time_msecs()
 	add_to_group("gem")
 	
