@@ -50,6 +50,7 @@ run/main_scene="res://global/SceneChanger.tscn"
 [autoload]
 
 AssetLoader="*res://global/AssetLoader.gd"
+AudioManager="*res://global/AudioManager.gd"
 
 [display]
 

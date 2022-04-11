@@ -2,12 +2,10 @@ extends Area2D
 
 var myExp : float
 var startTime
-#var playerPickup
 
 func _ready():
 	myExp = 20.0
 	startTime = OS.get_system_time_msecs()
-#	playerPickup = false
 	add_to_group("gem")
 	
 func _player_pickup(target):
@@ -27,8 +25,7 @@ func _player_pickup(target):
 		tween.remove_all()
 		
 		$Gemsprite.visible = false
-		$GemPickupAS.play()
-		yield($GemPickupAS, "finished")
+		AudioManager.play("res://audio/gem_pickup.sfxr")
 		queue_free()
 
 func _on_Gem_body_entered(body):
