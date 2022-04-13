@@ -90,6 +90,7 @@ func _timeout():
 
 		var ai_diff = int(secs / 60)
 		ni.setAIDifficulty(ai_diff)
+#		ni.setAIDifficulty(6)
 #		ni.multiplyDifficulty(0.1/next_to_5)
 
 		if tracking:

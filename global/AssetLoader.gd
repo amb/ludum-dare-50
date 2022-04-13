@@ -3,8 +3,8 @@ extends Node
 var garlic = {
 	"use_instant":true,
 	"use_timer":true,
-#	"timer_delay":1.0, 
-	"timer_delay":0.2, 
+	"timer_delay":1.0, 
+#	"timer_delay":0.2, 
 	
 	# circle, beam
 	"collision_type":"circle",
@@ -29,10 +29,10 @@ var garlic = {
 	},
 	
 	"damage": {
-#		"low":3,
-#		"add":3,
-		"low":10,
-		"add":10,
+		"low":3,
+		"add":3,
+#		"low":10,
+#		"add":10,
 		"knockback":0.5,
 	},
 }

@@ -27,35 +27,35 @@ var _ai_difficulty = [
 		"tracking":5,
 		"aggro":15,
 		"speed":90.0,
-		"predict":0.0,
+		"predict":0.4,
 		"state":EnemyState.IDLE, 
 	},
 	{
 		"tracking":10,
 		"aggro":20,
 		"speed":100.0,
-		"predict":0.4,
+		"predict":0.8,
 		"state":EnemyState.IDLE, 
 	},
 	{
 		"tracking":15,
 		"aggro":25,
 		"speed":100.0,
-		"predict":0.8,
+		"predict":1.2,
 		"state":EnemyState.TRACKING, 
 	},
 	{
 		"tracking":50,
 		"aggro":30,
 		"speed":100.0,
-		"predict":1.2,
+		"predict":1.6,
 		"state":EnemyState.TRACKING, 
 	},
 	{
 		"tracking":100,
 		"aggro":50,
 		"speed":110.0,
-		"predict":1.6,
+		"predict":2.0,
 		"state":EnemyState.TRACKING, 
 	},
 	# 6
@@ -63,28 +63,28 @@ var _ai_difficulty = [
 		"tracking":100,
 		"aggro":100,
 		"speed":120.0,
-		"predict":2.0,
+		"predict":2.4,
 		"state":EnemyState.TRACKING, 
 	},
 	{
 		"tracking":100,
 		"aggro":100,
 		"speed":130.0,
-		"predict":2.0,
+		"predict":2.8,
 		"state":EnemyState.TRACKING, 
 	},
 	{
 		"tracking":100,
 		"aggro":100,
 		"speed":140.0,
-		"predict":2.0,
+		"predict":3.0,
 		"state":EnemyState.TRACKING, 
 	},
 	{
 		"tracking":100,
 		"aggro":100,
 		"speed":150.0,
-		"predict":2.0,
+		"predict":3.0,
 		"state":EnemyState.TRACKING, 
 	},
 ]
@@ -238,9 +238,28 @@ func _seekTarget():
 				
 		EnemyState.CHASING:
 			if player_in_sight:
-				var predictedLocation = attackTarget.global_position + \
-					attackTarget.movementVector * dlen * _predict_move
-				diff = predictedLocation - global_position
+				# Predict where player is in the future
+				# Then calculate good intersection trajectory
+				var epos = global_position
+				var ppos = attackTarget.global_position
+				var ldif = attackTarget.movementVector * dlen * _predict_move
+				var predictLocation = ppos + ldif
+				
+				var e_to_p = (ppos - epos).normalized()
+				var p_to_l = (predictLocation - ppos).normalized()
+#				var e_to_l = (predictLocation - epos).normalized()
+				
+				# angle < 0.0 -> in front of target
+				# angle > 0.0 -> behind of target
+				var approach_angle = e_to_p.dot(p_to_l)
+				
+				var intersectTrajectory = ppos
+				if approach_angle < 0.0:
+					intersectTrajectory += ldif * (1.0 + approach_angle)
+				else:
+					intersectTrajectory += ldif
+				
+				diff = intersectTrajectory - global_position
 				movementVector = diff/diff.length() * totalForce
 				lastSeen = OS.get_ticks_msec()
 				
