@@ -13,52 +13,80 @@ enum EnemyState {IDLE, CHASING, TRACKING}
 var _state : int = EnemyState.IDLE
 var _tracking_range : int = 5
 var _aggro_range : int = 10
-var _predict_move : int = 1
+var _predict_move : float = 1.0
 
-var _ai_difficulty = {
-	0 : {
+var _ai_difficulty = [
+	{
 		"tracking":0,
-		"aggro":10,
-		"speed":60.0,
-		"predict":0,
-		"state":EnemyState.IDLE, 
-	},
-	1 : {
-		"tracking":5,
 		"aggro":15,
 		"speed":80.0,
-		"predict":0,
+		"predict":0.0,
 		"state":EnemyState.IDLE, 
 	},
-	2 : {
+	{
+		"tracking":5,
+		"aggro":15,
+		"speed":90.0,
+		"predict":0.0,
+		"state":EnemyState.IDLE, 
+	},
+	{
 		"tracking":10,
 		"aggro":20,
 		"speed":100.0,
-		"predict":1,
+		"predict":0.4,
 		"state":EnemyState.IDLE, 
 	},
-	3 : {
+	{
 		"tracking":15,
 		"aggro":25,
 		"speed":100.0,
-		"predict":1,
+		"predict":0.8,
 		"state":EnemyState.TRACKING, 
 	},
-	4 : {
+	{
 		"tracking":50,
 		"aggro":30,
 		"speed":100.0,
-		"predict":2,
+		"predict":1.2,
 		"state":EnemyState.TRACKING, 
 	},
-	5 : {
+	{
 		"tracking":100,
 		"aggro":50,
 		"speed":110.0,
-		"predict":3,
+		"predict":1.6,
 		"state":EnemyState.TRACKING, 
 	},
-}
+	{
+		"tracking":100,
+		"aggro":100,
+		"speed":120.0,
+		"predict":2.0,
+		"state":EnemyState.TRACKING, 
+	},
+	{
+		"tracking":100,
+		"aggro":100,
+		"speed":130.0,
+		"predict":2.0,
+		"state":EnemyState.TRACKING, 
+	},
+	{
+		"tracking":100,
+		"aggro":100,
+		"speed":140.0,
+		"predict":2.0,
+		"state":EnemyState.TRACKING, 
+	},
+	{
+		"tracking":100,
+		"aggro":100,
+		"speed":150.0,
+		"predict":2.0,
+		"state":EnemyState.TRACKING, 
+	},
+]
 
 var entityAvatar
 var sleepTimer : float = 0.0
@@ -75,7 +103,11 @@ export(PackedScene) var lootDrop
 var currentMaterial
 
 func setAIDifficulty(val):
-	var d = _ai_difficulty[val]
+	var d 
+	if _ai_difficulty.size() > val:
+		d = _ai_difficulty[val]
+	else:
+		d = _ai_difficulty[-1]
 	_tracking_range = d.tracking
 	_aggro_range = d.aggro
 	_predict_move = d.predict
@@ -111,8 +143,9 @@ func takeDamage(amount):
 		$Sprite.set_material(null)
 
 func setTarget(target):
-	attackTarget = target
-	pathFinder = attackTarget.get_node("PathFinder")
+	if is_instance_valid(target):
+		attackTarget = target
+		pathFinder = attackTarget.get_node("PathFinder")
 
 func _ready():
 	entityAvatar = get_node("Sprite")
@@ -147,7 +180,7 @@ func _ready():
 	$Sprite.set_material(null)
 	
 	lastSeen = OS.get_ticks_msec()
-	setAIDifficulty(2)
+	setAIDifficulty(0)
 	
 func multiplyDifficulty(mm):
 	health *= mm
@@ -185,6 +218,10 @@ func _seekTarget():
 				_state = EnemyState.CHASING
 			else:
 				movementVector = Vector2(randf()*2.0-1.0, randf()*2.0-1.0).normalized() * totalForce
+			
+			if OS.get_ticks_msec() - lastSeen > 30000:
+				# If idle more than half a minute, go away
+				_destroy()
 				
 		EnemyState.TRACKING:
 			# Some tiles don't have full 100% filled collisions, which is why the minus
@@ -192,18 +229,18 @@ func _seekTarget():
 			if nextMove != Vector2.ZERO:
 				movementVector = nextMove * totalForce
 			
-			if not player_in_sight and _tracking_range * 16.0 < dlen:
+			if not player_in_sight and _tracking_range < tracking_distance:
 				_state = EnemyState.IDLE
 				
-			if player_in_sight and _aggro_range * 16.0 > dlen:
+			if player_in_sight:
 				_state = EnemyState.CHASING
 				
 		EnemyState.CHASING:
 			if player_in_sight:
-				if dlen >= movementMinDistance:
-					movementVector = diff/dlen * totalForce
-				else:
-					movementVector = Vector2.ZERO
+				var predictedLocation = attackTarget.global_position + \
+					attackTarget.movementVector * dlen * _predict_move
+				diff = predictedLocation - global_position
+				movementVector = diff/diff.length() * totalForce
 				lastSeen = OS.get_ticks_msec()
 				
 			elif tracking_distance < _tracking_range:

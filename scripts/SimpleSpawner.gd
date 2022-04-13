@@ -11,6 +11,8 @@ var itemPreload
 var startTime
 var timer
 
+var debugTimer
+
 var pathFinder
 
 func _ready():
@@ -20,6 +22,13 @@ func _ready():
 	add_child(timer)
 	timer.connect("timeout", self, "_timeout")
 	
+	debugTimer = Timer.new()
+	debugTimer.autostart = true
+	debugTimer.wait_time = 1.0
+	add_child(debugTimer)
+	debugTimer.connect("timeout", self, "_print_debug")
+	
+	
 	tracking = get_node(tracking)
 		
 	mapSource = get_node(mapSource)
@@ -27,27 +36,37 @@ func _ready():
 	
 	pathFinder = tracking.get_node("PathFinder")
 	
+func _print_debug():
+	var wck = mapSource.getWaterCells()
+	print(wck.size())
+	print(_calculate_spawn_rate((OS.get_ticks_msec() - startTime) / 1000.0, wck.size()))
+	
 func _process(_delta):
 	if is_instance_valid(tracking):
 		global_position = tracking.global_position
 
+func _calculate_spawn_rate(secs, available_tiles):
+	var next_to_5 = 1.0 / pow(2.0, 1.0 + secs/120)
+	if next_to_5 > 1.0:
+		next_to_5 = 1.0
+	if next_to_5 < 0.02:
+		next_to_5 = 0.02
+	# Max 0.5s spawn per tile
+	if available_tiles > 0:
+		if next_to_5 < 8.0/available_tiles:
+			next_to_5 = 8.0/available_tiles
+	else:
+		next_to_5 = 8.0
+	return next_to_5
+		
 func _timeout():
 	if isRunning:
-		var secs = (OS.get_ticks_msec() - startTime) / 1000.0
-		var next_to_5 = 1.0 / pow(2.0, 1.0 + secs/120)
-		if next_to_5 > 1.0:
-			next_to_5 = 1.0
-		if next_to_5 < 0.001:
-			next_to_5 = 0.001
-#		print(next_to_5)
-		timer.wait_time = next_to_5 * 0.5
-#		print(timer.wait_time)
-
-
-#		print(0.4/next_to_5)
-#		ni.multiplyDifficulty(0.1/next_to_5)
-		var pos = Vector2.ZERO
 		var wck = mapSource.getWaterCells()
+		var secs = (OS.get_ticks_msec() - startTime) / 1000.0
+		var next_to_5 = _calculate_spawn_rate(secs, wck.size())
+		timer.wait_time = next_to_5 * 0.5
+
+		var pos = Vector2.ZERO
 		if wck.size() > 0:
 			var rpick = wck[randi() % wck.size()]
 			
@@ -73,5 +92,10 @@ func _timeout():
 		var ni = spawnItem.instance()
 		ni.global_position = pos
 		get_parent().add_child(ni)
+
+		var ai_diff = int(secs / 60)
+		ni.setAIDifficulty(ai_diff)
+#		ni.multiplyDifficulty(0.1/next_to_5)
+
 		if tracking:
 			ni.setTarget(tracking)

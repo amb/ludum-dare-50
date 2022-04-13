@@ -15,7 +15,7 @@ func _hardcoded_mods():
 		"area": {
 			"description":tr("Bigger area"),
 			"multiply":1.0,
-			"increase":0.25,
+			"increase":0.1,
 			"level":0,
 			"max_level":4,
 			"value":1.0
@@ -23,7 +23,7 @@ func _hardcoded_mods():
 		"damage": {
 			"description":tr("Increase damage"),
 			"multiply":1.0,
-			"increase":0.25,
+			"increase":0.2,
 			"level":0,
 			"max_level":4,
 			"value":1.0
@@ -39,7 +39,7 @@ func _hardcoded_mods():
 		"cast": {
 			"description":tr("Lower cast time"),
 			"multiply":1.0,
-			"increase":0.5,
+			"increase":0.1,
 			"level":0,
 			"max_level":4,
 			"value":1.0
@@ -71,7 +71,7 @@ func _hardcoded_mods():
 		"pickup": {
 			"description":tr("Pickup range"),
 			"multiply":1.0,
-			"increase":0.5,
+			"increase":0.7,
 			"level":0,
 			"max_level":4,
 			"value":1.0
@@ -79,9 +79,9 @@ func _hardcoded_mods():
 		"health": {
 			"description":tr("Health pickup"),
 			"multiply":1.0,
-			"increase":0.4,
+			"increase":1.0,
 			"level":0,
-			"max_level":20,
+			"max_level":10,
 			"value":0.0
 		},
 #		"armor": {
