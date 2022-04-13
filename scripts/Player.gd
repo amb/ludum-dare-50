@@ -177,12 +177,11 @@ func _levelup():
 
 
 func addExperience(amount):
-#	print("exp:", amount)
-	textDump.setText(tr("Exp"), "%.2f" % [stats.experience*100.0 / stats.levelCap])
 	stats.experience += amount
 	if stats.experience > stats.levelCap:
 		stats.experience -= stats.levelCap
 		_levelup()
+	textDump.setText(tr("Exp"), "%.2f" % [stats.experience*100.0 / stats.levelCap])
 
 func _on_Area2D_body_entered(body):
 	# Water Area2D entered

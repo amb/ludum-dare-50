@@ -58,6 +58,7 @@ var _ai_difficulty = [
 		"predict":1.6,
 		"state":EnemyState.TRACKING, 
 	},
+	# 6
 	{
 		"tracking":100,
 		"aggro":100,
@@ -219,8 +220,8 @@ func _seekTarget():
 			else:
 				movementVector = Vector2(randf()*2.0-1.0, randf()*2.0-1.0).normalized() * totalForce
 			
-			if OS.get_ticks_msec() - lastSeen > 30000:
-				# If idle more than half a minute, go away
+			if OS.get_ticks_msec() - lastSeen > 60000 and dlen > 20.0 * 16.0:
+				# If idle more than a minute, go away
 				_destroy()
 				
 		EnemyState.TRACKING:

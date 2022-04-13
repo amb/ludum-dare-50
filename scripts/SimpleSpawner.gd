@@ -83,11 +83,6 @@ func _timeout():
 			pos.x += global_position.x - cx
 			pos.y += global_position.y - cy
 			
-		# If no path to player, don't spawn
-#		if is_instance_valid(pathFinder):
-#			if pathFinder.get_grid_value(pos) < 1:
-#				pass
-#			else:
 		# Add to world
 		var ni = spawnItem.instance()
 		ni.global_position = pos
