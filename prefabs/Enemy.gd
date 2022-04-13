@@ -1,20 +1,67 @@
 extends RigidBody2D
 
-var moveTarget : Vector2
-var resting : bool = true
-var previousPosition : Vector2
-
 var movementVector = Vector2()
 var movementMinDistance = 10.0
 var movementForce = 100.0
 var health = 12.0
 
-var entityAvatar
-var sleepTimer : float = 0.0
-
 var attackTarget
 var pathFinder
 onready var touchingTarget = false
+
+enum EnemyState {IDLE, CHASING, TRACKING}
+var _state : int = EnemyState.IDLE
+var _tracking_range : int = 5
+var _aggro_range : int = 10
+var _predict_move : int = 1
+
+var _ai_difficulty = {
+	0 : {
+		"tracking":0,
+		"aggro":10,
+		"speed":60.0,
+		"predict":0,
+		"state":EnemyState.IDLE, 
+	},
+	1 : {
+		"tracking":5,
+		"aggro":15,
+		"speed":80.0,
+		"predict":0,
+		"state":EnemyState.IDLE, 
+	},
+	2 : {
+		"tracking":10,
+		"aggro":20,
+		"speed":100.0,
+		"predict":1,
+		"state":EnemyState.IDLE, 
+	},
+	3 : {
+		"tracking":15,
+		"aggro":25,
+		"speed":100.0,
+		"predict":1,
+		"state":EnemyState.TRACKING, 
+	},
+	4 : {
+		"tracking":50,
+		"aggro":30,
+		"speed":100.0,
+		"predict":2,
+		"state":EnemyState.TRACKING, 
+	},
+	5 : {
+		"tracking":100,
+		"aggro":50,
+		"speed":110.0,
+		"predict":3,
+		"state":EnemyState.TRACKING, 
+	},
+}
+
+var entityAvatar
+var sleepTimer : float = 0.0
 
 var seekTimer
 var attackTick
@@ -27,6 +74,14 @@ export(PackedScene) var lootDrop
 
 var currentMaterial
 
+func setAIDifficulty(val):
+	var d = _ai_difficulty[val]
+	_tracking_range = d.tracking
+	_aggro_range = d.aggro
+	_predict_move = d.predict
+	movementForce = d.speed
+	_state = d.state
+
 func _death():
 	set_deferred("disabled", true)
 	$CollisionShape2D.set_deferred("disabled", true)
@@ -37,10 +92,9 @@ func _death():
 	ni.position.y = global_position.y
 	get_parent().add_child(ni)
 	
-#		$Sprite.visible = false
-#		$Shadow.visible = false
-
 	AudioManager.play("res://audio/enemy_die.sfxr")
+	
+	# Delay enough to show some hit animation/flashing
 	yield(get_tree().create_timer(0.1), "timeout")
 
 	_destroy()
@@ -55,10 +109,10 @@ func takeDamage(amount):
 		# Got hit animation
 		yield(get_tree().create_timer(0.1), "timeout")
 		$Sprite.set_material(null)
-	
 
 func setTarget(target):
 	attackTarget = target
+	pathFinder = attackTarget.get_node("PathFinder")
 
 func _ready():
 	entityAvatar = get_node("Sprite")
@@ -75,8 +129,6 @@ func _ready():
 	attackTick.connect("timeout", self, "_attackTick")
 	add_child(attackTick)
 #
-	resting = false
-	
 	# Lock rotation
 	self.mode = self.MODE_CHARACTER 
 	
@@ -89,13 +141,13 @@ func _ready():
 #		queue_free()
 	else:
 		self.visible = true
-		previousPosition = self.position
 		
 	# Save flash material
 	currentMaterial = $Sprite.get_material()
 	$Sprite.set_material(null)
 	
 	lastSeen = OS.get_ticks_msec()
+	setAIDifficulty(2)
 	
 func multiplyDifficulty(mm):
 	health *= mm
@@ -107,53 +159,66 @@ func _attackTick():
 		attackTarget.takeDamage(1.0, direction)
 		attackTick.start(0)
 	
-# Called by prefab timer
 func _seekTarget():
-	var spr = $Sprite
-
+	var totalForce = movementForce * mass
+	
 	if not is_instance_valid(attackTarget):
 		attackTarget = null
+		_state = EnemyState.IDLE
+		return
 		
-	var totalForce = movementForce * mass
-		
-	if attackTarget:
-		moveTarget = attackTarget.global_position
-		var diff = moveTarget - global_position
-		var dlen = diff.length()
-		
-		var space_state = get_world_2d().direct_space_state
-		
-		# Collide with top tilemap (terrain)
-		var result = space_state.intersect_ray(global_position, moveTarget, [], 1 << TERRAIN_ID)
-		
-		if not result:
-			if dlen >= movementMinDistance:
-				movementVector = diff/dlen * totalForce
+	var diff = attackTarget.global_position - global_position
+	var dlen = diff.length()
+	var space_state = get_world_2d().direct_space_state
+	var pos = global_position
+	
+	# Collide with top tilemap (terrain)
+	var result = space_state.intersect_ray(global_position, \
+		attackTarget.global_position, [], 1 << TERRAIN_ID)
+	var player_in_sight = not result
+	# TODO: magic numbers
+	var tracking_distance = 99 - pathFinder.get_grid_value(pos)
+	
+	match _state:
+		EnemyState.IDLE:
+			if player_in_sight and _aggro_range * 16.0 > dlen:
+				_state = EnemyState.CHASING
 			else:
-				movementVector = Vector2.ZERO
-			lastSeen = OS.get_ticks_msec()
-		else:
-			if OS.get_ticks_msec() - lastSeen > 3000:
-				var pos = global_position # + Vector2(8.0, 8.0)
-				# Some tiles don't have full 100% filled collisions, which is why the minus
-				var nextMove = attackTarget.get_node("PathFinder").find_move(Vector2(pos.x, pos.y-3.0))
-				if nextMove != Vector2.ZERO:
-					movementVector = nextMove * totalForce
+				movementVector = Vector2(randf()*2.0-1.0, randf()*2.0-1.0).normalized() * totalForce
+				
+		EnemyState.TRACKING:
+			# Some tiles don't have full 100% filled collisions, which is why the minus
+			var nextMove = pathFinder.find_move(Vector2(pos.x, pos.y-3.0))
+			if nextMove != Vector2.ZERO:
+				movementVector = nextMove * totalForce
+			
+			if not player_in_sight and _tracking_range * 16.0 < dlen:
+				_state = EnemyState.IDLE
+				
+			if player_in_sight and _aggro_range * 16.0 > dlen:
+				_state = EnemyState.CHASING
+				
+		EnemyState.CHASING:
+			if player_in_sight:
+				if dlen >= movementMinDistance:
+					movementVector = diff/dlen * totalForce
 				else:
-					movementVector = Vector2(randf()*2.0-1.0, randf()*2.0-1.0).normalized() * totalForce
-#					movementVector = nextMove
+					movementVector = Vector2.ZERO
+				lastSeen = OS.get_ticks_msec()
+				
+			elif tracking_distance < _tracking_range:
+				_state = EnemyState.TRACKING
+			
+			elif OS.get_ticks_msec() - lastSeen > 3000:
+				_state = EnemyState.IDLE
 		
-		spr.flip_h = movementVector.x < 0
+	$Sprite.flip_h = movementVector.x < 0
 				
 #		if dlen > 450.0 and self.visible == true:
 #			_go_to_sleep()
 #
 #		elif dlen < 430.0 and self.visible == false:
 #			_wakeup()
-			
-	else:
-		# Scan for player target
-		pass
 			
 #	if sleeping:
 #		# Seektimer usually ~0.5s
