@@ -1,8 +1,8 @@
 extends Node2D
 
-@export var tilesBase: NodePath
-@export var tilesGround: NodePath
-@export var tilesBlocking: NodePath
+@export var tilesBase: TileMap
+@export var tilesGround: TileMap
+@export var tilesBlocking: TileMap
 
 var mapSize = 128
 var mapHalfSize = 64
@@ -254,9 +254,9 @@ func _update_tilemap(tmap):
 	tmap.fix_invalid_tiles()
 
 func _ready():
-	tilesBase = get_node(tilesBase) as TileMap
-	tilesGround = get_node(tilesGround) as TileMap
-	tilesBlocking = get_node(tilesBlocking) as TileMap
+#	tilesBase = get_node(tilesBase) as TileMap
+#	tilesGround = get_node(tilesGround) as TileMap
+#	tilesBlocking = get_node(tilesBlocking) as TileMap
 	
 	var tileSize = tilesBase.cell_size.x
 	

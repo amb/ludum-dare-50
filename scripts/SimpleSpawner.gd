@@ -3,8 +3,8 @@ extends Node2D
 @export var spawnItem: PackedScene
 #export(float) var randomness = 5.0
 @export var isRunning: bool
-@export var tracking: NodePath
-@export var mapSource: NodePath
+@export var tracking: Node
+@export var mapSource: Node
 
 var timerTick = 1.0
 var itemPreload
@@ -29,9 +29,9 @@ func _ready():
 	debugTimer.connect("timeout", Callable(self, "_print_debug"))
 	
 	
-	tracking = get_node(tracking)
+#	tracking = get_node(tracking)
 		
-	mapSource = get_node(mapSource)
+#	mapSource = get_node(mapSource)
 	startTime = Time.get_ticks_msec()
 	
 	pathFinder = tracking.get_node("PathFinder")

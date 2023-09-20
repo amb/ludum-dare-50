@@ -168,7 +168,8 @@ func _ready():
 	
 	# Test if can move and not collide
 #	pathFinder = attackTarget.get_node("PathFinder")
-	if self.test_motion(Vector2(1.0, 1.0), false):
+	# if self.test_motion(Vector2(1.0, 1.0), false):
+	if self.test_move(self.transform, Vector2(1.0, 1.0)):
 		# Remove self
 		#_destroy()
 		pass
@@ -207,8 +208,11 @@ func _seekTarget():
 	var pos = global_position
 	
 	# Collide with top tilemap (terrain)
-	var result = space_state.intersect_ray(global_position, \
-		attackTarget.global_position, [], 1 << TERRAIN_ID)
+	var ray = RayCast2D.new()
+	ray.collision_mask = 1 << TERRAIN_ID
+	ray.cast_to = attackTarget.global_position
+	ray.position = global_position
+	var result = space_state.intersect_ray(ray)
 	var player_in_sight = not result
 	# TODO: magic numbers
 	var tracking_distance = 99 - pathFinder.get_grid_value(pos)
@@ -290,7 +294,7 @@ func _destroy():
 	queue_free()
 		
 func _wakeup():
-	self.mode = RigidBody2D.MODE_CHARACTER
+	# self.mode = RigidBody2D.MODE_CHARACTER
 	self.sleeping = false
 	sleepTimer = 0.0
 	self.visible = true
@@ -302,8 +306,8 @@ func _go_to_sleep():
 	self.mode = RigidBody2D.FREEZE_MODE_STATIC
 	self.sleeping = true
 
-func _integrate_forces(_state):
-	applied_force = movementVector
+# func _integrate_forces(_state):
+# 	applied_force = movementVector
 
 func _on_EnemyMob_body_entered(body):
 	if not body.is_in_group("enemy"):

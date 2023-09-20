@@ -26,11 +26,11 @@ var updateTimer
 
 var movementPath : PackedVector2Array
 
-@export var pathFinder: NodePath
-@export var modManager: NodePath
-@export var textDump: NodePath
-@export var levelUpPanel: NodePath
-@export var hpBar: NodePath
+@export var pathFinder: Node
+@export var modManager: Node
+@export var textDump: Node
+@export var levelUpPanel: Node
+@export var hpBar: Node
 
 signal death
 
@@ -56,7 +56,7 @@ func get_input():
 func setTargetLocation(newLoc):
 	# Pathfinding here, therefore separate function
 	movePath = pathFinder.find_path(newLoc)
-	movePath.invert()
+	movePath.reverse()
 	# Result took a while, global_position already changed if moving
 	movePath[0] = global_position
 
@@ -75,10 +75,10 @@ func _update_hp():
 
 func _ready():
 	entityAvatar = get_node("Hero")
-	textDump = get_node(textDump)
-	levelUpPanel = get_node(levelUpPanel)
-	hpBar = get_node(hpBar)
-	modManager = get_node(modManager)
+#	textDump = get_node(textDump)
+#	levelUpPanel = get_node(levelUpPanel)
+#	hpBar = get_node(hpBar)
+#	modManager = get_node(modManager)
 	
 	updateTimer = Timer.new()
 	updateTimer.autostart = true

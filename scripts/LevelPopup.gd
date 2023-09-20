@@ -2,12 +2,12 @@ extends PanelContainer
 
 var powerups = {}
 #var mutex
-@export var modManager: NodePath
+@export var modManager: Node
 
 signal panelFinished
 
 func _ready():
-	modManager = get_node(modManager)
+#	modManager = get_node(modManager)
 	visible = false
 #	mutex = Mutex.new()
 

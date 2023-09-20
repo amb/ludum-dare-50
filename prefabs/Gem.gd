@@ -9,7 +9,7 @@ var WALL = 2
 
 func _ready():
 	myExp = 5.0
-	startTime = OS.get_system_time_msecs()
+	startTime = Time.get_ticks_msec()
 	add_to_group("gem")
 	
 func _gem_pickup(target):
@@ -34,7 +34,11 @@ func _player_pickup(target):
 	if is_instance_valid(target):
 		# Gem must be visible to be picked up
 		var space_state = get_world_2d().direct_space_state
-		var result = space_state.intersect_ray(position, target.position, [], 1 << WALL)
+		var ray = RayCast2D.new()
+		ray.collision_mask = 1 << WALL
+		ray.cast_to = target.position
+		ray.position = position
+		var result = space_state.intersect_ray(ray)
 		if not result:
 			_gem_pickup(target)
 		elif checkTimer == null:
