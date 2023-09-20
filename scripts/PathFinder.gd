@@ -4,17 +4,17 @@ extends Node2D
 var drawTimer
 
 var djkPath : Array
-var djkDirection : PoolVector2Array
+var djkDirection : PackedVector2Array
 
-export(int) var djkSide
+@export var djkSide: int
 
 var djkWidth : int
 var tileWidth : int
 var tileWidthf : float
 
-export(Array, NodePath) var djkTilesPaths
+@export var djkTilesPaths # (Array, NodePath)
 var djkTiles
-export(bool) var debugDraw
+@export var debugDraw: bool
 var target
 #export(NodePath) var target
 #export(int) var collisionLayer
@@ -61,7 +61,7 @@ func _ready():
 
 	# Init necessary arrays
 	djkPath = Array()
-	djkDirection = PoolVector2Array()
+	djkDirection = PackedVector2Array()
 	for i in range(djkWidth*djkWidth):
 		djkPath.append(i % djkWidth)
 		djkDirection.append(Vector2.ZERO)
@@ -80,13 +80,13 @@ func _ready():
 		# Builder thread start
 		builder_thread = Thread.new()
 		builder_mutex = Mutex.new()
-		builder_thread.start(self, "_grid_update_thread", [])
+		builder_thread.start(Callable(self, "_grid_update_thread").bind([]))
 	else:
 		# Mostly for debugging (can't debug a thread)
 		tickTimer = Timer.new()
 		tickTimer.autostart = true
 		tickTimer.wait_time = 0.2
-		tickTimer.connect("timeout", self, "_grid_update_tick")
+		tickTimer.connect("timeout", Callable(self, "_grid_update_tick"))
 		add_child(tickTimer)
 	
 func get_grid_value(loc) -> int:
@@ -343,43 +343,43 @@ func _draw_sub():
 			# DJK value
 #			draw_string(font, Vector2(xloc+2.0, yloc+12.0)-v_off, str(num), Color.yellow)
 			# DJK direction
-			draw_line(center, center + djkDirection[x+djkSide+(y+djkSide)*djkWidth] * 7.0, Color.green, 2.0)
+			draw_line(center, center + djkDirection[x+djkSide+(y+djkSide)*djkWidth] * 7.0, Color.GREEN, 2.0)
 
 	# Draw world origin
 	# draw_circle(Vector2(-xpos, -ypos), 3.0, Color.yellow)
 	
 	# Draw grid
 	if true:
-		draw_circle(Vector2(tileWidthf/2, tileWidthf/2)-v_off, 5.0, Color.blue)
+		draw_circle(Vector2(tileWidthf/2, tileWidthf/2)-v_off, 5.0, Color.BLUE)
 		
 		for x in range(-djkSide, djkSide+2):
 			var xloc = float(x*tileWidth)-x_off
-			draw_line(Vector2(xloc, -tileWidth*djkSide-y_off), Vector2(xloc, tileWidth*(djkSide+1)-y_off), Color.red)
+			draw_line(Vector2(xloc, -tileWidth*djkSide-y_off), Vector2(xloc, tileWidth*(djkSide+1)-y_off), Color.RED)
 
 		for y in range(-djkSide, djkSide+2):
 			var yloc = float(y*tileWidth)-y_off
-			draw_line(Vector2(-tileWidth*djkSide-x_off, yloc), Vector2(tileWidth*(djkSide+1)-x_off, yloc), Color.red)
+			draw_line(Vector2(-tileWidth*djkSide-x_off, yloc), Vector2(tileWidth*(djkSide+1)-x_off, yloc), Color.RED)
 
 	# Draw pathfinding result
 	if false:
-		if not pathToDestination.empty():
+		if not pathToDestination.is_empty():
 			for i in range(1, pathToDestination.size()):
 				var ppos = pathToDestination[i]
-				draw_circle(ppos - gpos, 5.0, Color.black)
-				draw_line(ppos - gpos, pathToDestination[i-1] - gpos, Color.black, 5.0)
+				draw_circle(ppos - gpos, 5.0, Color.BLACK)
+				draw_line(ppos - gpos, pathToDestination[i-1] - gpos, Color.BLACK, 5.0)
 				
 			for i in range(1, pathToDestination.size()):
 				var ppos = pathToDestination[i]
-				draw_circle(ppos - gpos, 3.5, Color.green)
-				draw_line(ppos - gpos, pathToDestination[i-1] - gpos, Color.green, 2.5)
+				draw_circle(ppos - gpos, 3.5, Color.GREEN)
+				draw_line(ppos - gpos, pathToDestination[i-1] - gpos, Color.GREEN, 2.5)
 				
 	# Draw move query origins
 	if false:
 		var tvec = Vector2(djkSide*tileWidth-tileWidth/2, djkSide*tileWidth-tileWidth/2)
 		for mq in debugMoves:
-			draw_circle(mq*tileWidth-tvec-v_off, 5.0, Color.yellow)
+			draw_circle(mq*tileWidth-tvec-v_off, 5.0, Color.YELLOW)
 		for mq in debugOrigins:
-			draw_circle(mq-global_position, 3.0, Color.sienna)
+			draw_circle(mq-global_position, 3.0, Color.SIENNA)
 				
 	debugMoves = []
 	debugOrigins = []

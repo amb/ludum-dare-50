@@ -1,6 +1,6 @@
 extends Camera2D
 
-export(NodePath) var trackTarget
+@export var trackTarget: NodePath
 
 func _ready():
 	trackTarget = get_node(trackTarget)

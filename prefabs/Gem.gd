@@ -23,7 +23,7 @@ func _gem_pickup(target):
 		target, "global_position", 0.5, \
 		Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.start()
-	yield(tween, "tween_completed")
+	await tween.tween_completed
 	tween.remove_all()
 	
 	$Gemsprite.visible = false
@@ -42,7 +42,7 @@ func _player_pickup(target):
 			checkTimer.autostart = true
 			checkTimer.wait_time = 0.5
 			add_child(checkTimer)
-			checkTimer.connect("timeout", self, "_timeout")
+			checkTimer.connect("timeout", Callable(self, "_timeout"))
 			timerTarget = target
 
 func _timeout():

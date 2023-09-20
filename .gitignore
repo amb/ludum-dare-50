@@ -2,6 +2,7 @@ addons/
 build/
 
 # Godot-specific ignores
+.godot/
 .import/
 */*.import
 output/

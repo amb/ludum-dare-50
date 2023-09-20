@@ -1,6 +1,6 @@
 extends Button
 
-export(NodePath) var mapGenerator
+@export var mapGenerator: NodePath
 
 func _ready():
 	mapGenerator = get_node(mapGenerator)

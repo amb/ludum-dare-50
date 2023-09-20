@@ -39,7 +39,7 @@ func _activate():
 		add_child(collisionShape)
 		
 	if weapon.texture:
-		sprite = Sprite.new()
+		sprite = Sprite2D.new()
 		sprite.set_texture(AssetLoader.weapon_textures[weapon.texture])
 		scale.x = weapon.initial_scale
 		scale.y = weapon.initial_scale
@@ -52,7 +52,7 @@ func _activate():
 		attackTimer = Timer.new()
 		attackTimer.autostart = true
 		attackTimer.wait_time = weapon.timer_delay
-		attackTimer.connect("timeout", self, "_timer_effect")
+		attackTimer.connect("timeout", Callable(self, "_timer_effect"))
 		add_child(attackTimer)
 	
 

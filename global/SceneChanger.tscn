@@ -6,7 +6,7 @@
 output_port_for_preview = 0
 input_name = "uv"
 
-[sub_resource type="VisualShaderNodeScalarOp" id=92]
+[sub_resource type="VisualShaderNodeFloatOp" id=92]
 default_input_values = [ 0, 0.0, 1, 600.0 ]
 operator = 2
 
@@ -21,9 +21,9 @@ default_input_values = [ 0, Vector3( 0, 0, 0 ), 1, Vector3( 0.85, 0.5, 0 ) ]
 default_input_values = [ 0, 0.0, 1, 20.0, 2, 1e-05 ]
 function = 2
 
-[sub_resource type="VisualShaderNodeScalarSwitch" id=87]
+[sub_resource type="VisualShaderNodeSwitch" id=87]
 
-[sub_resource type="VisualShaderNodeScalarUniform" id=88]
+[sub_resource type="VisualShaderNodeFloatParameter" id=88]
 uniform_name = "Radius"
 
 [sub_resource type="VisualShader" id=85]
@@ -103,7 +103,7 @@ nodes/fragment/12/node = SubResource( 92 )
 nodes/fragment/12/position = Vector2( -60, 60 )
 nodes/fragment/13/node = SubResource( 93 )
 nodes/fragment/13/position = Vector2( -340, 260 )
-nodes/fragment/connections = PoolIntArray( 4, 0, 6, 0, 7, 0, 4, 1, 12, 0, 4, 0, 11, 0, 13, 0, 13, 0, 2, 0, 2, 0, 12, 0, 6, 0, 0, 1 )
+nodes/fragment/connections = PackedInt32Array( 4, 0, 6, 0, 7, 0, 4, 1, 12, 0, 4, 0, 11, 0, 13, 0, 13, 0, 2, 0, 2, 0, 12, 0, 6, 0, 0, 1 )
 
 [sub_resource type="ShaderMaterial" id=86]
 shader = SubResource( 85 )
@@ -119,8 +119,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 2 ),
-"transitions": PoolRealArray( 1.93187, 1 ),
+"times": PackedFloat32Array( 0, 2 ),
+"transitions": PackedFloat32Array( 1.93187, 1 ),
 "update": 0,
 "values": [ 0.0, 600.0 ]
 }
@@ -134,8 +134,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ 0.0 ]
 }
@@ -146,8 +146,8 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ 600.0 ]
 }

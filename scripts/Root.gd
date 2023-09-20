@@ -3,8 +3,8 @@ extends Node2D
 var timer
 var timerTicks : int = 0
 
-export(NodePath) var textDump
-export(NodePath) var player
+@export var textDump: NodePath
+@export var player: NodePath
 
 signal scene_finished
 	
@@ -25,11 +25,11 @@ func _ready():
 	timer.autostart = true
 	timer.wait_time = 1.0
 	add_child(timer)
-	timer.connect("timeout", self, "_timeout")
+	timer.connect("timeout", Callable(self, "_timeout"))
 
 	player = get_node(player)
 	
 	# Player died, send signal
 	if is_instance_valid(player):
-		player.connect("death", self, "_player_dead")
+		player.connect("death", Callable(self, "_player_dead"))
 	

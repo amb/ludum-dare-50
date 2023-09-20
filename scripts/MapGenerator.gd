@@ -1,8 +1,8 @@
 extends Node2D
 
-export(NodePath) var tilesBase
-export(NodePath) var tilesGround
-export(NodePath) var tilesBlocking
+@export var tilesBase: NodePath
+@export var tilesGround: NodePath
+@export var tilesBlocking: NodePath
 
 var mapSize = 128
 var mapHalfSize = 64
@@ -270,7 +270,7 @@ func _ready():
 	mapUpdateTick = Timer.new()
 	mapUpdateTick.autostart = true
 	mapUpdateTick.wait_time = 0.2
-	mapUpdateTick.connect("timeout", self, "_map_update_tick")
+	mapUpdateTick.connect("timeout", Callable(self, "_map_update_tick"))
 	add_child(mapUpdateTick)
 	
 	# Get water and land border tiles

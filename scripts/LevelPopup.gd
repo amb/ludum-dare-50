@@ -2,7 +2,7 @@ extends PanelContainer
 
 var powerups = {}
 #var mutex
-export(NodePath) var modManager
+@export var modManager: NodePath
 
 signal panelFinished
 
@@ -37,8 +37,8 @@ func activate():
 		$VBoxContainer.add_child(new_button)
 		new_button.text = mods[m]
 		new_button.name = m
-		new_button.connect("pressed", self, "_button_press", [m])
-		total_height += new_button.rect_size.y
+		new_button.connect("pressed", Callable(self, "_button_press").bind(m))
+		total_height += new_button.size.y
 		total_height += 3
 #		if box_width < new_button.rect_size.x:
 #			box_width = new_button.rect_size.x
@@ -64,7 +64,7 @@ func _deactivate():
 func _input(ev):
 	if visible:
 		if ev is InputEventKey and ev.pressed and \
-		ev.scancode == KEY_ESCAPE and not ev.echo:
+		ev.keycode == KEY_ESCAPE and not ev.echo:
 			_deactivate()
 
 

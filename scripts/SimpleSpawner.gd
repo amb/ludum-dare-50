@@ -1,10 +1,10 @@
 extends Node2D
 
-export(PackedScene) var spawnItem
+@export var spawnItem: PackedScene
 #export(float) var randomness = 5.0
-export(bool) var isRunning
-export(NodePath) var tracking
-export(NodePath) var mapSource
+@export var isRunning: bool
+@export var tracking: NodePath
+@export var mapSource: NodePath
 
 var timerTick = 1.0
 var itemPreload
@@ -20,26 +20,26 @@ func _ready():
 	timer.autostart = true
 	timer.wait_time = timerTick
 	add_child(timer)
-	timer.connect("timeout", self, "_timeout")
+	timer.connect("timeout", Callable(self, "_timeout"))
 	
 	debugTimer = Timer.new()
 	debugTimer.autostart = true
 	debugTimer.wait_time = 1.0
 	add_child(debugTimer)
-	debugTimer.connect("timeout", self, "_print_debug")
+	debugTimer.connect("timeout", Callable(self, "_print_debug"))
 	
 	
 	tracking = get_node(tracking)
 		
 	mapSource = get_node(mapSource)
-	startTime = OS.get_ticks_msec()
+	startTime = Time.get_ticks_msec()
 	
 	pathFinder = tracking.get_node("PathFinder")
 	
 func _print_debug():
 	var wck = mapSource.getWaterCells()
 	print(wck.size())
-	print(_calculate_spawn_rate((OS.get_ticks_msec() - startTime) / 1000.0, wck.size()))
+	print(_calculate_spawn_rate((Time.get_ticks_msec() - startTime) / 1000.0, wck.size()))
 	
 func _process(_delta):
 	if is_instance_valid(tracking):
@@ -62,7 +62,7 @@ func _calculate_spawn_rate(secs, available_tiles):
 func _timeout():
 	if isRunning:
 		var wck = mapSource.getWaterCells()
-		var secs = (OS.get_ticks_msec() - startTime) / 1000.0
+		var secs = (Time.get_ticks_msec() - startTime) / 1000.0
 		var next_to_5 = _calculate_spawn_rate(secs, wck.size())
 		timer.wait_time = next_to_5 * 0.5
 
@@ -84,7 +84,7 @@ func _timeout():
 			pos.y += global_position.y - cy
 			
 		# Add to world
-		var ni = spawnItem.instance()
+		var ni = spawnItem.instantiate()
 		ni.global_position = pos
 		get_parent().add_child(ni)
 

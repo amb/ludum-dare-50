@@ -105,6 +105,6 @@ var weapon_textures = {
 #	_load_weapon_textures()
 
 func spawnWeapon(name, source):
-	var weapon = spawnItem.instance()
+	var weapon = spawnItem.instantiate()
 	weapon.setup(weaponList[name], source)
 	return weapon

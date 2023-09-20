@@ -7,7 +7,9 @@ func _json_parse(file_loc):
 	file.open(file_loc, file.READ)
 	var text = file.get_as_text()
 	file.close()
-	mods = JSON.parse(text).result
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(text).result
+	mods = test_json_conv.get_data()
 	
 func _hardcoded_mods():
 	return {

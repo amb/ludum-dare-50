@@ -10,8 +10,8 @@ func play(res):
 		p.stream = load(res)
 		add_child(p)
 		sound[res] = p
-		last_played[res] = OS.get_ticks_msec() - delay * 2
+		last_played[res] = Time.get_ticks_msec() - delay * 2
 		
-	if last_played[res] + delay < OS.get_ticks_msec():
+	if last_played[res] + delay < Time.get_ticks_msec():
 		sound[res].play()
-		last_played[res] = OS.get_ticks_msec()
+		last_played[res] = Time.get_ticks_msec()

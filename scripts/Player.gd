@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
 var moveTarget : Vector2
 var moving : bool = false
@@ -10,7 +10,7 @@ var moving_keyboard : bool = false
 
 var entityAvatar
 
-onready var stats = {
+@onready var stats = {
 	"health":20.0,
 	"maxHealth":20.0,
 	"experience":0.0,
@@ -21,16 +21,16 @@ onready var stats = {
 
 var weapons = []
 
-onready var inWater = false
+@onready var inWater = false
 var updateTimer
 
-var movementPath : PoolVector2Array
+var movementPath : PackedVector2Array
 
-export(NodePath) var pathFinder
-export(NodePath) var modManager
-export(NodePath) var textDump
-export(NodePath) var levelUpPanel
-export(NodePath) var hpBar
+@export var pathFinder: NodePath
+@export var modManager: NodePath
+@export var textDump: NodePath
+@export var levelUpPanel: NodePath
+@export var hpBar: NodePath
 
 signal death
 
@@ -83,7 +83,7 @@ func _ready():
 	updateTimer = Timer.new()
 	updateTimer.autostart = true
 	updateTimer.wait_time = 0.2
-	updateTimer.connect("timeout", self, "_updateTick")
+	updateTimer.connect("timeout", Callable(self, "_updateTick"))
 	add_child(updateTimer)
 	
 	_update_hp()
@@ -95,7 +95,8 @@ func _updateTick():
 	$PathFinder.find_move(global_position)
 	# This is to fix the occasional bug where running into
 	# water stops the health decrease after not moving
-	move_and_slide(Vector2(randf()-0.5, randf()-0.5))
+	set_velocity(Vector2(randf()-0.5, randf()-0.5))
+	move_and_slide()
 
 func _process(delta):
 	if inWater:
@@ -109,11 +110,12 @@ func _physics_process(_delta):
 		var diff = moveTarget - self.position
 		var dlen = diff.length()
 		if dlen > 5.0:
-			move_and_slide(120.0 * diff / dlen)
+			set_velocity(120.0 * diff / dlen)
+			move_and_slide()
 		else:
 			moving = false
 			
-	if not movePath.empty():
+	if not movePath.is_empty():
 		if movePath[0].distance_squared_to(global_position) < 32.0:
 			movePath.pop_front()
 		if movePath.size() > 0:
@@ -122,7 +124,8 @@ func _physics_process(_delta):
 	if movementVector != Vector2.ZERO:
 		# Only keyboard move
 		moving = false
-		move_and_slide(120.0 * movementVector)
+		set_velocity(120.0 * movementVector)
+		move_and_slide()
 		
 func _death():
 	# Death
@@ -130,7 +133,7 @@ func _death():
 	$DieAS.play()
 	stats.health = 0.0
 	hpBar.visible = false
-	yield($DieAS, "finished")
+	await $DieAS.finished
 	emit_signal("death")
 	queue_free()
 	
@@ -149,7 +152,7 @@ func _levelup():
 	stats.levelCap += 10
 	textDump.setText(tr("Level"), stats.level)
 	levelUpPanel.activate()
-	yield(levelUpPanel, "panelFinished")
+	await levelUpPanel.panelFinished
 	
 	# After pause return here
 	for i in modManager.getActivatedMods():
