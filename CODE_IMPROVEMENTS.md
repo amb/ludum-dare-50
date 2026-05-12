@@ -116,7 +116,9 @@ Benefits:
 
 ### 5. Consider converting enemies from `RigidBody2D` to `CharacterBody2D`
 
-Current state:
+Status: done in code on 2026-05-13. `prefabs/Enemy.tscn`/`Enemy.gd` now use `CharacterBody2D` and deterministic `velocity` + `move_and_slide()` movement. Knockback is currently a no-op placeholder.
+
+Previous state:
 
 - `prefabs/Enemy.gd` extends `RigidBody2D`.
 - Enemy movement is driven using force-like values and `constant_force`.
@@ -166,7 +168,9 @@ If keeping flow fields:
 
 ### 7. Rework water damage/collision handling
 
-Current state:
+Status: mostly done on 2026-05-13. Water no longer blocks movement or pathfinding. Player water damage and enemy drowning are explicit `MapGenerator.is_water_at_global_position()` checks against the logical ground grid. The obsolete player `WaterKill` Area2D node was removed.
+
+Previous state:
 
 - Water collision/damage behavior depends on TileMap collision and Area2D/body interactions.
 - This was restored during conversion, but could be simpler.
@@ -246,7 +250,7 @@ Benefits:
 
 ### 10. Replace dictionary-based stats/mods/weapons with Resources or typed classes
 
-Status: partially done on 2026-05-13. Weapon definitions were moved out of hard-coded dictionaries in `AssetLoader.gd` into `WeaponData`/`WeaponDamageData` resources under `weapons/data/`. Mods were moved into `ModData` resources under `mods/`. Player stats are still dictionary-based.
+Status: mostly done on 2026-05-13. Weapon definitions were moved out of hard-coded dictionaries in `AssetLoader.gd` into `WeaponData`/`WeaponDamageData` resources under `weapons/data/`. Mods were moved into `ModData` resources under `mods/`. Player stats were moved into a `PlayerStats` resource under `resources/`.
 
 Current state:
 

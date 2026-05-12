@@ -13,14 +13,8 @@ var moving_keyboard : bool = false
 @onready var die_audio: AudioStreamPlayer2D = $DieAS
 @onready var gem_pickup: RemoteTransform2D = $GemPickup
 
-@onready var stats = {
-	"health":20.0,
-	"maxHealth":20.0,
-	"experience":0.0,
-	"level":1,
-	"levelCap":10,
-	"movementSpeed":0.5,
-}
+@export var stats_resource: Resource = preload("res://resources/player_stats.tres")
+var stats: Resource
 
 var weapons = []
 
@@ -83,6 +77,7 @@ func _update_hp():
 	hpBar.value = max(stats.health, 0.0) * 100.0 / stats.maxHealth
 
 func _ready():
+	stats = stats_resource.runtime_copy()
 	pathFinder = get_node(path_finder_path)
 	textDump = get_node(text_dump_path)
 	levelUpPanel = get_node(level_up_panel_path)

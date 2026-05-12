@@ -1,8 +1,8 @@
-extends RigidBody2D
+extends CharacterBody2D
 
 var movementVector = Vector2()
 var movementMinDistance = 10.0
-var movementForce = 100.0
+var movementSpeed = 100.0
 var health = 12.0
 
 var attackTarget
@@ -113,7 +113,7 @@ func setAIDifficulty(val):
 	_tracking_range = d.tracking
 	_aggro_range = d.aggro
 	_predict_move = d.predict
-	movementForce = d.speed
+	movementSpeed = d.speed
 	_state = d.state
 
 func _death():
@@ -132,6 +132,10 @@ func _death():
 	await get_tree().create_timer(0.1).timeout
 
 	_destroy()
+
+func apply_knockback(_impulse: Vector2):
+	# CharacterBody2D enemies do not use physics impulses yet.
+	pass
 
 func takeDamage(amount):
 	health -= amount
@@ -167,10 +171,6 @@ func _ready():
 	attackTick.connect("timeout", Callable(self, "_attackTick"))
 	add_child(attackTick)
 #
-	# Lock rotation.
-	lock_rotation = true
-	
-	# Godot 4 removed RigidBody2D.test_motion(); keep the enemy visible.
 	self.visible = true
 		
 	# Save flash material
@@ -182,7 +182,7 @@ func _ready():
 	
 func multiplyDifficulty(mm):
 	health *= mm
-	mass *= mm
+	movementSpeed *= mm
 
 func _attackTick():
 	if touchingTarget:
@@ -194,7 +194,7 @@ func _seekTarget():
 	if is_instance_valid(mapSource) and mapSource.is_water_at_global_position(global_position):
 		_destroy()
 		return
-	var totalForce = movementForce * mass
+	var current_speed = movementSpeed
 	
 	if not is_instance_valid(attackTarget):
 		attackTarget = null
@@ -218,7 +218,7 @@ func _seekTarget():
 			if player_in_sight and _aggro_range * 16.0 > dlen:
 				_state = EnemyState.CHASING
 			else:
-				movementVector = Vector2(randf()*2.0-1.0, randf()*2.0-1.0).normalized() * totalForce
+				movementVector = Vector2(randf()*2.0-1.0, randf()*2.0-1.0).normalized()
 			
 			if Time.get_ticks_msec() - lastSeen > 60000 and dlen > 20.0 * 16.0:
 				# If idle more than a minute, go away
@@ -228,7 +228,7 @@ func _seekTarget():
 			# Some tiles don't have full 100% filled collisions, which is why the minus
 			var nextMove = pathFinder.find_move(Vector2(pos.x, pos.y-3.0))
 			if nextMove != Vector2.ZERO:
-				movementVector = nextMove * totalForce
+				movementVector = nextMove
 			
 			if not player_in_sight and _tracking_range < tracking_distance:
 				_state = EnemyState.IDLE
@@ -260,7 +260,7 @@ func _seekTarget():
 					intersectTrajectory += ldif
 				
 				diff = intersectTrajectory - global_position
-				movementVector = diff/diff.length() * totalForce
+				movementVector = diff.normalized()
 				lastSeen = Time.get_ticks_msec()
 				
 			elif tracking_distance < _tracking_range:
@@ -290,8 +290,6 @@ func _destroy():
 	queue_free()
 		
 func _wakeup():
-	freeze = false
-	self.sleeping = false
 	sleepTimer = 0.0
 	self.visible = true
 	set_process(true)
@@ -299,12 +297,10 @@ func _wakeup():
 func _go_to_sleep():
 	set_process(false)
 	self.visible = false
-	freeze_mode = RigidBody2D.FREEZE_MODE_STATIC
-	freeze = true
-	self.sleeping = true
 
-func _integrate_forces(_state):
-	constant_force = movementVector
+func _physics_process(_delta):
+	velocity = movementVector * movementSpeed
+	move_and_slide()
 
 func _on_EnemyMob_body_entered(body):
 	if not body.is_in_group("enemy"):

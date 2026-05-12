@@ -60,9 +60,9 @@ func _area_trigger(body):
 	if weapon.damage:
 		var diff = body.global_position - global_position
 		body.takeDamage(_attack_damage())
-		if is_instance_valid(body):
+		if is_instance_valid(body) and body.has_method("apply_knockback"):
 			var kbv = weapon.damage.knockback * 100.0
-			body.apply_central_impulse(diff.normalized() * kbv)
+			body.apply_knockback(diff.normalized() * kbv)
 		
 	if weapon.spawner:
 		target = body
