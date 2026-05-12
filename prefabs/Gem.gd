@@ -9,7 +9,7 @@ var WALL = 2
 
 func _ready():
 	myExp = 5.0
-	startTime = OS.get_system_time_msecs()
+	startTime = Time.get_ticks_msec()
 	add_to_group("gem")
 	
 func _gem_pickup(target):
@@ -18,13 +18,9 @@ func _gem_pickup(target):
 	$CollisionShape2D.set_deferred("disabled", true)
 	$Shadow.set_deferred("disabled", true)
 	
-	var tween = get_node("Tween")
-	tween.follow_property(self, "global_position", self.global_position, \
-		target, "global_position", 0.5, \
-		Tween.TRANS_LINEAR, Tween.EASE_OUT)
-	tween.start()
-	yield(tween, "tween_completed")
-	tween.remove_all()
+	var tween = create_tween()
+	tween.tween_property(self, "global_position", target.global_position, 0.5).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
+	await tween.finished
 	
 	$Gemsprite.visible = false
 	AudioManager.play("res://audio/gem_pickup.sfxr")
@@ -34,7 +30,8 @@ func _player_pickup(target):
 	if is_instance_valid(target):
 		# Gem must be visible to be picked up
 		var space_state = get_world_2d().direct_space_state
-		var result = space_state.intersect_ray(position, target.position, [], 1 << WALL)
+		var query = PhysicsRayQueryParameters2D.create(position, target.position, 1 << WALL)
+		var result = space_state.intersect_ray(query)
 		if not result:
 			_gem_pickup(target)
 		elif checkTimer == null:
@@ -42,7 +39,7 @@ func _player_pickup(target):
 			checkTimer.autostart = true
 			checkTimer.wait_time = 0.5
 			add_child(checkTimer)
-			checkTimer.connect("timeout", self, "_timeout")
+			checkTimer.connect("timeout", Callable(self, "_timeout"))
 			timerTarget = target
 
 func _timeout():

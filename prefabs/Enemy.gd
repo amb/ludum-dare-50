@@ -7,7 +7,7 @@ var health = 12.0
 
 var attackTarget
 var pathFinder
-onready var touchingTarget = false
+@onready var touchingTarget = false
 
 enum EnemyState {IDLE, CHASING, TRACKING}
 var _state : int = EnemyState.IDLE
@@ -99,7 +99,7 @@ var attackOnBodyEnter : bool = true
 
 const TERRAIN_ID = 2
 
-export(PackedScene) var lootDrop
+@export var lootDrop: PackedScene
 
 var currentMaterial
 
@@ -120,28 +120,28 @@ func _death():
 	$CollisionShape2D.set_deferred("disabled", true)
 	
 	# Spawn loots
-	var ni = lootDrop.instance()
+	var ni = lootDrop.instantiate()
 	ni.position.x = global_position.x
 	ni.position.y = global_position.y
-	get_parent().add_child(ni)
+	get_parent().call_deferred("add_child", ni)
 	
 	AudioManager.play("res://audio/enemy_die.sfxr")
 	
 	# Delay enough to show some hit animation/flashing
-	yield(get_tree().create_timer(0.1), "timeout")
+	await get_tree().create_timer(0.1).timeout
 
 	_destroy()
 
 func takeDamage(amount):
 	health -= amount
-	$Sprite.set_material(currentMaterial)
+	$Sprite2D.set_material(currentMaterial)
 	if health <= 0.0:
 		_death()
 	else:
 #		AudioManager.play("res://audio/enemy_take_damage.sfxr")
 		# Got hit animation
-		yield(get_tree().create_timer(0.1), "timeout")
-		$Sprite.set_material(null)
+		await get_tree().create_timer(0.1).timeout
+		$Sprite2D.set_material(null)
 
 func setTarget(target):
 	if is_instance_valid(target):
@@ -149,38 +149,31 @@ func setTarget(target):
 		pathFinder = attackTarget.get_node("PathFinder")
 
 func _ready():
-	entityAvatar = get_node("Sprite")
+	entityAvatar = get_node("Sprite2D")
 
 	seekTimer = Timer.new()
 	seekTimer.autostart = true
 	seekTimer.wait_time = 0.497
-	seekTimer.connect("timeout", self, "_seekTarget")
+	seekTimer.connect("timeout", Callable(self, "_seekTarget"))
 	add_child(seekTimer)
 	
 	attackTick = Timer.new()
 	attackTick.autostart = true
 	attackTick.wait_time = 0.5
-	attackTick.connect("timeout", self, "_attackTick")
+	attackTick.connect("timeout", Callable(self, "_attackTick"))
 	add_child(attackTick)
 #
-	# Lock rotation
-	self.mode = self.MODE_CHARACTER 
+	# Lock rotation.
+	lock_rotation = true
 	
-	# Test if can move and not collide
-#	pathFinder = attackTarget.get_node("PathFinder")
-	if self.test_motion(Vector2(1.0, 1.0), false):
-		# Remove self
-		#_destroy()
-		pass
-#		queue_free()
-	else:
-		self.visible = true
+	# Godot 4 removed RigidBody2D.test_motion(); keep the enemy visible.
+	self.visible = true
 		
 	# Save flash material
-	currentMaterial = $Sprite.get_material()
-	$Sprite.set_material(null)
+	currentMaterial = $Sprite2D.get_material()
+	$Sprite2D.set_material(null)
 	
-	lastSeen = OS.get_ticks_msec()
+	lastSeen = Time.get_ticks_msec()
 	setAIDifficulty(0)
 	
 func multiplyDifficulty(mm):
@@ -207,8 +200,8 @@ func _seekTarget():
 	var pos = global_position
 	
 	# Collide with top tilemap (terrain)
-	var result = space_state.intersect_ray(global_position, \
-		attackTarget.global_position, [], 1 << TERRAIN_ID)
+	var query = PhysicsRayQueryParameters2D.create(global_position, attackTarget.global_position, 1 << TERRAIN_ID)
+	var result = space_state.intersect_ray(query)
 	var player_in_sight = not result
 	# TODO: magic numbers
 	var tracking_distance = 99 - pathFinder.get_grid_value(pos)
@@ -220,7 +213,7 @@ func _seekTarget():
 			else:
 				movementVector = Vector2(randf()*2.0-1.0, randf()*2.0-1.0).normalized() * totalForce
 			
-			if OS.get_ticks_msec() - lastSeen > 60000 and dlen > 20.0 * 16.0:
+			if Time.get_ticks_msec() - lastSeen > 60000 and dlen > 20.0 * 16.0:
 				# If idle more than a minute, go away
 				_destroy()
 				
@@ -261,15 +254,15 @@ func _seekTarget():
 				
 				diff = intersectTrajectory - global_position
 				movementVector = diff/diff.length() * totalForce
-				lastSeen = OS.get_ticks_msec()
+				lastSeen = Time.get_ticks_msec()
 				
 			elif tracking_distance < _tracking_range:
 				_state = EnemyState.TRACKING
 			
-			elif OS.get_ticks_msec() - lastSeen > 3000:
+			elif Time.get_ticks_msec() - lastSeen > 3000:
 				_state = EnemyState.IDLE
 		
-	$Sprite.flip_h = movementVector.x < 0
+	$Sprite2D.flip_h = movementVector.x < 0
 				
 #		if dlen > 450.0 and self.visible == true:
 #			_go_to_sleep()
@@ -290,7 +283,7 @@ func _destroy():
 	queue_free()
 		
 func _wakeup():
-	self.mode = RigidBody2D.MODE_CHARACTER
+	freeze = false
 	self.sleeping = false
 	sleepTimer = 0.0
 	self.visible = true
@@ -299,11 +292,12 @@ func _wakeup():
 func _go_to_sleep():
 	set_process(false)
 	self.visible = false
-	self.mode = RigidBody2D.MODE_STATIC
+	freeze_mode = RigidBody2D.FREEZE_MODE_STATIC
+	freeze = true
 	self.sleeping = true
 
 func _integrate_forces(_state):
-	applied_force = movementVector
+	constant_force = movementVector
 
 func _on_EnemyMob_body_entered(body):
 	if not body.is_in_group("enemy"):

@@ -22,7 +22,7 @@ code = "//shader_type canvas_item;
 shader_type canvas_item;
 
 render_mode blend_mix;
-uniform vec4 modulate: hint_color;
+uniform vec4 modulate: source_color;
 
 void fragment() {
 	COLOR = vec4(modulate.rgb * modulate.a + texture(TEXTURE, UV).rgb * (1.0 - modulate.a), texture(TEXTURE, UV).a);

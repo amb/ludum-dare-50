@@ -1,7 +1,6 @@
 extends Area2D
 
-export(NodePath) var target
-
+@export var target = null
 func _ready():
 	target = get_node(target)
 

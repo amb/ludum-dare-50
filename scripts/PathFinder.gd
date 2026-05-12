@@ -4,17 +4,17 @@ extends Node2D
 var drawTimer
 
 var djkPath : Array
-var djkDirection : PoolVector2Array
+var djkDirection : PackedVector2Array
 
-export(int) var djkSide
+@export var djkSide: int
 
 var djkWidth : int
 var tileWidth : int
 var tileWidthf : float
 
-export(Array, NodePath) var djkTilesPaths
+@export var djkTilesPaths = [] # (Array, NodePath)
 var djkTiles
-export(bool) var debugDraw
+@export var debugDraw: bool
 var target
 #export(NodePath) var target
 #export(int) var collisionLayer
@@ -51,7 +51,7 @@ func _ready():
 		djkTiles.append(get_node(djkTilesPaths[dt]))
 	
 	
-	tileWidth = djkTiles[0].cell_size.x
+	tileWidth = djkTiles[0].tile_set.tile_size.x
 	tileWidthf = float(tileWidth)
 	
 	djkWidth = djkSide * 2 + 1
@@ -61,17 +61,14 @@ func _ready():
 
 	# Init necessary arrays
 	djkPath = Array()
-	djkDirection = PoolVector2Array()
+	djkDirection = PackedVector2Array()
 	for i in range(djkWidth*djkWidth):
 		djkPath.append(i % djkWidth)
 		djkDirection.append(Vector2.ZERO)
 		
-	# Get all tiels with collision shapes, use those tile to block path
+	# Godot 4 tile shape APIs changed; treat any occupied cell in pathfinding
+	# collision maps as blocking.
 	blocker_tiles = {}
-	var tset = djkTiles[0].get_tileset()
-	for i in tset.get_tiles_ids():
-		if tset.tile_get_shapes(i).size() > 0:
-			blocker_tiles[i] = true
 			
 	debugMoves = []
 	debugOrigins = []
@@ -80,13 +77,13 @@ func _ready():
 		# Builder thread start
 		builder_thread = Thread.new()
 		builder_mutex = Mutex.new()
-		builder_thread.start(self, "_grid_update_thread", [])
+		builder_thread.start(Callable(self, "_grid_update_thread").bind([]))
 	else:
 		# Mostly for debugging (can't debug a thread)
 		tickTimer = Timer.new()
 		tickTimer.autostart = true
 		tickTimer.wait_time = 0.2
-		tickTimer.connect("timeout", self, "_grid_update_tick")
+		tickTimer.connect("timeout", Callable(self, "_grid_update_tick"))
 		add_child(tickTimer)
 	
 func get_grid_value(loc) -> int:
@@ -140,7 +137,7 @@ func find_path(start, skip_ray=true):
 	var space_state = get_world_2d().direct_space_state
 	if not skip_ray:
 		# Try find a direct route through terrain (layer 6)
-		result = space_state.intersect_ray(head, target_position)
+		result = space_state.intersect_ray(PhysicsRayQueryParameters2D.create(head, target_position))
 	#	var result = space_state.intersect_ray(head, target_position, [], 1 << collisionLayer)
 	if not result and not skip_ray:
 		# Found a direct line of sight path
@@ -165,7 +162,7 @@ func find_path(start, skip_ray=true):
 			var nd = pathToDestination[-1-ti]
 			for i in range(pathToDestination.size()-3-ti):
 #				result = space_state.intersect_ray(nd, pathToDestination[-3-ti], [], 1 << collisionLayer)
-				result = space_state.intersect_ray(nd, pathToDestination[-3-ti])
+				result = space_state.intersect_ray(PhysicsRayQueryParameters2D.create(nd, pathToDestination[-3-ti]))
 				if not result:
 					# Prune
 					var tmp = pathToDestination.pop_at(-1-ti)
@@ -278,9 +275,9 @@ func _grid_update_inner(userdata):
 	for dt in djkTiles.size():
 		for x in range(0, djkWidth):
 			for y in range(0, djkWidth):
-				var cell = djkTiles[dt].get_cell(x + tile_x, y + tile_y)
+				var cell = djkTiles[dt].get_cell_source_id(0, Vector2i(x + tile_x, y + tile_y))
 				var loc = Vector2(x, y)
-				if blocker_tiles.has(cell):
+				if cell != -1:
 					blocking_cell[loc] = true
 
 
@@ -297,7 +294,7 @@ func _grid_update_inner(userdata):
 		
 	_grid_make_vectors(djkPath)
 
-	update()
+	queue_redraw()
 
 
 func _get_fmod(iv):
@@ -343,43 +340,43 @@ func _draw_sub():
 			# DJK value
 #			draw_string(font, Vector2(xloc+2.0, yloc+12.0)-v_off, str(num), Color.yellow)
 			# DJK direction
-			draw_line(center, center + djkDirection[x+djkSide+(y+djkSide)*djkWidth] * 7.0, Color.green, 2.0)
+			draw_line(center, center + djkDirection[x+djkSide+(y+djkSide)*djkWidth] * 7.0, Color.GREEN, 2.0)
 
 	# Draw world origin
 	# draw_circle(Vector2(-xpos, -ypos), 3.0, Color.yellow)
 	
 	# Draw grid
 	if true:
-		draw_circle(Vector2(tileWidthf/2, tileWidthf/2)-v_off, 5.0, Color.blue)
+		draw_circle(Vector2(tileWidthf/2, tileWidthf/2)-v_off, 5.0, Color.BLUE)
 		
 		for x in range(-djkSide, djkSide+2):
 			var xloc = float(x*tileWidth)-x_off
-			draw_line(Vector2(xloc, -tileWidth*djkSide-y_off), Vector2(xloc, tileWidth*(djkSide+1)-y_off), Color.red)
+			draw_line(Vector2(xloc, -tileWidth*djkSide-y_off), Vector2(xloc, tileWidth*(djkSide+1)-y_off), Color.RED)
 
 		for y in range(-djkSide, djkSide+2):
 			var yloc = float(y*tileWidth)-y_off
-			draw_line(Vector2(-tileWidth*djkSide-x_off, yloc), Vector2(tileWidth*(djkSide+1)-x_off, yloc), Color.red)
+			draw_line(Vector2(-tileWidth*djkSide-x_off, yloc), Vector2(tileWidth*(djkSide+1)-x_off, yloc), Color.RED)
 
 	# Draw pathfinding result
 	if false:
-		if not pathToDestination.empty():
+		if not pathToDestination.is_empty():
 			for i in range(1, pathToDestination.size()):
 				var ppos = pathToDestination[i]
-				draw_circle(ppos - gpos, 5.0, Color.black)
-				draw_line(ppos - gpos, pathToDestination[i-1] - gpos, Color.black, 5.0)
+				draw_circle(ppos - gpos, 5.0, Color.BLACK)
+				draw_line(ppos - gpos, pathToDestination[i-1] - gpos, Color.BLACK, 5.0)
 				
 			for i in range(1, pathToDestination.size()):
 				var ppos = pathToDestination[i]
-				draw_circle(ppos - gpos, 3.5, Color.green)
-				draw_line(ppos - gpos, pathToDestination[i-1] - gpos, Color.green, 2.5)
+				draw_circle(ppos - gpos, 3.5, Color.GREEN)
+				draw_line(ppos - gpos, pathToDestination[i-1] - gpos, Color.GREEN, 2.5)
 				
 	# Draw move query origins
 	if false:
 		var tvec = Vector2(djkSide*tileWidth-tileWidth/2, djkSide*tileWidth-tileWidth/2)
 		for mq in debugMoves:
-			draw_circle(mq*tileWidth-tvec-v_off, 5.0, Color.yellow)
+			draw_circle(mq*tileWidth-tvec-v_off, 5.0, Color.YELLOW)
 		for mq in debugOrigins:
-			draw_circle(mq-global_position, 3.0, Color.sienna)
+			draw_circle(mq-global_position, 3.0, Color.SIENNA)
 				
 	debugMoves = []
 	debugOrigins = []

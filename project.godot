@@ -1,3 +1,4 @@
+; Project was converted by built-in tool to Godot 4
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
 ; since the parameters that go here are not all obvious.
@@ -6,41 +7,7 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "PolygonShape2D",
-"class": "CapsulePolygonShape2D",
-"language": "GDScript",
-"path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/CapsulePolygonShape2D.gd"
-}, {
-"base": "PolygonShape2D",
-"class": "CirclePolygonShape2D",
-"language": "GDScript",
-"path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/CirclePolygonShape2D.gd"
-}, {
-"base": "Resource",
-"class": "PolygonShape2D",
-"language": "GDScript",
-"path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/PolygonShape2D.gd"
-}, {
-"base": "PolygonShape2D",
-"class": "RectanglePolygonShape2D",
-"language": "GDScript",
-"path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/RectanglePolygonShape2D.gd"
-}, {
-"base": "PolygonShape2D",
-"class": "TrianglePolygonShape2D",
-"language": "GDScript",
-"path": "res://addons/CollisionPolygonShape/CollisionPolygonShape2D/PolygonShape2D/TrianglePolygonShape2D.gd"
-} ]
-_global_script_class_icons={
-"CapsulePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/CapsulePolygonShape2D.svg",
-"CirclePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/CirclePolygonShape2D.svg",
-"PolygonShape2D": "res://addons/CollisionPolygonShape/Icons/PolygonShape2D.svg",
-"RectanglePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/RectanglePolygonShape2D.svg",
-"TrianglePolygonShape2D": "res://addons/CollisionPolygonShape/Icons/TrianglePolygonShape2D.svg"
-}
+config_version=5
 
 [application]
 
@@ -54,12 +21,16 @@ AudioManager="*res://global/AudioManager.gd"
 
 [display]
 
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/window_width_override=2560
+window/size/window_height_override=1440
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/CollisionPolygonShape/plugin.cfg", "res://addons/gdfxr/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg" )
+enabled=PackedStringArray("res://addons/gdfxr/plugin.cfg")
 
 [gdnative]
 
@@ -104,7 +75,7 @@ texture={
 
 [locale]
 
-translations=PoolStringArray(  )
+translations=PackedStringArray(  )
 
 [physics]
 

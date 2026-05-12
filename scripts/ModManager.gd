@@ -3,11 +3,12 @@ extends Node2D
 var mods = {}
 
 func _json_parse(file_loc):
-	var file = File.new()
-	file.open(file_loc, file.READ)
+	var file = FileAccess.open(file_loc, FileAccess.READ)
 	var text = file.get_as_text()
 	file.close()
-	mods = JSON.parse(text).result
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(text)
+	mods = test_json_conv.get_data()
 	
 func _hardcoded_mods():
 	return {
