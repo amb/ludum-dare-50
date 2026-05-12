@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://weapons/WeaponData.gd" id="1"]
+[ext_resource type="Texture2D" path="res://weapons/textures/missile.png" id="2"]
+[ext_resource type="Script" path="res://weapons/WeaponDamageData.gd" id="3"]
+
+[sub_resource type="Resource" id="WeaponDamageData_missile"]
+script = ExtResource("3")
+low = 10
+add = 5
+knockback = 0.0
+
+[resource]
+script = ExtResource("1")
+use_instant = true
+use_timer = false
+timer_delay = 1.0
+collision_type = "circle"
+collision_radius = 4.0
+initial_scale = 1.0
+texture = ExtResource("2")
+opacity = 1.0
+ground_sprite = false
+tracking = false
+split_on_strike = 0
+velocity = 1.0
+lifetime = 10.0
+attached = false
+activate_on_detach = false
+targeting = "area_nearest"
+spawner = false
+damage = SubResource("WeaponDamageData_missile")

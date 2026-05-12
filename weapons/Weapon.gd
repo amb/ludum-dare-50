@@ -1,18 +1,18 @@
 extends Area2D
 
 var attachment
-var weapon
-var wp_zero
-var attackTimer
-var collisionShape
-var sprite
+var weapon: Resource
+var wp_zero: Resource
+var attackTimer: Timer
+var collisionShape: CollisionShape2D
+var sprite: Sprite2D
 var target
 
-func setup(wp, attach):
-	weapon = wp.duplicate(true)
+func setup(wp: Resource, attach):
+	weapon = wp.runtime_copy()
 	attachment = attach
 	assert (self is Area2D)
-	wp_zero = weapon.duplicate(true)
+	wp_zero = weapon.runtime_copy()
 	if not weapon.activate_on_detach:
 		_activate()
 		
@@ -40,7 +40,7 @@ func _activate():
 		
 	if weapon.texture:
 		sprite = Sprite2D.new()
-		sprite.set_texture(AssetLoader.weapon_textures[weapon.texture])
+		sprite.set_texture(weapon.texture)
 		scale.x = weapon.initial_scale
 		scale.y = weapon.initial_scale
 		if weapon.ground_sprite:
