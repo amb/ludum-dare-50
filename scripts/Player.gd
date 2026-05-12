@@ -8,7 +8,10 @@ var previousLocation : Vector2
 var movePath : Array
 var moving_keyboard : bool = false
 
-var entityAvatar
+@onready var entityAvatar: Sprite2D = $Hero
+@onready var damage_audio: AudioStreamPlayer2D = $DamageAS
+@onready var die_audio: AudioStreamPlayer2D = $DieAS
+@onready var gem_pickup: RemoteTransform2D = $GemPickup
 
 @onready var stats = {
 	"health":20.0,
@@ -22,15 +25,20 @@ var entityAvatar
 var weapons = []
 
 @onready var inWater = false
-var updateTimer
+var updateTimer: Timer
 
 var movementPath : PackedVector2Array
 
-@export var pathFinder = null
-@export var modManager = null
-@export var textDump = null
-@export var levelUpPanel = null
-@export var hpBar = null
+@export var path_finder_path: NodePath
+@export var mod_manager_path: NodePath
+@export var text_dump_path: NodePath
+@export var level_up_panel_path: NodePath
+@export var hp_bar_path: NodePath
+var pathFinder: Node
+var modManager: Node
+var textDump: Node
+var levelUpPanel: Node
+var hpBar: TextureProgressBar
 signal death
 
 #var mainScene = load("res://default.tscn")
@@ -73,11 +81,11 @@ func _update_hp():
 	hpBar.value = max(stats.health, 0.0) * 100.0 / stats.maxHealth
 
 func _ready():
-	entityAvatar = get_node("Hero")
-	textDump = get_node(textDump)
-	levelUpPanel = get_node(levelUpPanel)
-	hpBar = get_node(hpBar)
-	modManager = get_node(modManager)
+	pathFinder = get_node(path_finder_path)
+	textDump = get_node(text_dump_path)
+	levelUpPanel = get_node(level_up_panel_path)
+	hpBar = get_node(hp_bar_path) as TextureProgressBar
+	modManager = get_node(mod_manager_path)
 	
 	updateTimer = Timer.new()
 	updateTimer.autostart = true
@@ -91,7 +99,7 @@ func _ready():
 	add_child(weapons[-1])
 
 func _updateTick():
-	$PathFinder.find_move(global_position)
+	pathFinder.find_move(global_position)
 	# This is to fix the occasional bug where running into
 	# water stops the health decrease after not moving
 	set_velocity(Vector2(randf()-0.5, randf()-0.5))
@@ -129,10 +137,10 @@ func _physics_process(_delta):
 func _death():
 	# Death
 	stats.movementSpeed = 0.0
-	$DieAS.play()
+	die_audio.play()
 	stats.health = 0.0
 	hpBar.visible = false
-	await $DieAS.finished
+	await die_audio.finished
 	emit_signal("death")
 	queue_free()
 	
@@ -143,7 +151,7 @@ func takeDamage(amount, _direction, playsound=true):
 			_death()
 		else:
 			if playsound:
-				$DamageAS.play()
+				damage_audio.play()
 			_update_hp()
 
 func _levelup():
@@ -174,8 +182,8 @@ func _levelup():
 		stats.movementSpeed = 0.5 * mods.speed.value
 
 	if mods.pickup.level > 0:
-		$GemPickup.scale.x = mods.pickup.value
-		$GemPickup.scale.y = mods.pickup.value
+		gem_pickup.scale.x = mods.pickup.value
+		gem_pickup.scale.y = mods.pickup.value
 
 
 func addExperience(amount):

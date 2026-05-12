@@ -2,11 +2,13 @@ extends PanelContainer
 
 var powerups = {}
 #var mutex
-@export var modManager = null
+@export var mod_manager_path: NodePath
+@onready var vbox_container: VBoxContainer = $VBoxContainer
+var modManager: Node
 signal panelFinished
 
 func _ready():
-	modManager = get_node(modManager)
+	modManager = get_node(mod_manager_path)
 	visible = false
 #	mutex = Mutex.new()
 
@@ -25,15 +27,12 @@ func activate():
 	picked.shuffle()
 	picked = picked.slice(0, 2)
 	
-	print("Modmanager: Activate")
-	print(picked)
-	
 	# Create buttons
 #	var box_width = 0.0
 	var total_height = 0.0
 	for m in picked:
 		var new_button = Button.new()
-		$VBoxContainer.add_child(new_button)
+		vbox_container.add_child(new_button)
 		new_button.text = mods[m]
 		new_button.name = m
 		new_button.connect("pressed", Callable(self, "_button_press").bind(m))
@@ -48,12 +47,12 @@ func activate():
 #	self.rect_min_size.x = box_width + 40
 #	print(total_height + 20, ", ", box_width + 40)
 	if picked.size() > 0:
-		$VBoxContainer.get_node(picked[0]).grab_focus()
+		vbox_container.get_node(picked[0]).grab_focus()
 	else:
 		_deactivate()
 
 func _deactivate():
-	for child in $VBoxContainer.get_children():
+	for child in vbox_container.get_children():
 		child.queue_free()
 	get_tree().paused = false
 	visible = false

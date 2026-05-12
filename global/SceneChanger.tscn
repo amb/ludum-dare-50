@@ -84,7 +84,6 @@ void light() {
 
 }
 "
-graph_offset = Vector2( -692, 16 )
 mode = 1
 flags/light_only = false
 flags/unshaded = true
@@ -107,13 +106,13 @@ nodes/fragment/connections = PackedInt32Array( 4, 0, 6, 0, 7, 0, 4, 1, 12, 0, 4,
 
 [sub_resource type="ShaderMaterial" id=86]
 shader = SubResource( 85 )
-shader_param/Radius = 41.2143
+shader_parameter/Radius = 41.2143
 
 [sub_resource type="Animation" id=89]
 resource_name = "FadeIn"
 length = 2.0
 tracks/0/type = "value"
-tracks/0/path = NodePath("FadeOut/Control/FadeOutCircle:material:shader_param/Radius")
+tracks/0/path = NodePath("FadeOut/Control/FadeOutCircle:material:shader_parameter/Radius")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -128,7 +127,7 @@ tracks/0/keys = {
 [sub_resource type="Animation" id=90]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath("Control/FadeOutCircle:material:shader_param/Radius")
+tracks/0/path = NodePath("Control/FadeOutCircle:material:shader_parameter/Radius")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -140,7 +139,7 @@ tracks/0/keys = {
 "values": [ 0.0 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("FadeOut/Control/FadeOutCircle:material:shader_param/Radius")
+tracks/1/path = NodePath("FadeOut/Control/FadeOutCircle:material:shader_parameter/Radius")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false

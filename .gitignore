@@ -1,11 +1,14 @@
 .godot/
+# Godot 4 script UID files are stable resource identifiers and should be committed.
+# Ignore any other legacy/generated .uid files unless explicitly unignored later.
 *.uid
+!*.gd.uid
 addons/
 build/
 
 # Godot-specific ignores
+# Commit *.import files: they contain import settings needed for reproducible assets.
 .import/
-*/*.import
 output/
 export.cfg
 export_presets.cfg

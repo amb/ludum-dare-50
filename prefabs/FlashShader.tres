@@ -30,4 +30,4 @@ void fragment() {
 
 [resource]
 shader = SubResource( 3 )
-shader_param/modulate = Color( 1, 1, 1, 1 )
+shader_parameter/modulate = Color( 1, 1, 1, 1 )

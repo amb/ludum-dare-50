@@ -1,10 +1,12 @@
 extends Node2D
 
-var timer
+var timer: Timer
 var timerTicks : int = 0
 
-@export var textDump = null
-@export var player = null
+@export var text_dump_path: NodePath
+@export var player_path: NodePath
+var textDump: Node
+var player: Node
 signal scene_finished
 
 func _unhandled_input(event):
@@ -16,13 +18,12 @@ func _timeout():
 	timerTicks += 1
 
 func _player_dead():
-	print("Signal: Player dead, end scene")
 	emit_signal("scene_finished")
 
 func _ready():
 #	TranslationServer.set_locale("fi")
 
-	textDump = get_node(textDump)
+	textDump = get_node(text_dump_path)
 	
 	timer = Timer.new()
 	timer.autostart = true
@@ -30,7 +31,7 @@ func _ready():
 	add_child(timer)
 	timer.connect("timeout", Callable(self, "_timeout"))
 
-	player = get_node(player)
+	player = get_node(player_path)
 	
 	# Player died, send signal
 	if is_instance_valid(player):

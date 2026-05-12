@@ -1,0 +1,17 @@
+[remap]
+
+importer="com.timothyqiu.gdfxr.importer"
+type="AudioStreamWAV"
+uid="uid://gu2qtnm7b8ik"
+path="res://.godot/imported/enemy_take_damage.sfxr-49fb426fd79891dbca3f6ff245c07980.sample"
+
+[deps]
+
+source_file="res://audio/enemy_take_damage.sfxr"
+dest_files=["res://.godot/imported/enemy_take_damage.sfxr-49fb426fd79891dbca3f6ff245c07980.sample"]
+
+[params]
+
+loop=false
+bit_depth=0
+sample_rate=0

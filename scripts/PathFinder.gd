@@ -31,6 +31,8 @@ var tickTimer : Timer
 var target_position : Vector2
 
 var blocker_tiles
+var blockingCells: Array[bool]
+var lastTargetTile := Vector2i(999999, 999999)
 
 var debugMoves
 var debugOrigins
@@ -62,9 +64,11 @@ func _ready():
 	# Init necessary arrays
 	djkPath = Array()
 	djkDirection = PackedVector2Array()
+	blockingCells = []
 	for i in range(djkWidth*djkWidth):
-		djkPath.append(i % djkWidth)
+		djkPath.append(0)
 		djkDirection.append(Vector2.ZERO)
+		blockingCells.append(false)
 		
 	# Godot 4 tile shape APIs changed; treat any occupied cell in pathfinding
 	# collision maps as blocking.
@@ -177,21 +181,19 @@ func _global_to_tile(loc):
 	var tile_loc = ((loc - global_position) / tileWidthf).round()
 	return tile_loc + Vector2(djkSide, djkSide)
 		
-func _grid_djk_step(djk_grid, blocking_cell):
+func _grid_djk_step(djk_grid, blocking_cells: Array[bool]):
 	var step = 1
-	for x in range(0, djkWidth-1):
-		for y in range(0, djkWidth-1):
-			if not blocking_cell.has(Vector2(x, y)):
-				var pos = x + y * djkWidth
-				if djk_grid[pos] == 0:
-					djk_grid[pos] = max(max(max(djk_grid[pos], djk_grid[pos-1]), djk_grid[pos-djkWidth])-step, 0)
+	for x in range(1, djkWidth-1):
+		for y in range(1, djkWidth-1):
+			var pos = x + y * djkWidth
+			if not blocking_cells[pos] and djk_grid[pos] == 0:
+				djk_grid[pos] = max(max(max(djk_grid[pos], djk_grid[pos-1]), djk_grid[pos-djkWidth])-step, 0)
 	
 	for x in range(djkWidth-2, 0, -1):
 		for y in range(djkWidth-2, 0, -1):
-			if not blocking_cell.has(Vector2(x, y)):
-				var pos = x + y * djkWidth
-				if djk_grid[pos] == 0:
-					djk_grid[pos] = max(max(max(djk_grid[pos], djk_grid[pos+1]), djk_grid[pos+djkWidth])-step, 0)
+			var pos = x + y * djkWidth
+			if not blocking_cells[pos] and djk_grid[pos] == 0:
+				djk_grid[pos] = max(max(max(djk_grid[pos], djk_grid[pos+1]), djk_grid[pos+djkWidth])-step, 0)
 
 func _grid_ray_center_step(djk_grid, blocking_cell):
 	# var maxd = sqrt(width*height)
@@ -259,38 +261,49 @@ func _grid_update_thread(userdata):
 		OS.delay_msec(200)
 		
 func _grid_update_inner(userdata):
-	# Update DJK grid for pathfinding calculations
+	# Update DJK grid for pathfinding calculations only when the target moves to
+	# another tile. Enemies can keep using the previous flow field between moves.
 	target_position = target.global_position
-	var new_global_position = (target_position / tileWidthf).floor() * tileWidthf
+	var target_tile = Vector2i(
+		int(floor((target_position.x - djkTiles[0].global_position.x) / tileWidthf)),
+		int(floor((target_position.y - djkTiles[0].global_position.y) / tileWidthf))
+	)
+	if target_tile == lastTargetTile:
+		return
+	lastTargetTile = target_tile
 	
-	var tile_x = int((new_global_position.x - djkTiles[0].global_position.x) / tileWidthf) - djkSide
-	var tile_y = int((new_global_position.y - djkTiles[0].global_position.y) / tileWidthf) - djkSide
+	var tile_x = target_tile.x - djkSide
+	var tile_y = target_tile.y - djkSide
 	
-	# Clear previous data
+	# Clear previous data without reallocating arrays.
 	for i in range(djkWidth*djkWidth):
 		djkPath[i] = 0
+		djkDirection[i] = Vector2.ZERO
+		blockingCells[i] = false
 		
-	# Calculate blocking locations
-	var blocking_cell = {}
+	# Calculate blocking locations into a reusable packed bool array instead of a
+	# Dictionary[Vector2, bool]. This runs every path update, so avoiding hash keys
+	# and Vector2 allocation is important.
 	for dt in djkTiles.size():
 		for x in range(0, djkWidth):
 			for y in range(0, djkWidth):
-				var cell = djkTiles[dt].get_cell_source_id(0, Vector2i(x + tile_x, y + tile_y))
-				var loc = Vector2(x, y)
+				var pos = x + y * djkWidth
+				if blockingCells[pos]:
+					continue
+				var cell = djkTiles[dt].get_cell_source_id(Vector2i(x + tile_x, y + tile_y))
 				if cell != -1:
-					blocking_cell[loc] = true
-
+					blockingCells[pos] = true
 
 	# ... but margin introduces troubles in starting the pathfind
 	# as it eats the first step and can get player stuck on wallgrinding
 	djkPath[djkSide+djkSide*djkWidth] = 99
 	
 	# Render rays from center, mark distance
-#		_grid_ray_center_step(djkPath, blocking_cell)
+#		_grid_ray_center_step(djkPath, blockingCells)
 	
 	# Calculate paths, spread from known positions (non-zero)
 	for r in range(3):
-		_grid_djk_step(djkPath, blocking_cell)
+		_grid_djk_step(djkPath, blockingCells)
 		
 	_grid_make_vectors(djkPath)
 

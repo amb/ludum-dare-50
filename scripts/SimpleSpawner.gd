@@ -3,16 +3,19 @@ extends Node2D
 @export var spawnItem: PackedScene
 #export(float) var randomness = 5.0
 @export var isRunning: bool
-@export var tracking = null
-@export var mapSource = null
+@export var tracking_path: NodePath
+@export var map_source_path: NodePath
+@export var debug_logging := false
 var timerTick = 1.0
 var itemPreload
 var startTime
-var timer
+var timer: Timer
 
-var debugTimer
+var debugTimer: Timer
 
-var pathFinder
+var tracking: Node2D
+var mapSource: Node
+var pathFinder: Node
 
 func _ready():
 	timer = Timer.new()
@@ -21,22 +24,23 @@ func _ready():
 	add_child(timer)
 	timer.connect("timeout", Callable(self, "_timeout"))
 	
-	debugTimer = Timer.new()
-	debugTimer.autostart = true
-	debugTimer.wait_time = 1.0
-	add_child(debugTimer)
-	debugTimer.connect("timeout", Callable(self, "_print_debug"))
+	if debug_logging:
+		debugTimer = Timer.new()
+		debugTimer.autostart = true
+		debugTimer.wait_time = 1.0
+		add_child(debugTimer)
+		debugTimer.connect("timeout", Callable(self, "_print_debug"))
 	
-	
-	tracking = get_node(tracking)
-		
-	mapSource = get_node(mapSource)
+	tracking = get_node(tracking_path) as Node2D
+	mapSource = get_node(map_source_path)
 	startTime = Time.get_ticks_msec()
 	
 	pathFinder = tracking.get_node("PathFinder")
 	
 func _print_debug():
-	var wck = mapSource.getWaterCells()
+	if not debug_logging:
+		return
+	var wck = mapSource.get_spawn_positions_near_water()
 	print(wck.size())
 	print(_calculate_spawn_rate((Time.get_ticks_msec() - startTime) / 1000.0, wck.size()))
 	
@@ -60,7 +64,7 @@ func _calculate_spawn_rate(secs, available_tiles):
 		
 func _timeout():
 	if isRunning:
-		var wck = mapSource.getWaterCells()
+		var wck = mapSource.get_spawn_positions_near_water()
 		var secs = (Time.get_ticks_msec() - startTime) / 1000.0
 		var next_to_5 = _calculate_spawn_rate(secs, wck.size())
 		timer.wait_time = next_to_5 * 0.5

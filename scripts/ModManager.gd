@@ -103,9 +103,7 @@ func _get_mods_keys_with_levelups():
 	return res
 
 func _ready():
-	print("Init: Modmanager")
 	mods = _hardcoded_mods()
-	print(mods.keys())
 #	mods = {}
 #	_json_parse("res://assets/values/mods.json")
 
@@ -133,7 +131,6 @@ func getActiveModsDict():
 	return res
 	
 func powerupMod(name):
-	print("Powerup:", name)
 	var mn = mods[name]
 	# TODO: test mn.level etc
 	if mn["level"] < mn["max_level"]:

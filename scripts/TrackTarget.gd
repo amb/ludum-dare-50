@@ -1,8 +1,10 @@
 extends Camera2D
 
-@export var trackTarget = null
+@export var track_target_path: NodePath
+var trackTarget: Node2D
+
 func _ready():
-	trackTarget = get_node(trackTarget)
+	trackTarget = get_node(track_target_path) as Node2D
 
 func _process(delta):
 	if is_instance_valid(trackTarget):

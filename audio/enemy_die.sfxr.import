@@ -1,0 +1,17 @@
+[remap]
+
+importer="com.timothyqiu.gdfxr.importer"
+type="AudioStreamWAV"
+uid="uid://dn0bm1c2i7bsa"
+path="res://.godot/imported/enemy_die.sfxr-0089621036ba6bfae3f3a47b0d99c371.sample"
+
+[deps]
+
+source_file="res://audio/enemy_die.sfxr"
+dest_files=["res://.godot/imported/enemy_die.sfxr-0089621036ba6bfae3f3a47b0d99c371.sample"]
+
+[params]
+
+loop=false
+bit_depth=0
+sample_rate=0

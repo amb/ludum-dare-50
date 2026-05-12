@@ -66,7 +66,6 @@ func _area_trigger(body):
 		
 	if weapon.spawner:
 		target = body
-		print("spawn")
 
 func _timer_effect():
 #	print("Timer: ", global_position)
@@ -81,7 +80,6 @@ func _attack_damage():
 func _process(_delta):
 	if weapon.attached:
 		if not is_instance_valid(attachment):
-			print("Weapon detach")
 			weapon.attached = false
 			
 			# TODO: figure out. lifetime?

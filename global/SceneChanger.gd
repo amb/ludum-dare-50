@@ -18,7 +18,6 @@ func _init_scene():
 	current_root.connect("scene_finished", Callable(self, "changer"))
 	
 func changer():
-	print("Scene change")
 	var delay = 0.5
 	
 	await get_tree().create_timer(delay).timeout
