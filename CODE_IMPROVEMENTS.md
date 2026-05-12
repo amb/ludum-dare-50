@@ -246,7 +246,7 @@ Benefits:
 
 ### 10. Replace dictionary-based stats/mods/weapons with Resources or typed classes
 
-Status: partially done on 2026-05-13. Weapon definitions were moved out of hard-coded dictionaries in `AssetLoader.gd` into `WeaponData`/`WeaponDamageData` resources under `weapons/data/`. Player stats and mods are still dictionary-based.
+Status: partially done on 2026-05-13. Weapon definitions were moved out of hard-coded dictionaries in `AssetLoader.gd` into `WeaponData`/`WeaponDamageData` resources under `weapons/data/`. Mods were moved into `ModData` resources under `mods/`. Player stats are still dictionary-based.
 
 Current state:
 

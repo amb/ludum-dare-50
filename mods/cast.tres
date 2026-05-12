@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ModData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ModData.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "cast"
+description = "Lower cast time"
+multiply = 1.0
+increase = 0.1
+level = 0
+max_level = 4
+value = 1.0
