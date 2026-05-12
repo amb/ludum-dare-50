@@ -7,6 +7,7 @@ var health = 12.0
 
 var attackTarget
 var pathFinder
+var mapSource
 @onready var touchingTarget = false
 
 enum EnemyState {IDLE, CHASING, TRACKING}
@@ -148,6 +149,9 @@ func setTarget(target):
 		attackTarget = target
 		pathFinder = attackTarget.get_node("PathFinder")
 
+func setMapSource(source):
+	mapSource = source
+
 func _ready():
 	entityAvatar = get_node("Sprite2D")
 
@@ -187,6 +191,9 @@ func _attackTick():
 		attackTick.start(0)
 	
 func _seekTarget():
+	if is_instance_valid(mapSource) and mapSource.is_water_at_global_position(global_position):
+		_destroy()
+		return
 	var totalForce = movementForce * mass
 	
 	if not is_instance_valid(attackTarget):

@@ -66,7 +66,9 @@ Benefits:
 
 ### 3. Move map generation data out of TileMap reads/writes
 
-Current state:
+Status: partially done on 2026-05-13. `MapGenerator.gd` now generates and mutates `baseGrid`, `groundGrid`, and `blockingGrid` arrays first, then renders them to `TileMapLayer` nodes. Water expansion and spawn queries update/read the grids as source of truth. PathFinder still reads rendered layers, so map/pathfinder integration can be improved later.
+
+Previous state:
 
 - `MapGenerator.gd` uses TileMap state as the source of truth during procedural generation.
 - Many helper methods call `_get_cell()` and `_set_cell()` directly against TileMap nodes.

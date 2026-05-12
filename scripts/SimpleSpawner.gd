@@ -96,5 +96,7 @@ func _timeout():
 #		ni.setAIDifficulty(6)
 #		ni.multiplyDifficulty(0.1/next_to_5)
 
+		if ni.has_method("setMapSource"):
+			ni.setMapSource(mapSource)
 		if tracking:
 			ni.setTarget(tracking)

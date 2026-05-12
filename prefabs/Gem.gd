@@ -4,6 +4,10 @@ var myExp : float
 var startTime
 var checkTimer = null
 var timerTarget = null
+var pickupTarget = null
+var pickupStart := Vector2.ZERO
+var pickupDuration := 0.5
+var pickupElapsed := 0.0
 
 var WALL = 2
 
@@ -14,17 +18,13 @@ func _ready():
 	
 func _gem_pickup(target):
 	target.addExperience(myExp)
+	pickupTarget = target
+	pickupStart = global_position
+	pickupElapsed = 0.0
 	
 	$CollisionShape2D.set_deferred("disabled", true)
 	$Shadow.set_deferred("disabled", true)
-	
-	var tween = create_tween()
-	tween.tween_property(self, "global_position", target.global_position, 0.5).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
-	await tween.finished
-	
-	$Gemsprite.visible = false
-	AudioManager.play("res://audio/gem_pickup.sfxr")
-	queue_free()
+	set_process(true)
 	
 func _player_pickup(target):
 	if is_instance_valid(target):
@@ -45,6 +45,17 @@ func _player_pickup(target):
 func _timeout():
 	# Periodically check for player visibility for gem pickup
 	_player_pickup(timerTarget)
+	
+func _process(delta):
+	if not is_instance_valid(pickupTarget):
+		return
+	pickupElapsed += delta
+	var weight = clamp(pickupElapsed / pickupDuration, 0.0, 1.0)
+	global_position = pickupStart.lerp(pickupTarget.global_position, weight)
+	if pickupElapsed >= pickupDuration or global_position.distance_squared_to(pickupTarget.global_position) < 4.0:
+		$Gemsprite.visible = false
+		AudioManager.play("res://audio/gem_pickup.sfxr")
+		queue_free()
 	
 
 func _on_Gem_body_entered(body):

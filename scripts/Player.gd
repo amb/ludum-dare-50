@@ -34,8 +34,10 @@ var movementPath : PackedVector2Array
 @export var text_dump_path: NodePath
 @export var level_up_panel_path: NodePath
 @export var hp_bar_path: NodePath
+@export var map_source_path: NodePath
 var pathFinder: Node
 var modManager: Node
+var mapSource: Node
 var textDump: Node
 var levelUpPanel: Node
 var hpBar: TextureProgressBar
@@ -86,6 +88,7 @@ func _ready():
 	levelUpPanel = get_node(level_up_panel_path)
 	hpBar = get_node(hp_bar_path) as TextureProgressBar
 	modManager = get_node(mod_manager_path)
+	mapSource = get_node(map_source_path)
 	
 	updateTimer = Timer.new()
 	updateTimer.autostart = true
@@ -106,6 +109,7 @@ func _updateTick():
 	move_and_slide()
 
 func _process(delta):
+	inWater = mapSource.is_water_at_global_position(global_position)
 	if inWater:
 		takeDamage(5.0 * delta, Vector2(0, 0), false)
 	get_input()
@@ -193,13 +197,10 @@ func addExperience(amount):
 		_levelup()
 	textDump.setText(tr("Exp"), "%.2f" % [stats.experience*100.0 / stats.levelCap])
 
-func _on_Area2D_body_entered(body):
-	# Water Area2D entered
-	if body.name != "Player":
-		inWater = true
-		stats.movementSpeed *= 0.5
+func _on_Area2D_body_entered(_body):
+	# Water is checked explicitly from MapGenerator now.
+	pass
 
-func _on_Area2D_body_exited(body):
-	if body.name != "Player":
-		inWater = false
-		stats.movementSpeed *= 2.0
+func _on_Area2D_body_exited(_body):
+	# Water is checked explicitly from MapGenerator now.
+	pass

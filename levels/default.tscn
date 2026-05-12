@@ -425,11 +425,12 @@ mod_manager_path = NodePath("../../ModManager")
 text_dump_path = NodePath("../../CanvasLayer/Control/PanelContainer/RandomTextContainer")
 level_up_panel_path = NodePath("../../CanvasLayer/Control/CenterContainer/LevelUpBox")
 hp_bar_path = NodePath("PlayerHPbar")
+map_source_path = NodePath("../../MapGenerator")
 
 [node name="PathFinder" type="Node2D" parent="Node2D/Player"]
 script = ExtResource( 18 )
 djkSide = 17
-djkTilesPaths = [ NodePath("../../../Tiles Ground"), NodePath("../../Tiles Blocking") ]
+djkTilesPaths = [ NodePath("../../Tiles Blocking") ]
 
 [node name="CameraLock" type="RemoteTransform2D" parent="Node2D/Player"]
 remote_path = NodePath("../../../Camera2D")
