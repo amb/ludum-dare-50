@@ -47,5 +47,5 @@ func getActiveModsDict():
 			res[k] = mods[k]
 	return res
 	
-func powerupMod(name):
-	mods[name].powerup()
+func powerupMod(mod_name):
+	mods[mod_name].powerup()

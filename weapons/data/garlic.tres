@@ -1,32 +1,21 @@
-[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://f367jgue617o"]
 
-[ext_resource type="Script" path="res://weapons/WeaponData.gd" id="1"]
-[ext_resource type="Texture2D" path="res://weapons/textures/white_circle_32.png" id="2"]
-[ext_resource type="Script" path="res://weapons/WeaponDamageData.gd" id="3"]
+[ext_resource type="Script" uid="uid://napkcmhbcqxq" path="res://weapons/WeaponData.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bgoe3soam728t" path="res://weapons/textures/white_circle_32.png" id="2"]
+[ext_resource type="Script" uid="uid://btw2vmh24fk5w" path="res://weapons/WeaponDamageData.gd" id="3"]
 
 [sub_resource type="Resource" id="WeaponDamageData_garlic"]
 script = ExtResource("3")
 low = 3
 add = 3
-knockback = 0.5
+knockback = 2.0
 
 [resource]
 script = ExtResource("1")
-use_instant = true
 use_timer = true
-timer_delay = 1.0
-collision_type = "circle"
-collision_radius = 16.0
 initial_scale = 2.0
 texture = ExtResource("2")
 opacity = 0.2
 ground_sprite = true
-tracking = false
-split_on_strike = 0
-velocity = 1.0
-lifetime = -1.0
 attached = true
-activate_on_detach = false
-targeting = "area_all"
-spawner = false
 damage = SubResource("WeaponDamageData_garlic")

@@ -7,7 +7,7 @@ var weaponList: Dictionary = {
 
 var spawnItem = preload("res://weapons/WeaponGeneric.tscn")
 
-func spawnWeapon(name, source):
+func spawnWeapon(weapon_name, source):
 	var weapon = spawnItem.instantiate()
-	weapon.setup(weaponList[name], source)
+	weapon.setup(weaponList[weapon_name], source)
 	return weapon

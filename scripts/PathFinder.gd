@@ -221,7 +221,7 @@ func _grid_ray_center_step(djk_grid, blocking_cell):
 					ray_blocks[a] = true
 		
 func _grid_make_vectors(djk_grid):
-	for tr in range(0):
+	for _tr in range(0):
 		for x in range(1, djkWidth-1):
 			for y in range(1, djkWidth-1):
 				var pos = x + y * djkWidth
@@ -260,7 +260,7 @@ func _grid_update_thread(userdata):
 		builder_mutex.unlock()
 		OS.delay_msec(200)
 		
-func _grid_update_inner(userdata):
+func _grid_update_inner(_userdata):
 	# Update DJK grid for pathfinding calculations only when the target moves to
 	# another tile. Enemies can keep using the previous flow field between moves.
 	target_position = target.global_position
@@ -320,7 +320,7 @@ func _get_fmod(iv):
 		y_off += tileWidthf
 	return Vector2(x_off, y_off)
 
-func visible(x, y):
+func visible(_x, _y):
 	# Simple visibility test based on smaller numbers
 	# compared to what it would be without obstructing tile(s)
 	# max(abs(x-y), abs(x+y)) is the function for open area 
@@ -335,21 +335,21 @@ func _draw_sub():
 	
 	# Purely for debugging
 	var gpos = self.global_position
-	var xpos = gpos.x
-	var ypos = gpos.y
+#	var xpos = gpos.x
+#	var ypos = gpos.y
 	
 	var v_off = _get_fmod(gpos)
 	var x_off = v_off.x
 	var y_off = v_off.y
 
-	var maxnum = djkPath[0+djkSide+(0+djkSide)*djkWidth]
+#	var maxnum = djkPath[0+djkSide+(0+djkSide)*djkWidth]
 	for x in range(-djkSide, djkSide+1):
 		for y in range(-djkSide, djkSide+1):
 			var xloc = float(x*tileWidth)
 			var yloc = float(y*tileWidth)
 			var center = Vector2(xloc, yloc)-v_off+Vector2(8.0,8.0)
-			var pos = x+djkSide+(y+djkSide)*djkWidth
-			var num = djkPath[pos]
+#			var pos = x+djkSide+(y+djkSide)*djkWidth
+#			var num = djkPath[pos]
 			# DJK value
 #			draw_string(font, Vector2(xloc+2.0, yloc+12.0)-v_off, str(num), Color.yellow)
 			# DJK direction
@@ -385,7 +385,7 @@ func _draw_sub():
 				
 	# Draw move query origins
 	if false:
-		var tvec = Vector2(djkSide*tileWidth-tileWidth/2, djkSide*tileWidth-tileWidth/2)
+		var tvec = Vector2(djkSide*tileWidth-tileWidthf/2, djkSide*tileWidth-tileWidthf/2)
 		for mq in debugMoves:
 			draw_circle(mq*tileWidth-tvec-v_off, 5.0, Color.YELLOW)
 		for mq in debugOrigins:

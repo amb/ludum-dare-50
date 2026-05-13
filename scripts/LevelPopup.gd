@@ -29,15 +29,15 @@ func activate():
 	
 	# Create buttons
 #	var box_width = 0.0
-	var total_height = 0.0
+#	var total_height = 0.0
 	for m in picked:
 		var new_button = Button.new()
 		vbox_container.add_child(new_button)
 		new_button.text = mods[m]
 		new_button.name = m
 		new_button.connect("pressed", Callable(self, "_button_press").bind(m))
-		total_height += new_button.size.y
-		total_height += 3
+#		total_height += new_button.size.y
+#		total_height += 3
 #		if box_width < new_button.rect_size.x:
 #			box_width = new_button.rect_size.x
 #		total_height += $VBoxContainer.theme.separation

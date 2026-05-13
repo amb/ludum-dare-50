@@ -155,8 +155,8 @@ func _add_rooms_grid(grid: Array, block_mask: Array) -> Array:
 		var sizey := (randi() % 4) * 2 + 6
 		var asize := 18
 		var loc := Vector2i(
-			randi() % (asize * 2 - sizex) + mapSize / 2 - asize,
-			randi() % (asize * 2 - sizey) + mapSize / 2 - asize
+			randi() % (asize * 2 - sizex) + int(mapSize * 0.5) - asize,
+			randi() % (asize * 2 - sizey) + int(mapSize * 0.5) - asize
 		)
 		var fits := true
 		for y in range(-1, sizey + 2):

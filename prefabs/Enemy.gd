@@ -5,6 +5,11 @@ var movementMinDistance = 10.0
 var movementSpeed = 100.0
 var health = 12.0
 
+# Inertia / acceleration smoothing
+var acceleration: float = 4.0
+var knockback_velocity: Vector2 = Vector2.ZERO
+var knockback_friction: float = 6.0
+
 var attackTarget
 var pathFinder
 var mapSource
@@ -134,8 +139,7 @@ func _death():
 	_destroy()
 
 func apply_knockback(_impulse: Vector2):
-	# CharacterBody2D enemies do not use physics impulses yet.
-	pass
+	knockback_velocity = _impulse
 
 func takeDamage(amount):
 	health -= amount
@@ -194,7 +198,7 @@ func _seekTarget():
 	if is_instance_valid(mapSource) and mapSource.is_water_at_global_position(global_position):
 		_destroy()
 		return
-	var current_speed = movementSpeed
+#	var current_speed = movementSpeed
 	
 	if not is_instance_valid(attackTarget):
 		attackTarget = null
@@ -299,7 +303,15 @@ func _go_to_sleep():
 	self.visible = false
 
 func _physics_process(_delta):
-	velocity = movementVector * movementSpeed
+	var target_velocity = movementVector * movementSpeed
+	# Smooth acceleration for inertia (lerp with framerate-independent adjustment)
+	var weight = 1.0 - exp(-acceleration * _delta)
+	velocity = velocity.lerp(target_velocity + knockback_velocity, weight)
+	
+	# Apply knockback friction (decay over time)
+	var kb_weight = 1.0 - exp(-knockback_friction * _delta)
+	knockback_velocity = knockback_velocity.lerp(Vector2.ZERO, kb_weight)
+	
 	move_and_slide()
 
 func _on_EnemyMob_body_entered(body):

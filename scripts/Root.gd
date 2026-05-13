@@ -14,7 +14,7 @@ func _unhandled_input(event):
 		get_tree().quit()
 	
 func _timeout():
-	textDump.setText(tr("Time"), "%02d:%02d" % [timerTicks/60, timerTicks % 60])
+	textDump.setText(tr("Time"), "%02d:%02d" % [int(timerTicks / 60.0), timerTicks % 60])
 	timerTicks += 1
 
 func _player_dead():

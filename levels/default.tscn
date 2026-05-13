@@ -1,246 +1,27 @@
-[gd_scene load_steps=100 format=2]
-
-[ext_resource path="res://assets/hp_bar_under.png" type="Texture2D" id=1]
-[ext_resource path="res://scripts/LevelPopup.gd" type="Script" id=2]
-[ext_resource path="res://scripts/RandomTextContainer.gd" type="Script" id=3]
-[ext_resource path="res://scripts/SimpleSpawner.gd" type="Script" id=4]
-[ext_resource path="res://scripts/Player.gd" type="Script" id=5]
-[ext_resource path="res://scripts/ButtonGenerate.gd" type="Script" id=6]
-[ext_resource path="res://scripts/MapGenerator.gd" type="Script" id=7]
-[ext_resource path="res://prefabs/Enemy.tscn" type="PackedScene" id=8]
-[ext_resource path="res://scripts/ModManager.gd" type="Script" id=9]
-[ext_resource path="res://assets/hero.png" type="Texture2D" id=10]
-[ext_resource path="res://scripts/Root.gd" type="Script" id=11]
-[ext_resource path="res://assets/tiles_map.png" type="Texture2D" id=12]
-[ext_resource path="res://audio/die.sfxr" type="AudioStream" id=13]
-[ext_resource path="res://audio/hit.sfxr" type="AudioStream" id=14]
-[ext_resource path="res://assets/hp_bar_over.png" type="Texture2D" id=15]
-[ext_resource path="res://assets/floor_shadow.png" type="Texture2D" id=16]
-[ext_resource path="res://theme_gui.tres" type="Theme" id=17]
-[ext_resource path="res://scripts/PathFinder.gd" type="Script" id=18]
-[ext_resource path="res://assets/water_tile.png" type="Texture2D" id=19]
-[ext_resource path="res://assets/map_tileset.tres" type="TileSet" id=20]
-
-[sub_resource type="ConvexPolygonShape2D" id=31]
-points = PackedVector2Array( 4, 0, 16, 0, 16, 12, 8, 8 )
-
-[sub_resource type="ConvexPolygonShape2D" id=32]
-points = PackedVector2Array( 16, 16, 4, 16, 8, 8, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=33]
-points = PackedVector2Array( 0, 4, 8, 8, 12, 16, 0, 16 )
-
-[sub_resource type="ConvexPolygonShape2D" id=34]
-points = PackedVector2Array( 0, 0, 12, 0, 8, 8, 0, 12 )
-
-[sub_resource type="ConvexPolygonShape2D" id=35]
-points = PackedVector2Array( 16, 12, 0, 12, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=36]
-points = PackedVector2Array( 12, 12, 0, 12, 0, 4, 12, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=37]
-points = PackedVector2Array( 16, 12, 4, 12, 4, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=38]
-points = PackedVector2Array( 12, 16, 4, 16, 4, 4, 12, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=39]
-points = PackedVector2Array( 12, 16, 4, 16, 4, 0, 12, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=40]
-points = PackedVector2Array( 12, 12, 4, 12, 4, 0, 12, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=41]
-points = PackedVector2Array( 12, 12, 4, 12, 4, 4, 12, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=42]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=43]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=44]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=45]
-points = PackedVector2Array( 16, 16, 4, 16, 4, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=46]
-points = PackedVector2Array( 16, 12, 0, 12, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=47]
-points = PackedVector2Array( 12, 16, 0, 16, 0, 0, 12, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=48]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=49]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=50]
-points = PackedVector2Array( 16, 16, 4, 16, 8, 8, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=51]
-points = PackedVector2Array( 12, 16, 0, 16, 0, 4, 8, 8 )
-
-[sub_resource type="ConvexPolygonShape2D" id=52]
-points = PackedVector2Array( 8, 8, 0, 12, 0, 0, 12, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=53]
-points = PackedVector2Array( 16, 12, 8, 8, 4, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=54]
-points = PackedVector2Array( 16, 12, 0, 12, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=55]
-points = PackedVector2Array( 16, 16, 4, 16, 4, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=56]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=57]
-points = PackedVector2Array( 0, 0, 12, 0, 12, 16, 0, 16 )
-
-[sub_resource type="ConvexPolygonShape2D" id=58]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=59]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=60]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=61]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=62]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=63]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=64]
-points = PackedVector2Array( 12, 16, 0, 16, 0, 0, 12, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=65]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=66]
-points = PackedVector2Array( 16, 16, 4, 16, 4, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=67]
-points = PackedVector2Array( 16, 12, 0, 12, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=68]
-points = PackedVector2Array( 16, 12, 0, 12, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=69]
-points = PackedVector2Array( 0, 0, 12, 0, 12, 16, 0, 16 )
-
-[sub_resource type="ConvexPolygonShape2D" id=70]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=71]
-points = PackedVector2Array( 16, 16, 4, 16, 4, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=72]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=73]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=74]
-points = PackedVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
-
-[sub_resource type="ConvexPolygonShape2D" id=75]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=76]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=77]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=78]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=79]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="OccluderPolygon2D" id=18]
-polygon = PackedVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
-
-[sub_resource type="OccluderPolygon2D" id=19]
-polygon = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="OccluderPolygon2D" id=20]
-polygon = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="OccluderPolygon2D" id=21]
-polygon = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="OccluderPolygon2D" id=22]
-polygon = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="OccluderPolygon2D" id=23]
-polygon = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="OccluderPolygon2D" id=24]
-polygon = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="OccluderPolygon2D" id=25]
-polygon = PackedVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
-
-[sub_resource type="OccluderPolygon2D" id=26]
-polygon = PackedVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
-
-[sub_resource type="OccluderPolygon2D" id=27]
-polygon = PackedVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
-
-[sub_resource type="OccluderPolygon2D" id=28]
-polygon = PackedVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
-
-[sub_resource type="OccluderPolygon2D" id=29]
-polygon = PackedVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
-
-[sub_resource type="ConvexPolygonShape2D" id=6]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=7]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=8]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=9]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=10]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=11]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=12]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=13]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=14]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=15]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=16]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="ConvexPolygonShape2D" id=17]
-points = PackedVector2Array( 16, 16, 0, 16, 0, 4, 16, 4 )
-
-[sub_resource type="Shader" id=87]
+[gd_scene format=3 uid="uid://cywqkriroyu47"]
+
+[ext_resource type="Texture2D" uid="uid://beluups4vh0hh" path="res://assets/hp_bar_under.png" id="1"]
+[ext_resource type="Script" uid="uid://bdysjmepdyooa" path="res://scripts/LevelPopup.gd" id="2"]
+[ext_resource type="Script" uid="uid://dxau6d32krtwm" path="res://scripts/RandomTextContainer.gd" id="3"]
+[ext_resource type="Script" uid="uid://bdjsijkf7i32" path="res://scripts/SimpleSpawner.gd" id="4"]
+[ext_resource type="Script" uid="uid://bamabji2wgb05" path="res://scripts/Player.gd" id="5"]
+[ext_resource type="Script" uid="uid://dqblubiu3mjk7" path="res://scripts/ButtonGenerate.gd" id="6"]
+[ext_resource type="Script" uid="uid://cl1ki4fmjm7b6" path="res://scripts/MapGenerator.gd" id="7"]
+[ext_resource type="PackedScene" path="res://prefabs/Enemy.tscn" id="8"]
+[ext_resource type="Script" uid="uid://b3poh35toixdi" path="res://scripts/ModManager.gd" id="9"]
+[ext_resource type="Texture2D" uid="uid://mae5pgvv57fd" path="res://assets/hero.png" id="10"]
+[ext_resource type="Script" uid="uid://dc5cxm1nhhnkq" path="res://scripts/Root.gd" id="11"]
+[ext_resource type="Texture2D" uid="uid://dlcjeufgy3wnv" path="res://assets/tiles_map.png" id="12"]
+[ext_resource type="AudioStream" uid="uid://d3t5o0wloqwlb" path="res://audio/die.sfxr" id="13"]
+[ext_resource type="AudioStream" uid="uid://c4hpio673msxt" path="res://audio/hit.sfxr" id="14"]
+[ext_resource type="Texture2D" uid="uid://n3kn6nwkqtnx" path="res://assets/hp_bar_over.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://b3rbgj7gvr1t1" path="res://assets/floor_shadow.png" id="16"]
+[ext_resource type="Theme" path="res://theme_gui.tres" id="17"]
+[ext_resource type="Script" uid="uid://chqmvu3bmfq0a" path="res://scripts/PathFinder.gd" id="18"]
+[ext_resource type="Texture2D" uid="uid://rhgtp3414i4h" path="res://assets/water_tile.png" id="19"]
+[ext_resource type="TileSet" path="res://assets/map_tileset.tres" id="20"]
+
+[sub_resource type="Shader" id="87"]
 code = "shader_type canvas_item;
 uniform sampler2D tex_tiles : source_color;
 uniform sampler2D tex_water : source_color;
@@ -309,114 +90,100 @@ void fragment() {
 
 "
 
-[sub_resource type="ShaderMaterial" id=86]
-shader = SubResource( 87 )
-shader_parameter/WaterPosition = Vector3( 0, 0, 0 )
-shader_parameter/tex_tiles = ExtResource( 12 )
-shader_parameter/tex_water = ExtResource( 19 )
+[sub_resource type="ShaderMaterial" id="86"]
+shader = SubResource("87")
+shader_parameter/tex_tiles = ExtResource("12")
+shader_parameter/tex_water = ExtResource("19")
+shader_parameter/WaterPosition = Vector3(0, 0, 0)
 
-[sub_resource type="Animation" id=88]
+[sub_resource type="Animation" id="88"]
 length = 0.001
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:material:shader_parameter/WaterPosition")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PackedFloat32Array( 0 ),
-"transitions": PackedFloat32Array( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ Vector3( 0, 0, 0 ) ]
+"values": [Vector3(0, 0, 0)]
 }
 
-[sub_resource type="Animation" id=89]
+[sub_resource type="Animation" id="89"]
 resource_name = "water_flow"
 length = 4.0
-loop = true
+loop_mode = 1
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:material:shader_parameter/WaterPosition")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PackedFloat32Array( 0, 2, 4 ),
-"transitions": PackedFloat32Array( 1, 1, 1 ),
+"times": PackedFloat32Array(0, 2, 4),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [ Vector3( 0, 0, 0 ), Vector3( 0.063, 0.015, 0 ), Vector3( 0.125, 0, 0 ) ]
+"values": [Vector3(0, 0, 0), Vector3(0.063, 0.015, 0), Vector3(0.125, 0, 0)]
 }
 
-[sub_resource type="CircleShape2D" id=5]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_12hh7"]
+_data = {
+&"RESET": SubResource("88"),
+&"water_flow": SubResource("89")
+}
+
+[sub_resource type="CircleShape2D" id="5"]
 radius = 5.0
 
-[sub_resource type="CircleShape2D" id=80]
+[sub_resource type="CircleShape2D" id="80"]
 radius = 24.0
 
-[node name="Root" type="Node2D"]
-script = ExtResource( 11 )
+[node name="Root" type="Node2D" unique_id=841936182]
+script = ExtResource("11")
 text_dump_path = NodePath("CanvasLayer/Control/PanelContainer/RandomTextContainer")
 player_path = NodePath("Node2D/Player")
 
-[node name="ModManager" type="Node2D" parent="."]
-script = ExtResource( 9 )
+[node name="ModManager" type="Node2D" parent="." unique_id=93720600]
+script = ExtResource("9")
 
-[node name="MapGenerator" type="Node2D" parent="."]
-script = ExtResource( 7 )
+[node name="MapGenerator" type="Node2D" parent="." unique_id=1993403173]
+script = ExtResource("7")
 tiles_base_path = NodePath("../Tiles Base")
 tiles_ground_path = NodePath("../Tiles Ground")
 tiles_blocking_path = NodePath("../Node2D/Tiles Blocking")
-map_tileset = ExtResource( 20 )
+map_tileset = ExtResource("20")
 
-[node name="Tiles Base" type="TileMapLayer" parent="." groups=["world"]]
+[node name="Tiles Base" type="TileMapLayer" parent="." unique_id=1594132062 groups=["world"]]
 z_index = -100
-tile_set = ExtResource( 20 )
-cell_size = Vector2( 16, 16 )
-cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
-format = 1
-tile_data = PackedInt32Array( 262168, 1, 0, 262169, 1, 0, 262170, 1, 0, 262171, 1, 0, 262172, 1, 0, 327701, 1, 0, 327702, 1, 0, 327703, 1, 0, 327704, 1, 0, 327705, 1, 0, 327706, 1, 0, 327707, 1, 0, 327708, 1, 0, 327709, 1, 0, 327710, 1, 0, 327711, 1, 0, 393235, 1, 0, 393236, 1, 0, 393237, 1, 0, 393238, 1, 0, 393239, 1, 0, 393240, 1, 0, 393241, 1, 0, 393242, 1, 0, 393243, 1, 0, 393244, 1, 0, 393245, 1, 0, 393246, 1, 0, 393247, 1, 0, 393248, 1, 0, 458770, 1, 0, 458771, 1, 0, 458772, 1, 0, 458773, 1, 0, 458774, 1, 0, 458775, 1, 0, 458776, 1, 0, 458777, 1, 0, 458778, 1, 0, 458779, 1, 0, 458780, 1, 0, 458781, 1, 0, 458782, 1, 0, 458783, 1, 0, 458784, 1, 0, 458785, 1, 0, 524305, 1, 0, 524306, 1, 0, 524307, 1, 0, 524308, 1, 0, 524309, 1, 0, 524310, 1, 0, 524311, 1, 0, 524312, 1, 0, 524313, 1, 0, 524314, 1, 0, 524315, 1, 0, 524316, 1, 0, 524317, 1, 0, 524318, 1, 0, 524319, 1, 0, 524320, 1, 0, 524321, 1, 0, 524322, 1, 0, 589840, 1, 0, 589841, 1, 0, 589842, 1, 0, 589843, 1, 0, 589844, 1, 0, 589845, 1, 0, 589846, 1, 0, 589847, 1, 0, 589848, 1, 0, 589849, 1, 0, 589850, 1, 0, 589851, 1, 0, 589852, 1, 0, 589853, 1, 0, 589854, 1, 0, 589855, 1, 0, 589856, 1, 0, 589857, 1, 0, 589858, 1, 0, 655376, 1, 0, 655377, 1, 0, 655378, 1, 0, 655379, 1, 0, 655380, 1, 0, 655381, 1, 0, 655382, 1, 0, 655383, 1, 0, 655384, 1, 0, 655385, 1, 0, 655386, 1, 0, 655387, 1, 0, 655388, 1, 0, 655389, 1, 0, 655390, 1, 0, 655391, 1, 0, 655392, 1, 0, 655393, 1, 0, 655394, 1, 0, 720911, 1, 0, 720912, 1, 0, 720913, 1, 0, 720914, 1, 0, 720915, 1, 0, 720916, 1, 0, 720917, 1, 0, 720918, 1, 0, 720919, 1, 0, 720920, 1, 0, 720921, 1, 0, 720922, 1, 0, 720923, 1, 0, 720924, 1, 0, 720925, 1, 0, 720926, 1, 0, 720927, 1, 0, 720928, 1, 0, 720929, 1, 0, 720930, 1, 0, 786447, 1, 0, 786448, 1, 0, 786449, 1, 0, 786450, 1, 0, 786451, 1, 0, 786452, 1, 0, 786453, 1, 0, 786454, 1, 0, 786455, 1, 0, 786456, 1, 0, 786457, 1, 0, 786458, 1, 0, 786459, 1, 0, 786460, 1, 0, 786461, 1, 0, 786462, 1, 0, 786463, 1, 0, 786464, 1, 0, 786465, 1, 0, 786466, 1, 0, 851983, 1, 0, 851984, 1, 0, 851985, 1, 0, 851986, 1, 0, 851987, 1, 0, 851988, 1, 0, 851989, 1, 0, 851990, 1, 0, 851991, 1, 0, 851992, 1, 0, 851993, 1, 0, 851994, 1, 0, 851995, 1, 0, 851996, 1, 0, 851997, 1, 0, 851998, 1, 0, 851999, 1, 0, 852000, 1, 0, 852001, 1, 0, 852002, 1, 0, 917519, 1, 0, 917520, 1, 0, 917521, 1, 0, 917522, 1, 0, 917523, 1, 0, 917524, 1, 0, 917525, 1, 0, 917526, 1, 0, 917527, 1, 0, 917528, 1, 0, 917529, 1, 0, 917530, 1, 0, 917531, 1, 0, 917532, 1, 0, 917533, 1, 0, 917534, 1, 0, 917535, 1, 0, 917536, 1, 0, 917537, 1, 0, 983056, 1, 0, 983057, 1, 0, 983058, 1, 0, 983059, 1, 0, 983060, 1, 0, 983061, 1, 0, 983062, 1, 0, 983063, 1, 0, 983064, 1, 0, 983065, 1, 0, 983066, 1, 0, 983067, 1, 0, 983068, 1, 0, 983069, 1, 0, 983070, 1, 0, 983071, 1, 0, 983072, 1, 0, 983073, 1, 0, 1048592, 1, 0, 1048593, 1, 0, 1048594, 1, 0, 1048595, 1, 0, 1048596, 1, 0, 1048597, 1, 0, 1048598, 1, 0, 1048599, 1, 0, 1048600, 1, 0, 1048601, 1, 0, 1048602, 1, 0, 1048603, 1, 0, 1048604, 1, 0, 1048605, 1, 0, 1048606, 1, 0, 1048607, 1, 0, 1048608, 1, 0, 1114129, 1, 0, 1114130, 1, 0, 1114131, 1, 0, 1114132, 1, 0, 1114133, 1, 0, 1114134, 1, 0, 1114135, 1, 0, 1114136, 1, 0, 1114137, 1, 0, 1114138, 1, 0, 1114139, 1, 0, 1114140, 1, 0, 1114141, 1, 0, 1114142, 1, 0, 1114143, 1, 0, 1179665, 1, 0, 1179666, 1, 0, 1179667, 1, 0, 1179668, 1, 0, 1179669, 1, 0, 1179670, 1, 0, 1179671, 1, 0, 1179672, 1, 0, 1179673, 1, 0, 1179674, 1, 0, 1179675, 1, 0, 1179676, 1, 0, 1179677, 1, 0, 1179678, 1, 0, 1245203, 1, 0, 1245204, 1, 0, 1245205, 1, 0, 1245206, 1, 0, 1245207, 1, 0, 1245208, 1, 0, 1245209, 1, 0, 1245210, 1, 0, 1245211, 1, 0, 1245212, 1, 0, 1310740, 1, 0, 1310741, 1, 0, 1310742, 1, 0, 1310743, 1, 0, 1310744, 1, 0, 1310745, 1, 0, 1310746, 1, 0, 1310747, 1, 0, 1376277, 1, 0, 1376278, 1, 0, 1376279, 1, 0, 1376280, 1, 0, 1376281, 1, 0 )
+tile_set = ExtResource("20")
 
-[node name="Tiles Ground" type="TileMapLayer" parent="." groups=["world"]]
-material = SubResource( 86 )
+[node name="Tiles Ground" type="TileMapLayer" parent="." unique_id=1092278468 groups=["world"]]
 z_index = -100
-tile_set = ExtResource( 20 )
-cell_size = Vector2( 16, 16 )
-cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
-collision_layer = 4
-collision_mask = 62
-format = 1
-tile_data = PackedInt32Array( 131106, 0, 0, 196641, 0, 196612, 196642, 0, 393219, 262172, 0, 0, 262176, 0, 196612, 262177, 0, 196614, 262178, 0, 262149, 327707, 0, 196612, 327708, 0, 393219, 327711, 0, 196612, 327712, 0, 196614, 327713, 0, 262149, 393237, 0, 0, 393241, 0, 196612, 393242, 0, 65542, 393243, 0, 262147, 393244, 0, 262146, 393245, 0, 65542, 393246, 0, 65542, 393247, 0, 262147, 393248, 0, 131078, 458773, 0, 131073, 458774, 0, 327683, 458775, 0, 65542, 458776, 0, 65542, 458777, 0, 262147, 458778, 0, 6, 458779, 0, 6, 458780, 0, 6, 458781, 0, 6, 458782, 0, 6, 458783, 0, 6, 458784, 0, 131078, 458788, 0, 196612, 458789, 0, 196613, 524310, 0, 65541, 524311, 0, 6, 524312, 0, 6, 524313, 4, 0, 524314, 4, 0, 524315, 4, 0, 524316, 4, 0, 524317, 0, 6, 524318, 0, 6, 524319, 0, 6, 524320, 0, 131078, 524322, 0, 196612, 524323, 0, 65542, 524324, 0, 196614, 524325, 0, 262149, 589843, 0, 4, 589846, 0, 65541, 589847, 0, 6, 589848, 0, 6, 589849, 4, 0, 589850, 4, 0, 589851, 4, 0, 589852, 4, 0, 589853, 0, 131077, 589854, 0, 196611, 589855, 0, 6, 589856, 0, 262146, 589857, 0, 65542, 589858, 0, 196614, 589859, 0, 131077, 589860, 0, 262149, 655381, 0, 196612, 655382, 0, 196614, 655383, 0, 131077, 655384, 0, 131077, 655385, 4, 0, 655386, 4, 0, 655387, 4, 0, 655388, 4, 0, 655390, 0, 262148, 655391, 0, 196611, 655392, 0, 6, 655393, 0, 6, 655394, 0, 131078, 720915, 0, 1, 720916, 0, 2, 720917, 0, 262145, 720918, 0, 131078, 720927, 0, 65541, 720928, 0, 6, 720929, 0, 6, 720930, 0, 262146, 720931, 0, 196613, 786453, 0, 65541, 786454, 0, 262146, 786455, 0, 65542, 786456, 0, 65542, 786457, 0, 196613, 786459, 0, 4, 786463, 0, 262148, 786464, 0, 131077, 786465, 0, 196611, 786466, 0, 196610, 786467, 0, 393218, 786468, 0, 327683, 786469, 0, 196613, 851987, 0, 196612, 851988, 0, 65542, 851989, 0, 262147, 851990, 0, 6, 851991, 0, 6, 851992, 0, 196610, 851993, 0, 262149, 851997, 4, 0, 851998, 4, 0, 851999, 4, 0, 852000, 4, 0, 852001, 0, 65541, 852002, 0, 131078, 852004, 0, 262148, 852005, 0, 262149, 917521, 0, 65537, 917522, 0, 2, 917523, 0, 393216, 917524, 0, 196611, 917525, 0, 6, 917526, 0, 6, 917527, 0, 6, 917528, 0, 131078, 917533, 0, 65537, 917534, 4, 0, 917535, 4, 0, 917536, 4, 0, 917537, 0, 262145, 917538, 0, 196608, 917539, 0, 3, 983057, 0, 131072, 983060, 0, 262148, 983061, 0, 131077, 983062, 0, 131077, 983063, 0, 131077, 983064, 0, 393217, 983066, 0, 0, 983068, 0, 196612, 983069, 4, 0, 983070, 4, 0, 983071, 4, 0, 983072, 4, 0, 983073, 0, 327682, 983074, 0, 262149, 1048600, 0, 327680, 1048601, 0, 65542, 1048602, 0, 262144, 1048603, 0, 65542, 1048604, 0, 262147, 1048605, 4, 0, 1048606, 4, 0, 1048607, 4, 0, 1048608, 4, 0, 1048609, 0, 131076, 1114121, 4, 0, 1114122, 4, 0, 1114123, 4, 0, 1114124, 4, 0, 1114135, 0, 196612, 1114136, 0, 262147, 1114137, 0, 196610, 1114138, 0, 131077, 1114139, 0, 196609, 1114140, 0, 131077, 1114141, 0, 393218, 1114142, 0, 3, 1114145, 0, 131072, 1179653, 4, 0, 1179654, 4, 0, 1179657, 4, 0, 1179658, 4, 0, 1179659, 4, 0, 1179660, 4, 0, 1179661, 4, 0, 1179662, 4, 0, 1179663, 4, 0, 1179671, 0, 262148, 1179672, 0, 196611, 1179673, 0, 131078, 1179675, 0, 131072, 1245188, 4, 0, 1245189, 4, 0, 1245190, 4, 0, 1245191, 4, 0, 1245192, 4, 0, 1245193, 4, 0, 1245194, 4, 0, 1245195, 4, 0, 1245196, 4, 0, 1245208, 0, 327682, 1245209, 0, 393218, 1245210, 0, 3, 1310724, 4, 0, 1310727, 4, 0, 1310728, 4, 0, 1310729, 4, 0, 1310730, 4, 0, 1310731, 4, 0, 1310743, 0, 65537, 1310744, 0, 131074, 1376264, 4, 0, 1376265, 4, 0, 1376266, 4, 0, 1376267, 4, 0, 1376279, 0, 131072, 1441800, 4, 0, 1441801, 4, 0, 1441802, 4, 0, 1441803, 4, 0, 1507333, 4, 0, 1507335, 4, 0, 1507336, 4, 0, 1507337, 4, 0, 1507338, 4, 0, 1507339, 4, 0, 1572869, 4, 0, 1572870, 4, 0, 1572871, 4, 0, 1572872, 4, 0, 1572873, 4, 0, 1572874, 4, 0, 1638405, 4, 0, 1638406, 4, 0, 1638407, 4, 0, 1638408, 4, 0, 1638409, 4, 0, 1703942, 4, 0, 1703943, 4, 0, 1703944, 4, 0, 1769478, 4, 0, 1769479, 4, 0, 1769480, 4, 0, 1835014, 4, 0, 1835015, 4, 0, 1835016, 4, 0 )
+material = SubResource("86")
+tile_set = ExtResource("20")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Tiles Ground"]
-autoplay = "water_flow"
-anims/RESET = SubResource( 88 )
-anims/water_flow = SubResource( 89 )
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Tiles Ground" unique_id=807929148]
+libraries/ = SubResource("AnimationLibrary_12hh7")
+autoplay = &"water_flow"
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="Node2D" type="Node2D" parent="." unique_id=2061790837]
 
-[node name="Tiles Blocking" type="TileMapLayer" parent="Node2D" groups=["world"]]
+[node name="Tiles Blocking" type="TileMapLayer" parent="Node2D" unique_id=652449326 groups=["world"]]
 z_index = -100
-tile_set = ExtResource( 20 )
-cell_size = Vector2( 16, 16 )
-cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
-cell_tile_origin = 2
-cell_y_sort = true
-show_collision = true
-collision_layer = 4
-collision_mask = 63
-format = 1
-tile_data = PackedInt32Array( 458777, 5, 0, 458778, 5, 1, 458779, 5, 1, 458780, 5, 2, 524313, 5, 65538, 524316, 5, 65538, 589849, 5, 65538, 589852, 5, 65538, 655385, 5, 131072, 655386, 5, 1, 655387, 5, 1, 655388, 5, 131074, 786461, 5, 0, 786462, 5, 1, 786463, 5, 1, 786464, 5, 2, 851997, 5, 65538, 852000, 5, 65538, 917533, 5, 65538, 917536, 5, 65538, 983069, 5, 65538, 983072, 5, 65538, 1048585, 5, 0, 1048586, 5, 1, 1048587, 5, 1, 1048588, 5, 2, 1048605, 5, 131072, 1048606, 5, 1, 1048607, 5, 1, 1048608, 5, 131074, 1114116, 5, 0, 1114117, 5, 1, 1114118, 5, 2, 1114121, 5, 65538, 1114124, 5, 131072, 1114125, 5, 1, 1114126, 5, 1, 1114127, 5, 131075, 1179652, 5, 65538, 1179654, 5, 131072, 1179655, 5, 1, 1179656, 5, 1, 1179657, 5, 131074, 1245188, 5, 65538, 1245196, 5, 0, 1245197, 5, 1, 1245198, 5, 1, 1245199, 5, 131075, 1310724, 5, 131072, 1310725, 5, 1, 1310726, 5, 1, 1310727, 5, 2, 1310732, 5, 65538, 1376263, 5, 65538, 1376268, 5, 65538, 1441799, 5, 65538, 1441803, 5, 0, 1441804, 5, 131074, 1507332, 5, 0, 1507333, 5, 1, 1507334, 5, 1, 1507335, 5, 131074, 1507339, 5, 65538, 1572868, 5, 65538, 1572874, 5, 0, 1572875, 5, 131074, 1638404, 5, 65538, 1638410, 5, 65538, 1703940, 5, 131072, 1703941, 5, 1, 1703942, 5, 2, 1703944, 5, 0, 1703945, 5, 1, 1703946, 5, 131074, 1769478, 5, 65538, 1769480, 5, 65538, 1835014, 5, 65539, 1835016, 5, 65539 )
+tile_set = ExtResource("20")
 
-[node name="SimpleSpawner" type="Node2D" parent="Node2D"]
-script = ExtResource( 4 )
-spawnItem = ExtResource( 8 )
+[node name="SimpleSpawner" type="Node2D" parent="Node2D" unique_id=1975711905]
+script = ExtResource("4")
+spawnItem = ExtResource("8")
 isRunning = true
 tracking_path = NodePath("../Player")
 map_source_path = NodePath("../../MapGenerator")
 
-[node name="Player" type="CharacterBody2D" parent="Node2D"]
+[node name="Player" type="CharacterBody2D" parent="Node2D" unique_id=625193948]
 collision_mask = 51
-script = ExtResource( 5 )
+script = ExtResource("5")
 path_finder_path = NodePath("PathFinder")
 mod_manager_path = NodePath("../../ModManager")
 text_dump_path = NodePath("../../CanvasLayer/Control/PanelContainer/RandomTextContainer")
@@ -424,38 +191,39 @@ level_up_panel_path = NodePath("../../CanvasLayer/Control/CenterContainer/LevelU
 hp_bar_path = NodePath("PlayerHPbar")
 map_source_path = NodePath("../../MapGenerator")
 
-[node name="PathFinder" type="Node2D" parent="Node2D/Player"]
-script = ExtResource( 18 )
+[node name="PathFinder" type="Node2D" parent="Node2D/Player" unique_id=244427804]
+script = ExtResource("18")
 djkSide = 17
-djkTilesPaths = [ NodePath("../../Tiles Blocking") ]
+djkTilesPaths = [NodePath("../../Tiles Blocking")]
 
-[node name="CameraLock" type="RemoteTransform2D" parent="Node2D/Player"]
+[node name="CameraLock" type="RemoteTransform2D" parent="Node2D/Player" unique_id=2001360839]
 remote_path = NodePath("../../../Camera2D")
 
-[node name="GemPickup" type="RemoteTransform2D" parent="Node2D/Player"]
+[node name="GemPickup" type="RemoteTransform2D" parent="Node2D/Player" unique_id=1882902583]
 remote_path = NodePath("../../../PlayerGemPickup")
 
-[node name="Shadow" type="Sprite2D" parent="Node2D/Player"]
-modulate = Color( 1, 1, 1, 0.376471 )
-texture = ExtResource( 16 )
+[node name="Shadow" type="Sprite2D" parent="Node2D/Player" unique_id=810462511]
+modulate = Color(1, 1, 1, 0.376471)
+texture = ExtResource("16")
 vframes = 2
 frame = 1
 
-[node name="Hero" type="Sprite2D" parent="Node2D/Player"]
-position = Vector2( 0, -7 )
-texture = ExtResource( 10 )
+[node name="Hero" type="Sprite2D" parent="Node2D/Player" unique_id=963152663]
+position = Vector2(0, -7)
+texture = ExtResource("10")
 hframes = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Player"]
-shape = SubResource( 5 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Player" unique_id=651912168]
+shape = SubResource("5")
 
-[node name="DamageAS" type="AudioStreamPlayer2D" parent="Node2D/Player"]
-stream = ExtResource( 14 )
+[node name="DamageAS" type="AudioStreamPlayer2D" parent="Node2D/Player" unique_id=575471212]
+stream = ExtResource("14")
 
-[node name="DieAS" type="AudioStreamPlayer2D" parent="Node2D/Player"]
-stream = ExtResource( 13 )
+[node name="DieAS" type="AudioStreamPlayer2D" parent="Node2D/Player" unique_id=617506544]
+stream = ExtResource("13")
 
-[node name="PlayerHPbar" type="TextureProgressBar" parent="Node2D/Player"]
+[node name="PlayerHPbar" type="TextureProgressBar" parent="Node2D/Player" unique_id=2075165067]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -465,42 +233,44 @@ offset_top = -24.0
 offset_right = 8.0
 offset_bottom = -20.0
 value = 50.0
-texture_under = ExtResource( 1 )
-texture_progress = ExtResource( 15 )
+texture_under = ExtResource("1")
+texture_progress = ExtResource("15")
 
-[node name="PlayerGemPickup" type="Area2D" parent="." groups=["player"]]
+[node name="PlayerGemPickup" type="Area2D" parent="." unique_id=1444243215 groups=["player"]]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerGemPickup"]
-shape = SubResource( 80 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerGemPickup" unique_id=1906786671]
+shape = SubResource("80")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-current = true
-zoom = Vector2( 2, 2 )
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1667679299]
+zoom = Vector2(2, 2)
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=791444933]
 process_mode = 3
 
-[node name="Control" type="Control" parent="CanvasLayer"]
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=1040986570]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 17 )
+theme = ExtResource("17")
 
-[node name="HBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control"]
+[node name="HBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control" unique_id=2135935670]
 visible = false
+layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_top = -90.0
 offset_right = 135.0
-theme = ExtResource( 17 )
+theme = ExtResource("17")
 
-[node name="Panel2" type="Panel" parent="CanvasLayer/Control/HBoxContainer"]
-self_modulate = Color( 1, 1, 1, 0.501961 )
-offset_right = 135.0
-offset_bottom = 90.0
-custom_minimum_size = Vector2( 0, 90 )
+[node name="Panel2" type="Panel" parent="CanvasLayer/Control/HBoxContainer" unique_id=1269215637]
+self_modulate = Color(1, 1, 1, 0.501961)
 clip_contents = true
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/HBoxContainer/Panel2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/HBoxContainer/Panel2" unique_id=886014992]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 10.0
@@ -508,78 +278,64 @@ offset_top = 10.0
 offset_right = -10.0
 offset_bottom = -10.0
 
-[node name="MinRange" type="HScrollBar" parent="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer"]
-offset_right = 115.0
-offset_bottom = 12.0
+[node name="MinRange" type="HScrollBar" parent="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer" unique_id=903216945]
+layout_mode = 2
 min_value = 1.0
 max_value = 5.0
 step = 1.0
 value = 3.0
 
-[node name="MaxRange" type="HScrollBar" parent="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer"]
-offset_top = 16.0
-offset_right = 115.0
-offset_bottom = 28.0
+[node name="MaxRange" type="HScrollBar" parent="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer" unique_id=1073025040]
+layout_mode = 2
 min_value = 3.0
 max_value = 7.0
 step = 1.0
 value = 4.0
 
-[node name="Iterations" type="HScrollBar" parent="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer"]
-offset_top = 32.0
-offset_right = 115.0
-offset_bottom = 44.0
+[node name="Iterations" type="HScrollBar" parent="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer" unique_id=1959542868]
+layout_mode = 2
 min_value = 1.0
 max_value = 10.0
 step = 1.0
 value = 4.0
 
-[node name="Generate" type="Button" parent="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer"]
-offset_top = 48.0
-offset_right = 115.0
-offset_bottom = 69.0
-focus_mode = 0
+[node name="Generate" type="Button" parent="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer" unique_id=1121820956]
+layout_mode = 2
 focus_mode = 0
 text = "Engage"
-script = ExtResource( 6 )
+script = ExtResource("6")
 map_generator_path = NodePath("../../../../../../MapGenerator")
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control" unique_id=118047908]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="LevelUpBox" type="PanelContainer" parent="CanvasLayer/Control/CenterContainer"]
+[node name="LevelUpBox" type="PanelContainer" parent="CanvasLayer/Control/CenterContainer" unique_id=453949592]
 visible = false
-offset_left = 505.0
-offset_top = 293.0
-offset_right = 519.0
-offset_bottom = 307.0
-script = ExtResource( 2 )
+layout_mode = 2
+script = ExtResource("2")
 mod_manager_path = NodePath("../../../../ModManager")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/CenterContainer/LevelUpBox"]
-offset_left = 7.0
-offset_top = 7.0
-offset_right = 7.0
-offset_bottom = 7.0
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/CenterContainer/LevelUpBox" unique_id=360235636]
+layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Control"]
-self_modulate = Color( 1, 1, 1, 0 )
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Control" unique_id=476178637]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 0
 offset_right = 14.0
 offset_bottom = 14.0
 
-[node name="RandomTextContainer" type="VBoxContainer" parent="CanvasLayer/Control/PanelContainer"]
-offset_left = 7.0
-offset_top = 7.0
-offset_right = 57.0
-offset_bottom = 21.0
-custom_minimum_size = Vector2( 50, 14 )
+[node name="RandomTextContainer" type="VBoxContainer" parent="CanvasLayer/Control/PanelContainer" unique_id=224022841]
+custom_minimum_size = Vector2(50, 14)
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 3 )
+script = ExtResource("3")
 
-[node name="WeaponsBar" type="PanelContainer" parent="CanvasLayer/Control"]
-self_modulate = Color( 1, 1, 1, 0 )
+[node name="WeaponsBar" type="PanelContainer" parent="CanvasLayer/Control" unique_id=306029110]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -587,61 +343,56 @@ anchor_bottom = 1.0
 offset_left = -176.0
 offset_top = -72.0
 offset_bottom = -40.0
-scale = Vector2( 2, 2 )
+scale = Vector2(2, 2)
 size_flags_vertical = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/WeaponsBar"]
-offset_left = 85.0
-offset_top = 7.0
-offset_right = 91.0
-offset_bottom = 25.0
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/WeaponsBar" unique_id=550706268]
+layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 2
 
-[node name="WeaponSlot1frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer"]
-offset_bottom = 18.0
+[node name="WeaponSlot1frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer" unique_id=1256370838]
+layout_mode = 2
 
-[node name="WeaponSlot1icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/WeaponSlot1frame"]
+[node name="WeaponSlot1icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/WeaponSlot1frame" unique_id=2075731517]
+layout_mode = 0
 offset_left = 1.0
 offset_top = 1.0
 offset_right = 33.0
 offset_bottom = 33.0
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2(0.5, 0.5)
 
-[node name="WeaponSlot2frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer"]
-offset_left = 2.0
-offset_right = 2.0
-offset_bottom = 18.0
+[node name="WeaponSlot2frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer" unique_id=1704643089]
+layout_mode = 2
 
-[node name="WeaponSlot2icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/WeaponSlot2frame"]
+[node name="WeaponSlot2icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/WeaponSlot2frame" unique_id=476912643]
+layout_mode = 0
 offset_left = 1.0
 offset_top = 1.0
 offset_right = 33.0
 offset_bottom = 33.0
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2(0.5, 0.5)
 
-[node name="TextureRect3frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer"]
-offset_left = 4.0
-offset_right = 4.0
-offset_bottom = 18.0
+[node name="TextureRect3frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer" unique_id=462909286]
+layout_mode = 2
 
-[node name="WeaponSlot3icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/TextureRect3frame"]
+[node name="WeaponSlot3icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/TextureRect3frame" unique_id=1501819652]
+layout_mode = 0
 offset_left = 1.0
 offset_top = 1.0
 offset_right = 33.0
 offset_bottom = 33.0
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2(0.5, 0.5)
 
-[node name="TextureRect4frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer"]
-offset_left = 6.0
-offset_right = 6.0
-offset_bottom = 18.0
+[node name="TextureRect4frame" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer" unique_id=745281940]
+layout_mode = 2
 
-[node name="WeaponSlot4icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/TextureRect4frame"]
+[node name="WeaponSlot4icon" type="TextureRect" parent="CanvasLayer/Control/WeaponsBar/HBoxContainer/TextureRect4frame" unique_id=1151040230]
+layout_mode = 0
 offset_left = 1.0
 offset_top = 1.0
 offset_right = 33.0
 offset_bottom = 33.0
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2(0.5, 0.5)
 
 [connection signal="pressed" from="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer/Generate" to="CanvasLayer/Control/HBoxContainer/Panel2/VBoxContainer/Generate" method="_on_Generate_pressed"]
